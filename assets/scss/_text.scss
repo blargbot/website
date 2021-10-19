@@ -1,0 +1,90 @@
+.primary-text {
+  color: $primary-text;
+}
+
+p {
+  font-size: 1.1em;
+  line-height: 1.3em;
+}
+
+a {
+  color: $accent-color;
+  text-decoration: none;
+}
+
+a:hover {
+  color: $secondary-accent-color;
+}
+
+code {
+  font-family: 'Ubuntu Mono', monospace;
+  padding: 1px 3px;
+  display: inline;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+
+  &:hover {
+    color: $accent-color;
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+blockquote {
+  margin: 10px 0;
+  padding: 5px 10px;
+  border-left: 4px solid $accent-color;
+
+  p {
+    margin: 0;
+  }
+}
+
+.twemoji {
+  display: flex;
+  align-items: center;
+
+  .emoji {
+    height: 1.25em;
+    margin-right: 0.25em;
+  }
+}
+
+
+.quote {
+  display: block;
+  padding-left: 0.5rem;
+  border-left: 4px solid rgba(0, 0, 0, 0.4);
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 0.5rem;
+
+  code {
+    background: none !important;
+    color: $primary-text;
+  }
+}
+
+
+// h1, h2, h3, h4, h5, h6 {
+//   &::before {
+//     content: '';
+//     display: block;
+//     height: 80px;
+//     margin-top: -80px;
+//     visibility: hidden;
+//     user-select: none;
+//   }
+// }
+
+.markdown {
+  h1, h2 {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 0.3em;
+  }
+}

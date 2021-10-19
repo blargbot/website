@@ -1,0 +1,5 @@
+{
+  "id": "BOT_ID",
+  "callback": "CALLBACK_URL",
+  "apiOrigin": "API_ORIGIN"
+}

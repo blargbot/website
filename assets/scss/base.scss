@@ -1,0 +1,309 @@
+@import 'variables';
+@import 'forms';
+@import 'text';
+
+body,
+html,
+#__nuxt,
+#__layout {
+  height: 100%;
+  width: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+  background: $primary-color;
+  color: $primary-text;
+  font-family: $primary-typeface;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box !important;
+}
+
+html {
+  position: relative;
+}
+
+body {
+  position: absolute;
+  z-index: -1000;
+}
+
+
+
+section {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 0.5rem;
+}
+
+.flexbox {
+  display: flex;
+  .child {
+    flex: 0 1 auto;
+  }
+}
+
+.flexbox.column {
+  flex-direction: column;
+}
+
+.flexbox.row {
+  flex-direction: row;
+}
+
+.v-aligned {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.subtitle {
+  font-size: 1.1em;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+header {
+  width: 100%;
+  background: $secondary-color;
+  padding: 20px 0;
+}
+
+footer {
+  background: $secondary-color;
+}
+
+.shadow-1 {
+  box-shadow: $shadow-1;
+  transition: $shadow-transition;
+}
+
+.shadow-1:hover {
+  box-shadow: $shadow-2;
+}
+
+.shadow-2 {
+  box-shadow: $shadow-2;
+  transition: $shadow-transition;
+}
+
+.shadow-2:hover {
+  box-shadow: $shadow-3;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+.center {
+  text-align: center;
+}
+
+.larger {
+  font-size: 1.5em;
+}
+
+.button {
+  display: block;
+  border-radius: 3px;
+  color: $primary-text;
+  background: nth(map-get($colors, "primary"), 1);
+  text-align: center;
+  padding: 10px;
+  text-transform: uppercase;
+  margin: 5px;
+  outline: none;
+  border: none;
+  &.flat {
+    background: none;
+    margin: 1px;
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+  &.full {
+    width: 100%;
+  }
+  &:hover {
+    background: nth(map-get($colors, "primary"), 2);
+    color: $primary-text;
+    cursor: pointer;
+  }
+  @each $i in $colors {
+    &.#{nth($i, 1)} {
+      background: nth(nth($i, 2), 1);
+      &:hover {
+        background: nth(nth($i, 2), 2);
+      }
+    }
+  }
+}
+
+.card {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
+  margin: 5px;
+  padding: 5px 15px 15px 15px;
+  .links {
+    background: none;
+    width: 100%;
+    padding: 10px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+
+
+  .title-bar {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+
+    .title {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .anchor {
+      position: absolute;
+      top: -100px;
+    }
+
+    .badges {
+      display: flex;
+
+      .badge {
+        display: block;
+        padding: 0.5rem;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 0.5rem;
+
+        &:not(:last-child) {
+          margin-right: 0.5rem;
+        }
+
+        &.warning {
+          background: rgb(126, 0, 0) !important;
+        }
+      }
+
+      .copy {
+        padding: 0.5rem;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 0.5rem;
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.4);
+        }
+      }
+    }
+
+
+  }
+
+  h3, h4 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.subtag-limit-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+
+  .subtag-limit {
+    flex: 1 1 auto;
+  }
+}
+
+input {
+  background: rgba(0, 0, 0, 0.3);
+  outline: none;
+  border: none;
+  padding: 0.5rem;
+  color: $primary-text;
+  border-radius: 0.5rem;
+  font-size: 1.1em;
+}
+
+.examples {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  flex-wrap: wrap;
+  grid-gap: 0.5rem;
+
+  .example {
+    display: flex;
+    flex-direction: column;
+
+    pre {
+      flex: 1 0 auto;
+    }
+  }
+}
+
+
+.anchor-header {
+  position: relative;
+
+  .anchor {
+    position: absolute;
+    top: -80px;
+  }
+
+  .anchor-link {
+    position: absolute;
+    top: 0;
+    left: -24px;
+    height: 20px;
+    width: 24px;
+    padding-right: 4px;
+    background-image: url(https://twemoji.maxcdn.com/v/13.1.0/72x72/1f517.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 0, 0;;
+    opacity: 0;
+  }
+
+  .anchor-link:hover, &:hover .anchor-link {
+    opacity: 1;
+  }
+}
+
+.sidebar {
+  width: 300px;
+  background: #40545D;
+  height: 100%;
+}
+
+.show-medium {
+  display: none;
+}
+
+.show-small {
+  display: none;
+}
+
+@media screen and (max-width: 800px) {
+  .hide-small {
+    display: none;
+  }
+
+  .show-small {
+    display: initial;
+  }
+}
+
+@media screen and (max-width: 1400px) {
+  .hide-medium {
+    display: none;
+  }
+
+  .show-medium {
+    display: block;
+  }
+}
