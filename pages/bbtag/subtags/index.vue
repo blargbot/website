@@ -76,7 +76,7 @@ export default {
   components: { Emoji, ItemList, Markdown },
   async asyncData ({ $axios }) {
     const subtags = await $axios.$get('/subtags')
-    const apiCategories = await $axios.$get('/categories/subtags')
+    const apiCategories = await $axios.$get('/subtags/meta/categories')
 
     const list = Object.values(subtags)
     list.sort((a, b) => {
@@ -138,16 +138,15 @@ export default {
       }
     },
     stringifyParameter (parameter) {
-      const innerParams = parameter.nested.map(this.stringifyParameter).join(';')
-      let result = innerParams.length > 0 && parameter.name !== undefined
-        ? `${parameter.name} ${innerParams}`
-        : parameter.name !== undefined ? parameter.name : innerParams
-
-      if (parameter.greedy !== false) { result += '...' }
-
+      if ('nested' in parameter) {
+        if (parameter.nested.length === 1) {
+          return this.stringifyParameter(parameter.nested[0]) + '...'
+        }
+        return `(${parameter.nested.map(this.stringifyParameter).join(';')})...`
+      }
       return parameter.required
-        ? `<${result}>`
-        : `[${result}]`
+        ? `<${parameter.name}>`
+        : `[${parameter.name}]`
     },
     renderParameterAttributes (parameters) {
       return parameters
