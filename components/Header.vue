@@ -12,7 +12,7 @@
       <div class="child container">
         <div class="flexbox row">
           <div class="child hide-small">
-            <nuxt-link to="invite" class="button flat">
+            <nuxt-link to="/invite" class="button flat">
               Invite
             </nuxt-link>
           </div>
@@ -20,24 +20,24 @@
             <a href="https://support.blargbot.xyz" class="button flat">Support Guild</a>
           </div>
           <div class="child hide-small">
-            <nuxt-link to="donate" class="button flat">
+            <nuxt-link to="/donate" class="button flat">
               Donate
             </nuxt-link>
           </div>
           <template v-if="$store.state.auth.user">
             <div class="child">
-              <nuxt-link to="dashboard" class="button flat">
+              <nuxt-link to="/dashboard" class="button flat">
                 Dashboard
               </nuxt-link>
             </div>
             <div class="child">
-              <nuxt-link to="logout" class="button flat">
+              <nuxt-link to="/logout" class="button flat">
                 Logout
               </nuxt-link>
             </div>
           </template>
           <div v-else class="child">
-            <nuxt-link to="login" class="button flat">
+            <nuxt-link to="/login" class="button flat">
               Login
             </nuxt-link>
           </div>

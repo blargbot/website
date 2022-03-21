@@ -7,19 +7,19 @@
           blargbot
         </h1>
         <div class="button-grid">
-          <nuxt-link to="invite" class="child-2 button shadow-2 green">
+          <nuxt-link to="/invite" class="child-2 button shadow-2 green">
             Invite
           </nuxt-link>
-          <nuxt-link to="commands" class="child-1 button shadow-2">
+          <nuxt-link to="/commands" class="child-1 button shadow-2">
             Commands
           </nuxt-link>
-          <nuxt-link to="bbtag" class="child-1 button shadow-2">
+          <nuxt-link to="/bbtag" class="child-1 button shadow-2">
             BBTag
           </nuxt-link>
-          <nuxt-link to="dashboard" class="child-2 button shadow-2">
+          <nuxt-link to="/dashboard" class="child-2 button shadow-2">
             Dashboard
           </nuxt-link>
-          <nuxt-link to="donate" class="child-2 button shadow-2 gold">
+          <nuxt-link to="/donate" class="child-2 button shadow-2 gold">
             Donate
           </nuxt-link>
         </div>
