@@ -9,10 +9,8 @@
 export default {
   async mounted () {
     if (this.$route.query && this.$route.query.code) {
-      const token = await this.$axios.$get('/auth/validate', {
-        params: {
-          code: this.$route.query.code
-        }
+      const token = await this.$axios.$post('/auth/validate', {
+        code: this.$route.query.code
       })
 
       if (token) {
@@ -21,8 +19,6 @@ export default {
         this.$store.commit('auth/setToken', token)
 
         const user = await this.$axios.$get('/users/@me')
-
-        console.log(user)
 
         this.$store.commit('auth/setUser', user)
         this.$router.push('/')
