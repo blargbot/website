@@ -43,7 +43,7 @@
           <h3>
             <div class="v-aligned">
               <emoji content="ℹ️ " />
-              {{ renderParameters(item, signature.parameters) }}
+              {{ renderParameters(item, signature) }}
             </div>
           </h3>
           <div class="quote">
@@ -113,16 +113,16 @@ export default {
 
       return out.join('  \n')
     },
-    renderParameters (item, parameters) {
+    renderParameters (item, signature) {
       const out = []
-      for (const param of parameters) {
+      for (const param of signature.parameters) {
         out.push(this.stringifyParameter(param))
       }
 
       if (out.length > 0) {
-        return `{${item.name};${out.join(';')}}`
+        return `{${signature.subtagName || item.name};${out.join(';')}}`
       } else {
-        return `{${item.name}}`
+        return `{${signature.subtagName || item.name}}`
       }
     },
     renderParameter (parameter) {
