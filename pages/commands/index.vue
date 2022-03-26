@@ -73,8 +73,7 @@ export default {
   methods: {
     copyUrl (item, event) {
       event.stopPropagation()
-      console.log(item)
-      window.history.pushState(item.name, '', '#' + item.name)
+      this.$router.push(`#${item.name}`)
       window.navigator.clipboard.writeText(window.location.href)
     },
     renderMarkup (...args) {
@@ -101,13 +100,18 @@ export default {
     },
     renderParameter (parameter) {
       switch (parameter.kind) {
-        case 'literal': return parameter.name
+        case 'literal':
+          return parameter.name
         case 'singleVar':
         case 'concatVar':
-          if (parameter.required) { return `<${parameter.name}>` }
+          if (parameter.required) {
+            return `<${parameter.name}>`
+          }
           return `[${parameter.name}]`
         case 'greedyVar':
-          if (parameter.minLength === 0) { return `[...${parameter.name}]` }
+          if (parameter.minLength === 0) {
+            return `[...${parameter.name}]`
+          }
           return `<...${parameter.name}>`
       }
     },
@@ -115,7 +119,9 @@ export default {
       const out = []
       for (const param of parameters) {
         const result = this.renderParameterAttribute(param)
-        if (result) { out.push(result) }
+        if (result) {
+          out.push(result)
+        }
       }
 
       return out.join('  \n')
@@ -135,21 +141,42 @@ export default {
     renderParameterAttribute (parameter) {
       switch (parameter.kind) {
         case 'literal':
-          if (parameter.alias.length > 0) { return `\`${parameter.name}\` can be replaced with ${this.smartJoin(parameter.alias.map(a => `\`${a}\``), ', ', ' or ')}` }
+          if (parameter.alias.length > 0) {
+            return `\`${parameter.name}\` can be replaced with ${this.smartJoin(
+              parameter.alias.map(a => `\`${a}\``),
+              ', ',
+              ' or '
+            )}`
+          }
           break
         case 'concatVar':
         case 'singleVar': {
           const result = []
-          if (parameter.type.descriptionSingular !== undefined) { result.push(` should be ${parameter.type.descriptionSingular}`) }
-          if (parameter.fallback !== undefined && parameter.fallback.length > 0) { result.push(`defaults to \`${parameter.fallback}\``) }
-          if (result.length > 0) { return `\`${parameter.name}\` ${result.join(' and ')}` }
+          if (parameter.type.descriptionSingular !== undefined) {
+            result.push(` should be ${parameter.type.descriptionSingular}`)
+          }
+          if (
+            parameter.fallback !== undefined &&
+            parameter.fallback.length > 0
+          ) {
+            result.push(`defaults to \`${parameter.fallback}\``)
+          }
+          if (result.length > 0) {
+            return `\`${parameter.name}\` ${result.join(' and ')}`
+          }
           break
         }
         case 'greedyVar': {
           const result = []
-          if (parameter.minLength > 1) { result.push(`${parameter.minLength} or more`) }
-          if (parameter.type.descriptionPlural !== undefined) { result.push(parameter.type.descriptionPlural) }
-          if (result.length > 0) { return `\`${parameter.name}\` are ${result.join(' ')}` }
+          if (parameter.minLength > 1) {
+            result.push(`${parameter.minLength} or more`)
+          }
+          if (parameter.type.descriptionPlural !== undefined) {
+            result.push(parameter.type.descriptionPlural)
+          }
+          if (result.length > 0) {
+            return `\`${parameter.name}\` are ${result.join(' ')}`
+          }
           break
         }
       }

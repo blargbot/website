@@ -1,13 +1,13 @@
 <template>
   <div class="body-wrapper">
     <Header />
+    <Sidebar />
     <main class="fill">
       <div class="body-wrapper">
         <nuxt class="fill" />
       </div>
     </main>
     <Footer />
-    <Sidebar />
   </div>
 </template>
 

@@ -2,9 +2,7 @@
   <div>
     <section>
       <h1>Subtags</h1>
-      <p>
-        Not sure how to use BBTag? Check out the documentation:
-      </p>
+      <p>Not sure how to use BBTag? Check out the documentation:</p>
 
       <div class="button-grid">
         <nuxt-link to="/bbtag" class="child-2 button shadow-2">
@@ -32,6 +30,17 @@
       </template>
 
       <template #default="{ item }">
+        <div v-if="item.deprecated" class="deprecated-message">
+          This subtag has been deprecated and will be removed in the future.<br>
+          <span v-if="typeof item.deprecated === 'string'">
+            Use the
+            <router-link :to="`#${item.deprecated}`">
+              <code>{{ "{" + item.deprecated + "}" }}</code>
+            </router-link>
+            subtag instead.
+          </span>
+        </div>
+
         <markdown v-if="item.description" :content="item.description" :auto-new-lines="true" />
 
         <!-- <template v-if="item.flags.length > 0">
@@ -39,11 +48,11 @@
           <markdown :content="renderFlags(item)" />
         </template> -->
 
-        <div v-for="signature, i of getSignatures(item)" :key="i">
+        <div v-for="signature, i of getSignatures(item)" :key="i" class="subtag-signature">
           <h3>
             <div class="v-aligned">
               <emoji content="ℹ️ " />
-              {{ renderParameters(item, signature) }}
+              <pre><code>{{ renderParameters(item, signature) }}</code></pre>
             </div>
           </h3>
           <div class="quote">
@@ -96,7 +105,7 @@ export default {
   methods: {
     copyUrl (item, event) {
       event.stopPropagation()
-      window.history.pushState(item.name, '', '#' + item.name)
+      this.$router.push(`#${item.name}`)
       window.navigator.clipboard.writeText(window.location.href)
     },
     renderMarkup (...args) {
@@ -127,13 +136,18 @@ export default {
     },
     renderParameter (parameter) {
       switch (parameter.kind) {
-        case 'literal': return parameter.name
+        case 'literal':
+          return parameter.name
         case 'singleVar':
         case 'concatVar':
-          if (parameter.required) { return `<${parameter.name}>` }
+          if (parameter.required) {
+            return `<${parameter.name}>`
+          }
           return `[${parameter.name}]`
         case 'greedyVar':
-          if (parameter.minLength === 0) { return `[...${parameter.name}]` }
+          if (parameter.minLength === 0) {
+            return `[...${parameter.name}]`
+          }
           return `<...${parameter.name}>`
       }
     },
@@ -144,16 +158,19 @@ export default {
         }
         return `(${parameter.nested.map(this.stringifyParameter).join(';')})...`
       }
-      return parameter.required
-        ? `<${parameter.name}>`
-        : `[${parameter.name}]`
+      return parameter.required ? `<${parameter.name}>` : `[${parameter.name}]`
     },
     renderParameterAttributes (parameters) {
       return parameters
         .map(p => p.nested || [p])
         .flat()
         .filter(param => param.defaultValue)
-        .map(param => `\`${param.name ?? '\u200B'}\` defaults to \`${param.defaultValue}\` if ${param.required ? 'left blank' : 'omitted or left blank'}`)
+        .map(
+          param =>
+            `\`${param.name ?? '\u200B'}\` defaults to \`${
+              param.defaultValue
+            }\` if ${param.required ? 'left blank' : 'omitted or left blank'}`
+        )
         .join('  \n')
     },
     smartJoin (values, separator, lastSeparator) {
@@ -171,21 +188,42 @@ export default {
     renderParameterAttribute (parameter) {
       switch (parameter.kind) {
         case 'literal':
-          if (parameter.alias.length > 0) { return `\`${parameter.name}\` can be replaced with ${this.smartJoin(parameter.alias.map(a => `\`${a}\``), ', ', ' or ')}` }
+          if (parameter.alias.length > 0) {
+            return `\`${parameter.name}\` can be replaced with ${this.smartJoin(
+              parameter.alias.map(a => `\`${a}\``),
+              ', ',
+              ' or '
+            )}`
+          }
           break
         case 'concatVar':
         case 'singleVar': {
           const result = []
-          if (parameter.type.descriptionSingular !== undefined) { result.push(` should be ${parameter.type.descriptionSingular}`) }
-          if (parameter.fallback !== undefined && parameter.fallback.length > 0) { result.push(`defaults to \`${parameter.fallback}\``) }
-          if (result.length > 0) { return `\`${parameter.name}\` ${result.join(' and ')}` }
+          if (parameter.type.descriptionSingular !== undefined) {
+            result.push(` should be ${parameter.type.descriptionSingular}`)
+          }
+          if (
+            parameter.fallback !== undefined &&
+            parameter.fallback.length > 0
+          ) {
+            result.push(`defaults to \`${parameter.fallback}\``)
+          }
+          if (result.length > 0) {
+            return `\`${parameter.name}\` ${result.join(' and ')}`
+          }
           break
         }
         case 'greedyVar': {
           const result = []
-          if (parameter.minLength > 1) { result.push(`${parameter.minLength} or more`) }
-          if (parameter.type.descriptionPlural !== undefined) { result.push(parameter.type.descriptionPlural) }
-          if (result.length > 0) { return `\`${parameter.name}\` are ${result.join(' ')}` }
+          if (parameter.minLength > 1) {
+            result.push(`${parameter.minLength} or more`)
+          }
+          if (parameter.type.descriptionPlural !== undefined) {
+            result.push(parameter.type.descriptionPlural)
+          }
+          if (result.length > 0) {
+            return `\`${parameter.name}\` are ${result.join(' ')}`
+          }
           break
         }
       }
@@ -204,5 +242,11 @@ export default {
   p {
     margin: 10px;
   }
+}
+.subtag-signature {
+  margin: 1em 0;
+}
+.deprecated-message {
+  margin-top: 1em;
 }
 </style>

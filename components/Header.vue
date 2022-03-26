@@ -49,13 +49,6 @@
 
 <script>
 export default {
-  data () {
-    return {
-      documentationOptions: [
-        { name: 'Commands', path: '/commands' },
-        { name: 'BBTag', path: '/subtags' }]
-    }
-  },
   computed: {
     showSidebarButton () {
       return this.$route.path !== '/' && this.$route.path !== '/invite'
@@ -111,11 +104,10 @@ header {
   background: rgba(0, 0, 0, 0.1);
   padding: 0.25rem 0.5rem;
   cursor: pointer;
-  user-select: none;;
+  user-select: none;
 
   &:hover {
     background: rgba(0, 0, 0, 0.3);
-
   }
 }
 </style>
