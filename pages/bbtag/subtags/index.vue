@@ -150,7 +150,9 @@ export default {
     },
     renderParameterAttributes (parameters) {
       return parameters
-        .filter(param => param.defaultValue !== '')
+        .map(p => p.nested || [p])
+        .flat()
+        .filter(param => param.defaultValue)
         .map(param => `\`${param.name ?? '\u200B'}\` defaults to \`${param.defaultValue}\` if ${param.required ? 'left blank' : 'omitted or left blank'}`)
         .join('  \n')
     },
