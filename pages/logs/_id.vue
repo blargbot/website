@@ -51,8 +51,6 @@ export default {
       return new Date(a.msgtime) - new Date(b.msgtime)
     })
 
-    console.log(logs)
-
     return {
       channel: logs.channel,
       channelName: logs.channelName,
@@ -105,7 +103,6 @@ export default {
 
 .card.min {
   margin-bottom: 0.5rem;
-
 }
 
 .message:not(:last-child) {
