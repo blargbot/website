@@ -1,6 +1,7 @@
 <template>
   <div>
     <section>
+      <!-- TODO render this nicely -->
       <p>Id: {{ id }}</p>
       <p>Content: {{ content }}</p>
       <p>Embeds: {{ embeds || [] }}</p>
