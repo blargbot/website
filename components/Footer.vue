@@ -1,13 +1,15 @@
 <template>
   <footer>
     <div class="footer-content">
-      &copy; 2016-{{ year }} | stupid cat
+      <nuxt-link to="/privacy">
+        Privacy Policy
+      </nuxt-link>
+      | &copy; 2016-{{ year }} | stupid cat
     </div>
   </footer>
 </template>
 
 <script>
-
 export default {
   computed: {
     year () {
