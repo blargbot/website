@@ -62,10 +62,10 @@
           <p>You can use BBTag in almost anything; custom commands, public tags, greetings/farewells. The sky's the limit!</p>
           <p>The applications are endless, too. Overwrite default commands, make your own moderation suite, or just make a minigame to have fun with!</p>
           <p>The public tag ecosystem is entirely run by the community; people like you! Thanks for being awesome.</p>
-          <nuxt-link to="bbtag" class="button flat">
+          <nuxt-link to="/bbtag" class="button flat">
             Documentation
           </nuxt-link>
-          <nuxt-link to="subtags" class="button flat">
+          <nuxt-link to="/bbtag/subtags" class="button flat">
             SubTags
           </nuxt-link>
         </div>
