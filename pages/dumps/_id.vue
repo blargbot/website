@@ -34,7 +34,10 @@ export default {
     }
 
     return {
-      ...dump,
+      id: dump.id,
+      channelid: dump.channelid,
+      content: dump.content,
+      embeds: dump.embeds,
       expiry,
       delta
     }
