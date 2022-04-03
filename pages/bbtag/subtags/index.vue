@@ -170,7 +170,7 @@ export default {
     },
     getPrarameterModifiers (parameter) {
       const modifiers = []
-      if (parameter.maxLength !== 1_000_000) {
+      if (parameter.maxLength !== 1000000) {
         modifiers.push(`can at most be ${parameter.maxLength} characters long`)
       }
       if (parameter.defaultValue !== '') {
