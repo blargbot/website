@@ -6,7 +6,7 @@
         <div v-html="content" />
         <hr>
         <p>This page will expire {{ expiry }} ({{ delta }})</p>
-        <a :href="'/api/dumps/' + id" :download="id + '.txt'" class="button shadow-1">Download</a>
+        <a :href="'/api/dumps/' + id" :download="id + '.json'" class="button shadow-1">Download</a>
       </div>
     </section>
   </div>
