@@ -56,7 +56,7 @@ export default {
   bottom: 0;
 }
 
-@media screen and (max-width: 1400px) {
+@media screen and (max-width: 1300px) {
   .sidebar {
     left: -300px;
 
