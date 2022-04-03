@@ -19,12 +19,13 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
 import showdown, { Converter } from 'showdown'
 import hljs from 'highlight.js'
-import 'highlight.js/styles/base16/solarized-dark.css'
 import xss from 'xss'
 
 dayjs.extend(duration)
 dayjs.extend(relativeTime)
 dayjs.extend(advancedFormat)
+
+export * from 'highlight.js/scss/base16/solarized-dark.scss'
 
 export default {
   async asyncData ({ params, $axios }) {
