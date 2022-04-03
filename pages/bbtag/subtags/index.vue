@@ -164,14 +164,31 @@ export default {
       return parameters
         .map(p => p.nested || [p])
         .flat()
-        .filter(param => param.defaultValue)
-        .map(
-          param =>
-            `\`${param.name ?? '\u200B'}\` defaults to \`${
-              param.defaultValue
-            }\` if ${param.required ? 'left blank' : 'omitted or left blank'}`
-        )
+        .map(param => this.getPrarameterModifiers(param))
+        .filter(modifiers => modifiers !== undefined)
         .join('  \n')
+    },
+    getPrarameterModifiers (parameter) {
+      const modifiers = []
+      if (parameter.maxLength !== 1_000_000) {
+        modifiers.push(`can at most be ${parameter.maxLength} characters long`)
+      }
+      if (parameter.defaultValue !== '') {
+        modifiers.push(
+          `defaults to \`${parameter.defaultValue}\` if ${
+            parameter.required ? '' : 'omitted or'
+          } left blank.`
+        )
+      }
+      if (modifiers.length === 0) {
+        return undefined
+      }
+
+      return `\`${parameter.name}\` ${this.smartJoin(
+        modifiers,
+        ', ',
+        ', and '
+      )}`
     },
     smartJoin (values, separator, lastSeparator) {
       switch (values.length) {
