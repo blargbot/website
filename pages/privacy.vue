@@ -2,7 +2,7 @@
   <div>
     <section>
       <div class="child card shadow-2">
-        <h2>Privacy Policy</h2>
+        <h1>Privacy Policy</h1>
         <p>Last updated: October 29, 2021</p>
         <p>
           Disclaimer: I am not a lawyer. I am just a developer, and this is a

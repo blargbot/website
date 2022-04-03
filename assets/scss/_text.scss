@@ -22,11 +22,6 @@ code {
   display: inline;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-
-  &:hover {
-    color: $accent-color;
-    background: rgba(0, 0, 0, 0.4);
-  }
 }
 
 blockquote {
