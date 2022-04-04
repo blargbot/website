@@ -1,6 +1,6 @@
-@import 'variables';
-@import 'forms';
-@import 'text';
+@import "variables";
+@import "forms";
+@import "text";
 
 body,
 html,
@@ -38,7 +38,6 @@ section {
     width: 100%;
   }
 }
-
 
 .flexbox {
   display: flex;
@@ -143,6 +142,17 @@ h1 {
   }
 }
 
+.button-grid {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  .child-1 {
+    grid-column-end: span 1;
+  }
+  .child-2 {
+    grid-column-end: span 2;
+  }
+}
+
 .card {
   background: rgba(0, 0, 0, 0.2);
   border-radius: 0.5rem;
@@ -154,8 +164,6 @@ h1 {
     padding: 10px 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
   }
-
-
 
   .title-bar {
     position: relative;
@@ -203,11 +211,10 @@ h1 {
         }
       }
     }
-
-
   }
 
-  h3, h4 {
+  h3,
+  h4 {
     margin-top: 1rem;
     margin-bottom: 0.5rem;
   }
@@ -248,7 +255,6 @@ input {
   }
 }
 
-
 .anchor-header {
   position: relative;
 
@@ -267,18 +273,19 @@ input {
     background-image: url(https://twemoji.maxcdn.com/v/13.1.0/72x72/1f517.png);
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: 0, 0;;
+    background-position: 0, 0;
     opacity: 0;
   }
 
-  .anchor-link:hover, &:hover .anchor-link {
+  .anchor-link:hover,
+  &:hover .anchor-link {
     opacity: 1;
   }
 }
 
 .sidebar {
   width: 300px;
-  background: #40545D;
+  background: #40545d;
   height: 100%;
 }
 
@@ -317,6 +324,6 @@ input {
     height: 1.375em;
     width: 1.375em;
     object-fit: contain;
-    vertical-align: bottom;;
+    vertical-align: bottom;
   }
 }

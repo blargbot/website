@@ -63,27 +63,24 @@ import Markdown from '~/components/Markdown.vue'
 
 export default {
   components: { Emoji, ItemList, Markdown },
-  async asyncData ({ $axios }) {
-    const commands = await $axios.$get('/commands')
-    console.log(commands)
+  data() {
     return {
-      commands: Object.values(commands)
+      commands: Object.values(this.$store.state.commands.list)
     }
   },
   methods: {
-    copyUrl (item, event) {
+    copyUrl(item, event) {
       event.stopPropagation()
-      console.log(item)
-      window.history.pushState(item.name, '', '#' + item.name)
+      this.$router.push(`#${item.name}`)
       window.navigator.clipboard.writeText(window.location.href)
     },
-    renderMarkup (...args) {
+    renderMarkup(...args) {
       return render(...args)
     },
-    getSignatures (item) {
+    getSignatures(item) {
       return item.signatures.filter(s => !s.hidden)
     },
-    renderFlags (item) {
+    renderFlags(item) {
       const out = []
       for (const flag of item.flags) {
         out.push(`\`-${flag.flag}\`/\`--${flag.word}\`: ${flag.description}`)
@@ -91,7 +88,7 @@ export default {
 
       return out.join('  \n')
     },
-    renderParameters (item, parameters) {
+    renderParameters(item, parameters) {
       const out = []
       for (const param of parameters) {
         out.push(this.renderParameter(param))
@@ -99,28 +96,35 @@ export default {
 
       return `${item.name} ${out.join(' ')}`
     },
-    renderParameter (parameter) {
+    renderParameter(parameter) {
       switch (parameter.kind) {
-        case 'literal': return parameter.name
+        case 'literal':
+          return parameter.name
         case 'singleVar':
         case 'concatVar':
-          if (parameter.required) { return `<${parameter.name}>` }
+          if (parameter.required) {
+            return `<${parameter.name}>`
+          }
           return `[${parameter.name}]`
         case 'greedyVar':
-          if (parameter.minLength === 0) { return `[...${parameter.name}]` }
+          if (parameter.minLength === 0) {
+            return `[...${parameter.name}]`
+          }
           return `<...${parameter.name}>`
       }
     },
-    renderParameterAttributes (parameters) {
+    renderParameterAttributes(parameters) {
       const out = []
       for (const param of parameters) {
         const result = this.renderParameterAttribute(param)
-        if (result) { out.push(result) }
+        if (result) {
+          out.push(result)
+        }
       }
 
       return out.join('  \n')
     },
-    smartJoin (values, separator, lastSeparator) {
+    smartJoin(values, separator, lastSeparator) {
       switch (values.length) {
         case 0:
         case 1:
@@ -132,24 +136,45 @@ export default {
           ].join(lastSeparator)
       }
     },
-    renderParameterAttribute (parameter) {
+    renderParameterAttribute(parameter) {
       switch (parameter.kind) {
         case 'literal':
-          if (parameter.alias.length > 0) { return `\`${parameter.name}\` can be replaced with ${this.smartJoin(parameter.alias.map(a => `\`${a}\``), ', ', ' or ')}` }
+          if (parameter.alias.length > 0) {
+            return `\`${parameter.name}\` can be replaced with ${this.smartJoin(
+              parameter.alias.map(a => `\`${a}\``),
+              ', ',
+              ' or '
+            )}`
+          }
           break
         case 'concatVar':
         case 'singleVar': {
           const result = []
-          if (parameter.type.descriptionSingular !== undefined) { result.push(` should be ${parameter.type.descriptionSingular}`) }
-          if (parameter.fallback !== undefined && parameter.fallback.length > 0) { result.push(`defaults to \`${parameter.fallback}\``) }
-          if (result.length > 0) { return `\`${parameter.name}\` ${result.join(' and ')}` }
+          if (parameter.type.descriptionSingular !== undefined) {
+            result.push(` should be ${parameter.type.descriptionSingular}`)
+          }
+          if (
+            parameter.fallback !== undefined &&
+            parameter.fallback.length > 0
+          ) {
+            result.push(`defaults to \`${parameter.fallback}\``)
+          }
+          if (result.length > 0) {
+            return `\`${parameter.name}\` ${result.join(' and ')}`
+          }
           break
         }
         case 'greedyVar': {
           const result = []
-          if (parameter.minLength > 1) { result.push(`${parameter.minLength} or more`) }
-          if (parameter.type.descriptionPlural !== undefined) { result.push(parameter.type.descriptionPlural) }
-          if (result.length > 0) { return `\`${parameter.name}\` are ${result.join(' ')}` }
+          if (parameter.minLength > 1) {
+            result.push(`${parameter.minLength} or more`)
+          }
+          if (parameter.type.descriptionPlural !== undefined) {
+            result.push(parameter.type.descriptionPlural)
+          }
+          if (result.length > 0) {
+            return `\`${parameter.name}\` are ${result.join(' ')}`
+          }
           break
         }
       }
@@ -157,16 +182,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.invite-grid {
-  display: grid;
-  grid-template-columns: 40% 60%;
-  align-content: center;
-  align-items: center;
-
-  p {
-    margin: 10px;
-  }
-}
-</style>

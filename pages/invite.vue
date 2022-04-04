@@ -37,19 +37,18 @@ import Banner from '~/components/Banner.vue'
 
 export default {
   components: { Banner },
-  layout: 'home',
   data: () => ({
     base:
       'https://discordapp.com/oauth2/authorize?client_id=170237838334492682&scope=bot'
   }),
   computed: {
-    pbase () {
+    pbase() {
       return this.base + '&permissions='
     },
-    minvite () {
+    minvite() {
       return this.pbase + 19520
     },
-    invite () {
+    invite() {
       return this.pbase + 8
     }
   }

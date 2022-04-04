@@ -11,7 +11,7 @@ export default {
     this.$cookies.set('token', null)
     this.$store.commit('auth/setToken', null)
     this.$store.commit('auth/setUser', null)
-    this.$router.push('/')
+    this.$router.push(this.$route.query.redirect || '/')
   }
 }
 </script>

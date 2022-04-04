@@ -13,6 +13,9 @@
         <nuxt-link to="/bbtag/subtags" class="child-2 button shadow-2">
           View Subtags
         </nuxt-link>
+        <nuxt-link to="/bbtag/editor" class="child-2 button shadow-2">
+          View the editor
+        </nuxt-link>
       </div>
 
       <markdown :content="docs" :options="{anchorTags: true}" />
@@ -33,16 +36,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.invite-grid {
-  display: grid;
-  grid-template-columns: 40% 60%;
-  align-content: center;
-  align-items: center;
-
-  p {
-    margin: 10px;
-  }
-}
-</style>

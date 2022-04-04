@@ -2,9 +2,7 @@
   <div>
     <section>
       <h1>Subtags</h1>
-      <p>
-        Not sure how to use BBTag? Check out the documentation:
-      </p>
+      <p>Not sure how to use BBTag? Check out the documentation:</p>
 
       <div class="button-grid">
         <nuxt-link to="/bbtag" class="child-2 button shadow-2">
@@ -32,6 +30,17 @@
       </template>
 
       <template #default="{ item }">
+        <div v-if="item.deprecated" class="deprecated-message">
+          This subtag has been deprecated and will be removed in the future.<br>
+          <span v-if="typeof item.deprecated === 'string'">
+            Use the
+            <router-link :to="`#${item.deprecated}`">
+              <code>{{ "{" + item.deprecated + "}" }}</code>
+            </router-link>
+            subtag instead.
+          </span>
+        </div>
+
         <markdown v-if="item.description" :content="item.description" :auto-new-lines="true" />
 
         <!-- <template v-if="item.flags.length > 0">
@@ -39,11 +48,11 @@
           <markdown :content="renderFlags(item)" />
         </template> -->
 
-        <div v-for="signature, i of getSignatures(item)" :key="i">
+        <div v-for="signature, i of getSignatures(item)" :key="i" class="subtag-signature">
           <h3>
             <div class="v-aligned">
               <emoji content="ℹ️ " />
-              {{ renderParameters(item, signature.parameters) }}
+              <pre><code>{{ renderParameters(item, signature) }}</code></pre>
             </div>
           </h3>
           <div class="quote">
@@ -74,38 +83,30 @@ import Markdown from '~/components/Markdown.vue'
 
 export default {
   components: { Emoji, ItemList, Markdown },
-  async asyncData ({ $axios }) {
-    const subtags = await $axios.$get('/subtags')
-    const apiCategories = await $axios.$get('/subtags/meta/categories')
-
-    const list = Object.values(subtags)
+  data() {
+    const list = Object.values(this.$store.state.subtags.list)
     list.sort((a, b) => {
       return a.category - b.category
     })
 
-    const categories = []
-    for (const key in apiCategories) {
-      categories[key] = apiCategories[key]
-    }
-
     return {
       subtags: list,
-      categories
+      categories: this.$store.state.subtags.categories
     }
   },
   methods: {
-    copyUrl (item, event) {
+    copyUrl(item, event) {
       event.stopPropagation()
-      window.history.pushState(item.name, '', '#' + item.name)
+      this.$router.push(`#${item.name}`)
       window.navigator.clipboard.writeText(window.location.href)
     },
-    renderMarkup (...args) {
+    renderMarkup(...args) {
       return render(...args)
     },
-    getSignatures (item) {
+    getSignatures(item) {
       return item.signatures.filter(s => !s.hidden)
     },
-    renderFlags (item) {
+    renderFlags(item) {
       const out = []
       for (const flag of item.flags) {
         out.push(`\`-${flag.flag}\`/\`--${flag.word}\`: ${flag.description}`)
@@ -113,48 +114,75 @@ export default {
 
       return out.join('  \n')
     },
-    renderParameters (item, parameters) {
+    renderParameters(item, signature) {
       const out = []
-      for (const param of parameters) {
+      for (const param of signature.parameters) {
         out.push(this.stringifyParameter(param))
       }
 
       if (out.length > 0) {
-        return `{${item.name};${out.join(';')}}`
+        return `{${signature.subtagName || item.name};${out.join(';')}}`
       } else {
-        return `{${item.name}}`
+        return `{${signature.subtagName || item.name}}`
       }
     },
-    renderParameter (parameter) {
+    renderParameter(parameter) {
       switch (parameter.kind) {
-        case 'literal': return parameter.name
+        case 'literal':
+          return parameter.name
         case 'singleVar':
         case 'concatVar':
-          if (parameter.required) { return `<${parameter.name}>` }
+          if (parameter.required) {
+            return `<${parameter.name}>`
+          }
           return `[${parameter.name}]`
         case 'greedyVar':
-          if (parameter.minLength === 0) { return `[...${parameter.name}]` }
+          if (parameter.minLength === 0) {
+            return `[...${parameter.name}]`
+          }
           return `<...${parameter.name}>`
       }
     },
-    stringifyParameter (parameter) {
+    stringifyParameter(parameter) {
       if ('nested' in parameter) {
         if (parameter.nested.length === 1) {
           return this.stringifyParameter(parameter.nested[0]) + '...'
         }
         return `(${parameter.nested.map(this.stringifyParameter).join(';')})...`
       }
-      return parameter.required
-        ? `<${parameter.name}>`
-        : `[${parameter.name}]`
+      return parameter.required ? `<${parameter.name}>` : `[${parameter.name}]`
     },
-    renderParameterAttributes (parameters) {
+    renderParameterAttributes(parameters) {
       return parameters
-        .filter(param => param.defaultValue !== '')
-        .map(param => `\`${param.name ?? '\u200B'}\` defaults to \`${param.defaultValue}\` if ${param.required ? 'left blank' : 'omitted or left blank'}`)
+        .map(p => p.nested || [p])
+        .flat()
+        .map(param => this.getPrarameterModifiers(param))
+        .filter(modifiers => modifiers !== undefined)
         .join('  \n')
     },
-    smartJoin (values, separator, lastSeparator) {
+    getPrarameterModifiers(parameter) {
+      const modifiers = []
+      if (parameter.maxLength !== 1000000) {
+        modifiers.push(`can at most be ${parameter.maxLength} characters long`)
+      }
+      if (parameter.defaultValue !== '') {
+        modifiers.push(
+          `defaults to \`${parameter.defaultValue}\` if ${
+            parameter.required ? '' : 'omitted or'
+          } left blank.`
+        )
+      }
+      if (modifiers.length === 0) {
+        return undefined
+      }
+
+      return `\`${parameter.name}\` ${this.smartJoin(
+        modifiers,
+        ', ',
+        ', and '
+      )}`
+    },
+    smartJoin(values, separator, lastSeparator) {
       switch (values.length) {
         case 0:
         case 1:
@@ -166,24 +194,45 @@ export default {
           ].join(lastSeparator)
       }
     },
-    renderParameterAttribute (parameter) {
+    renderParameterAttribute(parameter) {
       switch (parameter.kind) {
         case 'literal':
-          if (parameter.alias.length > 0) { return `\`${parameter.name}\` can be replaced with ${this.smartJoin(parameter.alias.map(a => `\`${a}\``), ', ', ' or ')}` }
+          if (parameter.alias.length > 0) {
+            return `\`${parameter.name}\` can be replaced with ${this.smartJoin(
+              parameter.alias.map(a => `\`${a}\``),
+              ', ',
+              ' or '
+            )}`
+          }
           break
         case 'concatVar':
         case 'singleVar': {
           const result = []
-          if (parameter.type.descriptionSingular !== undefined) { result.push(` should be ${parameter.type.descriptionSingular}`) }
-          if (parameter.fallback !== undefined && parameter.fallback.length > 0) { result.push(`defaults to \`${parameter.fallback}\``) }
-          if (result.length > 0) { return `\`${parameter.name}\` ${result.join(' and ')}` }
+          if (parameter.type.descriptionSingular !== undefined) {
+            result.push(` should be ${parameter.type.descriptionSingular}`)
+          }
+          if (
+            parameter.fallback !== undefined &&
+            parameter.fallback.length > 0
+          ) {
+            result.push(`defaults to \`${parameter.fallback}\``)
+          }
+          if (result.length > 0) {
+            return `\`${parameter.name}\` ${result.join(' and ')}`
+          }
           break
         }
         case 'greedyVar': {
           const result = []
-          if (parameter.minLength > 1) { result.push(`${parameter.minLength} or more`) }
-          if (parameter.type.descriptionPlural !== undefined) { result.push(parameter.type.descriptionPlural) }
-          if (result.length > 0) { return `\`${parameter.name}\` are ${result.join(' ')}` }
+          if (parameter.minLength > 1) {
+            result.push(`${parameter.minLength} or more`)
+          }
+          if (parameter.type.descriptionPlural !== undefined) {
+            result.push(parameter.type.descriptionPlural)
+          }
+          if (result.length > 0) {
+            return `\`${parameter.name}\` are ${result.join(' ')}`
+          }
           break
         }
       }
@@ -193,14 +242,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.invite-grid {
-  display: grid;
-  grid-template-columns: 40% 60%;
-  align-content: center;
-  align-items: center;
-
-  p {
-    margin: 10px;
-  }
+.subtag-signature {
+  margin: 1em 0;
+}
+.deprecated-message {
+  margin-top: 1em;
 }
 </style>

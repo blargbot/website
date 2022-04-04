@@ -1,38 +1,41 @@
-export function state () {
+export function state() {
   return {
     token: null,
-    user: null
+    user: null,
+    isAuth: false
   }
 }
 
 export const mutations = {
-  setToken (state, token) {
+  setToken(state, token) {
     state.token = token
   },
-  setUser (state, user) {
+  setUser(state, user) {
     state.user = user
+  },
+  isAuth(state, isAuth) {
+    state.isAuth = isAuth
   }
 }
 
 export const actions = {
-  async processAuth ({ commit }, { app: { $axios, $cookies }, req }) {
-    if (req.headers.cookie) {
-      const token = $cookies.get('token')
+  async processAuth({ commit, dispatch }) {
+    const token = this.$cookies.get('token')
+    if (!token) {
+      return
+    }
 
-      if (token) {
-        try {
-          commit('setToken', token)
-          $axios.setToken(token)
+    try {
+      commit('setToken', token)
+      this.$axios.setToken(token)
 
-          const user = await $axios.$get('/users/@me')
+      const user = await this.$axios.$get('/users/@me')
+      commit('setUser', user)
 
-          commit('setUser', user)
-        } catch (err) {
-          console.error(err)
-          $axios.setToken(false)
-          $cookies.remove('token')
-        }
-      }
+      await dispatch('guilds/reload', null, { root: true })
+    } catch (err) {
+      this.$axios.setToken(false)
+      this.$cookies.remove('token')
     }
   }
 }

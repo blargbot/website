@@ -28,26 +28,26 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       opened: false,
       boundToggleSidebar: this.toggleSidebar.bind(this)
     }
   },
-  mounted () {
+  mounted() {
     this.$root.$on('toggleSidebar', this.boundToggleSidebar)
   },
-  destroyed () {
+  destroyed() {
     this.$root.$off('toggleSidebar', this.boundToggleSidebar)
   },
   methods: {
-    toggleSidebar () {
+    toggleSidebar() {
       this.opened = !this.opened
     },
-    openSidebar () {
+    openSidebar() {
       this.opened = true
     },
-    closeSidebar () {
+    closeSidebar() {
       this.opened = false
     }
   }
@@ -141,4 +141,29 @@ export default {
     }
   }
 }
+/*
+.sidebar {
+  left: -300px;
+  position: fixed;
+  top: 80px;
+  bottom: 0;
+
+  transition-duration: 0.1s;
+  z-index: 10;
+
+  &.opened {
+    left: 0;
+  }
+}
+
+.sidebar-behind {
+  position: fixed;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.4);
+  top: 80px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+*/
 </style>

@@ -62,10 +62,10 @@
           <p>You can use BBTag in almost anything; custom commands, public tags, greetings/farewells. The sky's the limit!</p>
           <p>The applications are endless, too. Overwrite default commands, make your own moderation suite, or just make a minigame to have fun with!</p>
           <p>The public tag ecosystem is entirely run by the community; people like you! Thanks for being awesome.</p>
-          <nuxt-link to="bbtag" class="button flat">
+          <nuxt-link to="/bbtag" class="button flat">
             Documentation
           </nuxt-link>
-          <nuxt-link to="subtags" class="button flat">
+          <nuxt-link to="/bbtag/subtags" class="button flat">
             SubTags
           </nuxt-link>
         </div>
@@ -78,8 +78,7 @@
 import Banner from '~/components/Banner.vue'
 
 export default {
-  components: { Banner },
-  layout: 'home'
+  components: { Banner }
 }
 </script>
 
@@ -87,16 +86,6 @@ export default {
 .full-height {
   min-height: 100vh;
   margin-bottom: -80px;
-}
-.button-grid {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  .child-1 {
-    grid-column-end: span 1;
-  }
-  .child-2 {
-    grid-column-end: span 2;
-  }
 }
 .info-flex {
   display: flex;

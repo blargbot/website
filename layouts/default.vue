@@ -1,6 +1,6 @@
 <template>
   <div class="body-wrapper">
-    <Header :builtInSidebar="true" />
+    <Header :built-in-sidebar="true" />
     <main class="fill">
       <Sidebar :built-in="true" />
       <div class="body-wrapper fill">
@@ -12,12 +12,7 @@
 </template>
 
 <script>
-import Header from '~/components/Header.vue'
-import Footer from '~/components/Footer.vue'
-import Sidebar from '~/components/Sidebar.vue'
-export default {
-  components: { Header, Footer, Sidebar }
-}
+export default {}
 </script>
 
 <style lang="scss" scoped>

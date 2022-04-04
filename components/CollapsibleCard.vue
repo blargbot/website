@@ -41,6 +41,13 @@ export default {
       }
     }
   },
+  watch: {
+    $route (to) {
+      if (to.hash === '#' + this.name) {
+        this.expand()
+      }
+    }
+  },
   mounted () {
     this.$root.$on('expandAll', this.boundExpand)
     this.$root.$on('collapseAll', this.boundCollapse)
@@ -48,7 +55,8 @@ export default {
     this.setHeight()
 
     if (this.name && '#' + this.name === window.location.hash) {
-      this.collapsed = false
+      this.expand()
+      this.$el.scrollIntoView()
     }
   },
   destroyed () {
@@ -78,6 +86,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.card-wrapper {
+  scroll-margin-top: 100px;
+}
 
 .card {
   padding: 0;
@@ -124,6 +135,5 @@ export default {
     padding: 0 15px 0 15px;
     overflow: hidden;
   }
-
 }
 </style>

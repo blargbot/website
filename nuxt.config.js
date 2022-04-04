@@ -37,6 +37,10 @@ export default {
     '~/plugins/sanitizer'
   ],
 
+  router: {
+    middleware: ['global']
+  },
+
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
@@ -68,7 +72,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    extend (config, ctx) {
+    extend(config, ctx) {
       config.module.rules.push({
         test: /\.md$/,
         loader: 'raw-loader'

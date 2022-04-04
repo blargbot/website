@@ -1,46 +1,76 @@
 <template>
   <header>
     <div class="flexbox row">
-      <div v-if="showSidebarButton" class="sidebar-button" :class="sidebarButtonClass" @click.prevent="toggleSidebar">
-        <span class="material-icons material-icons-outlined">
-          menu
-        </span>
+      <div
+        v-if="showSidebarButton"
+        class="sidebar-button"
+        :class="sidebarButtonClass"
+        @click.prevent="toggleSidebar"
+      >
+        <span class="material-icons material-icons-outlined"> menu </span>
       </div>
-      <nuxt-link to="/" class="child title primary-text">
+      <nuxt-link
+        to="/"
+        class="child title primary-text"
+      >
         blargbot
       </nuxt-link>
       <div class="child container">
         <div class="flexbox row">
           <div class="child hide-small">
-            <nuxt-link to="/invite" class="button flat">
+            <nuxt-link
+              to="/invite"
+              class="button flat"
+            >
               Invite
             </nuxt-link>
           </div>
           <div class="child hide-small">
-            <a href="https://support.blargbot.xyz" class="button flat">Support Guild</a>
+            <a
+              href="https://support.blargbot.xyz"
+              class="button flat"
+            >
+              Support Guild
+            </a>
           </div>
           <div class="child hide-small">
-            <nuxt-link to="/donate" class="button flat">
+            <nuxt-link
+              to="/donate"
+              class="button flat"
+            >
               Donate
             </nuxt-link>
           </div>
           <template v-if="$store.state.auth.user">
             <div class="child">
-              <nuxt-link to="/dashboard" class="button flat">
+              <nuxt-link
+                to="/dashboard"
+                class="button flat"
+              >
                 Dashboard
               </nuxt-link>
             </div>
             <div class="child avatar-wrapper">
               <img
                 class="avatar"
-                :src="`https://cdn.discordapp.com/avatars/${$store.state.auth.user.id}/${$store.state.auth.user.avatar}.png`">
-              <nuxt-link to="/logout" class="button flat">
+                :src="`https://cdn.discordapp.com/avatars/${$store.state.auth.user.id}/${$store.state.auth.user.avatar}.png`"
+              >
+              <nuxt-link
+                to="/logout?redirect=${redirect}"
+                class="button flat"
+              >
                 Logout
               </nuxt-link>
             </div>
           </template>
-          <div v-else class="child">
-            <nuxt-link to="/login" class="button flat">
+          <div
+            v-else
+            class="child"
+          >
+            <nuxt-link
+              :to="`/login?redirect=${redirect}`"
+              class="button flat"
+            >
               Login
             </nuxt-link>
           </div>
@@ -58,26 +88,31 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       documentationOptions: [
         { name: 'Commands', path: '/commands' },
-        { name: 'BBTag', path: '/subtags' }]
+        { name: 'BBTag', path: '/subtags' }
+      ]
     }
   },
   computed: {
-    showSidebarButton () {
+    showSidebarButton() {
       return this.$route.path !== '/invite'
     },
-    sidebarButtonClass () {
+    sidebarButtonClass() {
       if (this.$route.path === '/') {
         return ''
       }
       return this.builtInSidebar ? 'show-small' : 'show-medium'
+    },
+    redirect() {
+      const path = this.$store.state.auth.isAuth ? '/' : this.$route.path
+      return encodeURIComponent(path)
     }
   },
   methods: {
-    toggleSidebar () {
+    toggleSidebar() {
       this.$root.$emit('toggleSidebar')
     }
   }
@@ -126,11 +161,10 @@ header {
   background: rgba(0, 0, 0, 0.1);
   padding: 0.25rem 0.5rem;
   cursor: pointer;
-  user-select: none;;
+  user-select: none;
 
   &:hover {
     background: rgba(0, 0, 0, 0.3);
-
   }
 }
 
