@@ -41,7 +41,7 @@ let tagContent = ''
 
 export default {
   components: { TagEditor, DropdownButton },
-  middleware: 'auth',
+  middleware: 'authenticated',
   data() {
     const targets = []
     targets.push({ display: 'Public tags', value: 'tag' })

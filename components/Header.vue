@@ -50,15 +50,16 @@
 <script>
 export default {
   computed: {
-    showSidebarButton () {
+    showSidebarButton() {
       return this.$route.path !== '/' && this.$route.path !== '/invite'
     },
-    redirect () {
-      return encodeURIComponent(this.$route.path)
+    redirect() {
+      const path = this.$store.state.auth.isAuth ? '/' : this.$route.path
+      return encodeURIComponent(path)
     }
   },
   methods: {
-    toggleSidebar () {
+    toggleSidebar() {
       this.$root.$emit('toggleSidebar')
     }
   }
