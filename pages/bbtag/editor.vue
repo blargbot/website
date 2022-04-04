@@ -42,7 +42,7 @@ let tagContent = ''
 export default {
   components: { TagEditor, DropdownButton },
   middleware: 'auth',
-  data () {
+  data() {
     const targets = []
     targets.push({ display: 'Public tags', value: 'tag' })
     for (const guild of this.$store.state.guilds.list) {
@@ -81,16 +81,16 @@ export default {
   },
   computed: {
     tagContent: {
-      get () {
+      get() {
         return tagContent
       },
-      set (value) {
+      set(value) {
         tagContent = value
         localStorage.setItem('tagContent', value)
       }
     }
   },
-  mounted () {
+  mounted() {
     tagContent = localStorage.getItem('tagContent')
     this.$refs.editor.setValue(tagContent)
   }

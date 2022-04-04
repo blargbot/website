@@ -7,7 +7,7 @@
 <script>
 /* global window */
 export default {
-  async mounted () {
+  async mounted() {
     if (this.$route.query && this.$route.query.error) {
       localStorage.removeItem('redirect')
       this.$router.push('/')
@@ -17,13 +17,8 @@ export default {
       })
 
       if (token) {
-        this.$axios.setToken(token)
         this.$cookies.set('token', token)
-        this.$store.commit('auth/setToken', token)
-
-        const user = await this.$axios.$get('/users/@me')
-
-        this.$store.commit('auth/setUser', user)
+        await this.$store.dispatch('auth/processAuth')
         const route = localStorage.getItem('redirect')
         localStorage.removeItem('redirect')
         this.$router.push(route || '/')
