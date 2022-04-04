@@ -1,24 +1,14 @@
 <template>
   <footer>
     <div class="footer-content">
-      &copy; 2016-{{ year }} | stupid cat
+      &copy; 2016-2022 | stupid cat
     </div>
   </footer>
 </template>
 
-<script>
-
-export default {
-  computed: {
-    year () {
-      return new Date().getFullYear()
-    }
-  }
-}
-</script>
-
 <style lang="scss" scoped>
 footer {
+  z-index: 9999;
   padding: 20px;
   text-align: center;
 

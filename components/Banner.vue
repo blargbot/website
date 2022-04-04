@@ -10,7 +10,7 @@
 .parallax-container {
   height: 350px;
   // background: rgba(0, 0, 0, 0.4);
-  width: 1500px;
+  width: 1000px;
   margin: 0 auto;
   overflow: hidden;
   background: #324149;
@@ -34,7 +34,7 @@
   }
 }
 
-@media screen and (max-width: 1550px) {
+@media screen and (max-width: 1400px) {
   .parallax-container {
     border-left: none;
     border-right: none;

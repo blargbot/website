@@ -82,5 +82,7 @@ export default {
   publicRuntimeConfig: {
     id: config.id,
     callback: config.callback
-  }
+  },
+
+  serverMiddleware: ['~/server-middleware/output-text']
 }

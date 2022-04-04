@@ -1,7 +1,7 @@
 <template>
   <header>
     <div class="flexbox row">
-      <div v-if="showSidebarButton" class="show-medium sidebar-button" @click.prevent="toggleSidebar">
+      <div v-if="showSidebarButton" class="sidebar-button" :class="sidebarButtonClass" @click.prevent="toggleSidebar">
         <span class="material-icons material-icons-outlined">
           menu
         </span>
@@ -30,7 +30,10 @@
                 Dashboard
               </nuxt-link>
             </div>
-            <div class="child">
+            <div class="child avatar-wrapper">
+              <img
+                class="avatar"
+                :src="`https://cdn.discordapp.com/avatars/${$store.state.auth.user.id}/${$store.state.auth.user.avatar}.png`">
               <nuxt-link to="/logout" class="button flat">
                 Logout
               </nuxt-link>
@@ -49,6 +52,12 @@
 
 <script>
 export default {
+  props: {
+    builtInSidebar: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       documentationOptions: [
@@ -58,7 +67,13 @@ export default {
   },
   computed: {
     showSidebarButton () {
-      return this.$route.path !== '/' && this.$route.path !== '/invite'
+      return this.$route.path !== '/invite'
+    },
+    sidebarButtonClass () {
+      if (this.$route.path === '/') {
+        return ''
+      }
+      return this.builtInSidebar ? 'show-small' : 'show-medium'
     }
   },
   methods: {
@@ -117,5 +132,16 @@ header {
     background: rgba(0, 0, 0, 0.3);
 
   }
+}
+
+.avatar {
+  height: 32px;
+  width: 32px;
+  border-radius: 100px;
+}
+
+.avatar-wrapper {
+  display: flex;
+  align-items: center;
 }
 </style>

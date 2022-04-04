@@ -1,13 +1,13 @@
 <template>
   <div class="body-wrapper">
-    <Header />
+    <Header :builtInSidebar="true" />
     <main class="fill">
-      <div class="body-wrapper">
+      <Sidebar :built-in="true" />
+      <div class="body-wrapper fill">
         <nuxt class="fill" />
       </div>
     </main>
     <Footer />
-    <Sidebar />
   </div>
 </template>
 
@@ -28,7 +28,12 @@ export default {
   padding: 0;
   min-height: 100%;
 }
-.body-wrapper > .fill {
+.fill {
   flex: 1;
+}
+
+main {
+  display: flex;
+  align-items: stretch;
 }
 </style>
