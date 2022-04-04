@@ -78,8 +78,7 @@
 import Banner from '~/components/Banner.vue'
 
 export default {
-  components: { Banner },
-  layout: 'home'
+  components: { Banner }
 }
 </script>
 
