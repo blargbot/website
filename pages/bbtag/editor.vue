@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import TagEditor from '~/components/TagEditor.vue'
+import TagEditor from '~/components/editor/TagEditor.vue'
 import DropdownButton from '~/components/DropdownButton.vue'
 
 let tagContent = ''
@@ -42,11 +42,10 @@ let tagContent = ''
 export default {
   components: { TagEditor, DropdownButton },
   middleware: 'auth',
-  async asyncData ({ $axios }) {
-    const guilds = await $axios.$get('/guilds')
+  data () {
     const targets = []
     targets.push({ display: 'Public tags', value: 'tag' })
-    for (const guild of guilds) {
+    for (const guild of this.$store.state.guilds.list) {
       const group = { display: `Guild: ${guild.guild.name}`, options: [] }
       targets.push(group)
       if (guild.ccommands) {
@@ -76,12 +75,8 @@ export default {
       })
     }
     return {
+      destination: null,
       targets
-    }
-  },
-  data () {
-    return {
-      destination: ''
     }
   },
   computed: {

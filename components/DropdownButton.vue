@@ -8,7 +8,7 @@
         <div class="dropdown-options-wrapper">
           <div class="dropdown-options">
             <template v-for="(entry, i) in options">
-              <hr v-if="i > 0" :key="i">
+              <hr v-if="i > 0" :key="`${i}_hr`">
               <div v-if="entry.options !== undefined" :key="i" class="dropdown-option-group">
                 <div class="dropdown-option-group-header">
                   {{ entry.display }}

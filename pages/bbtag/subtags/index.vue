@@ -83,23 +83,15 @@ import Markdown from '~/components/Markdown.vue'
 
 export default {
   components: { Emoji, ItemList, Markdown },
-  async asyncData ({ $axios }) {
-    const subtags = await $axios.$get('/subtags')
-    const apiCategories = await $axios.$get('/subtags/meta/categories')
-
-    const list = Object.values(subtags)
+  data () {
+    const list = Object.values(this.$store.state.subtags.list)
     list.sort((a, b) => {
       return a.category - b.category
     })
 
-    const categories = []
-    for (const key in apiCategories) {
-      categories[key] = apiCategories[key]
-    }
-
     return {
       subtags: list,
-      categories
+      categories: this.$store.state.subtags.categories
     }
   },
   methods: {

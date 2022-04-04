@@ -63,11 +63,9 @@ import Markdown from '~/components/Markdown.vue'
 
 export default {
   components: { Emoji, ItemList, Markdown },
-  async asyncData ({ $axios }) {
-    const commands = await $axios.$get('/commands')
-    console.log(commands)
+  data () {
     return {
-      commands: Object.values(commands)
+      commands: Object.values(this.$store.state.commands.list)
     }
   },
   methods: {

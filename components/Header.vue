@@ -31,13 +31,13 @@
               </nuxt-link>
             </div>
             <div class="child">
-              <nuxt-link to="/logout" class="button flat">
+              <nuxt-link :to="`/logout?redirect=${redirect}`" class="button flat">
                 Logout
               </nuxt-link>
             </div>
           </template>
           <div v-else class="child">
-            <nuxt-link to="/login" class="button flat">
+            <nuxt-link :to="`/login?redirect=${redirect}`" class="button flat">
               Login
             </nuxt-link>
           </div>
@@ -52,6 +52,9 @@ export default {
   computed: {
     showSidebarButton () {
       return this.$route.path !== '/' && this.$route.path !== '/invite'
+    },
+    redirect () {
+      return encodeURIComponent(this.$route.path)
     }
   },
   methods: {

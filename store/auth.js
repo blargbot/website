@@ -15,22 +15,22 @@ export const mutations = {
 }
 
 export const actions = {
-  async processAuth ({ commit }, { app: { $axios, $cookies }, req }) {
-    if (req.headers.cookie) {
-      const token = $cookies.get('token')
+  async processAuth ({ commit, dispatch }, ctx) {
+    if (ctx.req.headers.cookie) {
+      const token = this.$cookies.get('token')
 
       if (token) {
         try {
           commit('setToken', token)
-          $axios.setToken(token)
+          this.$axios.setToken(token)
 
-          const user = await $axios.$get('/users/@me')
+          const user = await this.$axios.$get('/users/@me')
 
           commit('setUser', user)
+          await dispatch('guilds/reload', null, { root: true })
         } catch (err) {
-          console.error(err)
-          $axios.setToken(false)
-          $cookies.remove('token')
+          this.$axios.setToken(false)
+          this.$cookies.remove('token')
         }
       }
     }
