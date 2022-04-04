@@ -1,11 +1,32 @@
 <template>
-  <div class="dropdown-wrapper" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
-    <div class="dropdown button flat">
-      {{ name }}
+  <div class="dropdown" :tabindex="tabindex" @blur="active = false">
+    <div class="dropdown-display button flat" :class="{ open: active }" @click="active = !active">
+      {{ display }}
     </div>
-    <div v-if="active" class="dropdown-content">
-      <div v-for="option in options" :key="option.name" class="dropdown-content-option">
-        {{ option.name }}
+    <div class="dropdown-collapsable-wrapper">
+      <div class="dropdown-collapsable" :class="{ open: active }">
+        <div class="dropdown-options-wrapper">
+          <div class="dropdown-options">
+            <template v-for="(entry, i) in options">
+              <hr v-if="i > 0" :key="i">
+              <div v-if="entry.options !== undefined" :key="i" class="dropdown-option-group">
+                <div class="dropdown-option-group-header">
+                  {{ entry.display }}
+                </div>
+                <div class="dropdown-options">
+                  <div v-for="(option, j) in entry.options" :key="j" class="dropdown-option" @click="selectOption(option)">
+                    <emoji content="⚙️" />
+                    <span>{{ option.display }}</span>
+                  </div>
+                </div>
+              </div>
+              <div v-else :key="i" class="dropdown-option" @click="selectOption(entry)">
+                <emoji content="⚙️" />
+                <span>{{ entry.display }}</span>
+              </div>
+            </template>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -16,46 +37,118 @@ export default {
   props: {
     options: {
       type: Array,
-      default () {
-        return []
-      }
+      required: true
     },
-    name: {
+    prompt: {
       type: String,
-      default: 'Dropdown'
+      required: false,
+      default: 'Select a value'
+    },
+    tabindex: {
+      type: Number,
+      required: false,
+      default: 0
     }
   },
   data () {
     return {
-      active: false
+      active: false,
+      value: null,
+      display: this.prompt
     }
   },
+  mounted () {
+    this.$emit('input', this.value)
+  },
   methods: {
-    onMouseEnter () {
-      this.active = true
-    },
-    onMouseLeave () {
+    selectOption (option) {
+      if (option == null) {
+        this.value = null
+        this.display = this.prompt
+      } else {
+        this.value = option.value
+        this.display = option.selectDisplay || option.display
+      }
       this.active = false
+      this.$emit('input', this.value)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.dropdown-wrapper {
-  position: relative;
-}
+@import "../assets/scss/variables";
 
-.dropdown-content {
-  position: absolute;
-  width: 100%;
-  padding: 0.5rem;
-  background: #32424A;
-  display: flex;
-  flex-direction: column;
+$dropdown-closed: #33424b;
+$dropdown-open: #2e3b42;
 
-  .dropdown-content-option {
+.dropdown {
+  .dropdown-display {
+    text-align: left;
+    background: $dropdown-closed;
 
+    &.open {
+      &.flat {
+        background: $dropdown-open;
+      }
+    }
+  }
+
+  .dropdown-collapsable-wrapper {
+    position: relative;
+
+    .dropdown-collapsable {
+      position: absolute;
+      top: -4px;
+      left: 1px;
+      right: 1px;
+      z-index: 1;
+      overflow: hidden;
+      -webkit-transition: max-height 0.3s;
+      -moz-transition: max-height 0.3s;
+      -ms-transition: max-height 0.3s;
+      -o-transition: max-height 0.3s;
+      transition: max-height 0.3s;
+      max-height: 0;
+
+      &.open {
+        max-height: 50vh;
+
+        .dropdown-options-wrapper {
+          background: $dropdown-open;
+        }
+      }
+
+      .dropdown-options-wrapper {
+        background: $dropdown-closed;
+        border-radius: 3px;
+        padding: 0.5rem;
+        max-height: inherit;
+        overflow: auto;
+
+        .dropdown-options {
+          .twemoji {
+            display: inline-block;
+          }
+
+          .dropdown-option {
+            padding: 0.5rem;
+            border-radius: 3px;
+            cursor: pointer;
+
+            &:hover {
+              background: nth(map-get($colors, "primary"), 1);
+            }
+          }
+
+          .dropdown-option-group {
+            .dropdown-option-group-header {
+              padding: 0.5rem;
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>

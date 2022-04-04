@@ -2,22 +2,18 @@
   <section class="wider">
     <div class="card">
       <h1>BBTag IDE</h1>
+      <dropdown-button v-model="destination" :options="targets" prompt="Select a Tag destination" />
+      <br>
+      <br>
+      <br>
+      <br>
+      Selected: {{ destination }}
       <div class="ide-wrapper">
-        <select class="col-1" v-bind="target">
-          <option v-for="t in validTargets" :key="t.value" :value="t.value">
-            {{ t.name }}
-          </option>
-        </select>
-        <select class="col-1" v-bind="type">
-          <option v-for="t in validTypes" :key="t.value" :value="t.value">
-            {{ t.name }}
-          </option>
-        </select>
         <button class="button col-1">
-          Button 1 aaaaaaaa aaaaaaa
+          Button 1
         </button>
         <button class="button col-1">
-          Button 1 aaaaaaaa aaaaaaa
+          Button 1
         </button>
         <button class="button col-1">
           Button 1
@@ -31,35 +27,61 @@
         <button class="button col-1">
           Button 1
         </button>
-        <div class="col-4">
-          <tag-editor ref="editor" v-model="tagContent" />
-        </div>
       </div>
+      <tag-editor ref="editor" v-model="tagContent" />
     </div>
   </section>
 </template>
 
 <script>
-import TagEditor from '~/components-client/TagEditor.vue'
+import TagEditor from '~/components/TagEditor.vue'
+import DropdownButton from '~/components/DropdownButton.vue'
 
 let tagContent = ''
 
 export default {
-  components: { TagEditor },
+  components: { TagEditor, DropdownButton },
   middleware: 'auth',
   async asyncData ({ $axios }) {
     const guilds = await $axios.$get('/guilds')
+    const targets = []
+    targets.push({ display: 'Public tags', value: 'tag' })
+    for (const guild of guilds) {
+      const group = { display: `Guild: ${guild.guild.name}`, options: [] }
+      targets.push(group)
+      if (guild.ccommands) {
+        group.options.push({ display: 'Custom Commands', value: 'ccommands' })
+      }
+      if (guild.censors) {
+        group.options.push({ display: 'Censors', value: 'censors' })
+      }
+      if (guild.autoresponses) {
+        group.options.push({ display: 'Autoresponses', value: 'autoresponses' })
+      }
+      if (guild.rolemes) {
+        group.options.push({ display: 'Rolemes', value: 'rolemes' })
+      }
+      if (guild.interval) {
+        group.options.push({ display: 'Interval', value: 'interval' })
+      }
+      if (guild.greeting) {
+        group.options.push({ display: 'Greeting', value: 'greeting' })
+      }
+      if (guild.farewell) {
+        group.options.push({ display: 'Farewell', value: 'farewell' })
+      }
+      group.options.forEach((opt) => {
+        opt.value = `${guild.guild.id}|${opt.value}`
+        opt.selectDisplay = `${guild.guild.name} ${opt.display}`
+      })
+    }
     return {
-      guildLookup: new Map(guilds.map(g => [g.guild.id, g])),
-      guildList: guilds
-        .map(g => ({ name: g.guild.name, value: g.guild.id }))
-        .sort((a, b) => (a.name < b.name ? -1 : 1))
+      targets
     }
   },
   data () {
     return {
-      target: '',
-      type: null
+      destination: ''
     }
   },
   computed: {
@@ -71,19 +93,6 @@ export default {
         tagContent = value
         localStorage.setItem('tagContent', value)
       }
-    },
-    validTargets () {
-      return [
-        {
-          name: 'Public Tags',
-          value: ''
-        },
-        ...this.guildList
-      ]
-    },
-    validTypes () {
-      console.log(this.target)
-      return []
     }
   },
   mounted () {
