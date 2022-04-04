@@ -1,5 +1,5 @@
 <template>
-  <div ref="wrapper" />
+  <div ref="wrapper" class="bbtag-editor" />
 </template>
 
 <script>
@@ -21,7 +21,6 @@ export default {
   props: {
     value: {
       type: String,
-      required: false,
       default: null
     }
   },
@@ -44,13 +43,17 @@ export default {
       .flat()
   },
   watch: {
-    value(newValue) {
-      if (!this.editor) {
+    value(newValue, oldValue) {
+      if (newValue === this.editor.getValue()) {
         return
       }
+
       const cursor = this.editor.getCursor()
-      this.editor.setValue(newValue)
+      this.editor.setValue(newValue || '')
       this.editor.setCursor(cursor)
+      if (oldValue === null) {
+        this.editor.clearHistory()
+      }
     }
   },
   beforeDestroy() {
@@ -63,8 +66,9 @@ export default {
     }
     const $this = this
     this.editor = CodeMirror(this.$refs.wrapper, {
-      value: this.value,
+      value: this.value || '',
       mode: 'cattag',
+      gutter: true,
       lineNumbers: true,
       indentWithTabs: false,
       styleActiveLine: true,
@@ -98,6 +102,11 @@ export default {
     this.editor.on('change', (editor) => {
       this.$emit('input', editor.getValue())
     })
+  },
+  methods: {
+    clearHistory() {
+      this.editor?.clearHistory()
+    }
   }
 }
 
@@ -192,5 +201,13 @@ CodeMirror?.registerHelper('hint', 'cattag', (editor, options) => {
 <style lang="scss">
 .CodeMirror {
   height: 100%;
+
+  .CodeMirror-sizer {
+    min-height: 10rem !important;
+  }
+}
+.bbtag-editor {
+  max-width: 100%;
+  width: 100vw;
 }
 </style>
