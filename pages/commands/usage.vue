@@ -90,20 +90,5 @@
 </template>
 
 <script>
-
-export default {
-}
+export default {}
 </script>
-
-<style lang="scss" scoped>
-.invite-grid {
-  display: grid;
-  grid-template-columns: 40% 60%;
-  align-content: center;
-  align-items: center;
-
-  p {
-    margin: 10px;
-  }
-}
-</style>

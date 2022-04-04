@@ -2,7 +2,7 @@
   <section class="wider">
     <div class="card">
       <h1>BBTag IDE</h1>
-      <dropdown-button v-model="destination" :options="targets" prompt="Select a Tag destination" />
+      <dropdown-button v-model="destination" :options="targetTree" prompt="Select a Tag destination" />
       <br>
       <br>
       <br>
@@ -24,30 +24,24 @@
         <button class="button col-1">
           Button 1
         </button>
-        <button class="button col-1">
+        <button class="button col-1" @click="tagContent = 'abc'">
           Button 1
         </button>
       </div>
-      <tag-editor ref="editor" v-model="tagContent" />
+      <bbtag-editor v-model="tagContent" class="full-width" />
     </div>
   </section>
 </template>
 
 <script>
-import TagEditor from '~/components/editor/TagEditor.vue'
-import DropdownButton from '~/components/DropdownButton.vue'
-
-let tagContent = ''
-
 export default {
-  components: { TagEditor, DropdownButton },
   middleware: 'authenticated',
   data() {
-    const targets = []
-    targets.push({ display: 'Public tags', value: 'tag' })
+    const targetTree = [{ display: 'Public tags', value: 'tag' }]
+    const targets = [...targetTree]
     for (const guild of this.$store.state.guilds.list) {
       const group = { display: `Guild: ${guild.guild.name}`, options: [] }
-      targets.push(group)
+      targetTree.push(group)
       if (guild.ccommands) {
         group.options.push({ display: 'Custom Commands', value: 'ccommands' })
       }
@@ -72,40 +66,35 @@ export default {
       group.options.forEach((opt) => {
         opt.value = `${guild.guild.id}|${opt.value}`
         opt.selectDisplay = `${guild.guild.name} ${opt.display}`
+        targets.push(opt)
       })
     }
+
     return {
       destination: null,
+      tagContent:
+        '{//;Start by typing an opening brace.\nDocumentation is available here: https://blargbot.xyz/bbtag/}',
+      targetTree,
       targets
     }
   },
-  computed: {
-    tagContent: {
-      get() {
-        return tagContent
-      },
-      set(value) {
-        tagContent = value
-        localStorage.setItem('tagContent', value)
-      }
+  watch: {
+    tagContent(newVal) {
+      localStorage.setItem('tagContent', newVal)
     }
   },
   mounted() {
-    tagContent = localStorage.getItem('tagContent')
-    this.$refs.editor.setValue(tagContent)
+    const content = localStorage.getItem('tagContent')?.trim()
+    if (content) {
+      this.tagContent = content
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.ide-wrapper {
-  display: grid;
-  grid-template-columns: 25% 25% 25% 25%;
-
-  @for $i from 1 to 5 {
-    .col-#{$i} {
-      grid-column-end: span $i;
-    }
-  }
+.full-width {
+  max-width: 100%;
+  width: 99999px;
 }
 </style>

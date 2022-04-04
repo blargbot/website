@@ -83,7 +83,7 @@ import Markdown from '~/components/Markdown.vue'
 
 export default {
   components: { Emoji, ItemList, Markdown },
-  data () {
+  data() {
     const list = Object.values(this.$store.state.subtags.list)
     list.sort((a, b) => {
       return a.category - b.category
@@ -95,18 +95,18 @@ export default {
     }
   },
   methods: {
-    copyUrl (item, event) {
+    copyUrl(item, event) {
       event.stopPropagation()
       this.$router.push(`#${item.name}`)
       window.navigator.clipboard.writeText(window.location.href)
     },
-    renderMarkup (...args) {
+    renderMarkup(...args) {
       return render(...args)
     },
-    getSignatures (item) {
+    getSignatures(item) {
       return item.signatures.filter(s => !s.hidden)
     },
-    renderFlags (item) {
+    renderFlags(item) {
       const out = []
       for (const flag of item.flags) {
         out.push(`\`-${flag.flag}\`/\`--${flag.word}\`: ${flag.description}`)
@@ -114,7 +114,7 @@ export default {
 
       return out.join('  \n')
     },
-    renderParameters (item, signature) {
+    renderParameters(item, signature) {
       const out = []
       for (const param of signature.parameters) {
         out.push(this.stringifyParameter(param))
@@ -126,7 +126,7 @@ export default {
         return `{${signature.subtagName || item.name}}`
       }
     },
-    renderParameter (parameter) {
+    renderParameter(parameter) {
       switch (parameter.kind) {
         case 'literal':
           return parameter.name
@@ -143,7 +143,7 @@ export default {
           return `<...${parameter.name}>`
       }
     },
-    stringifyParameter (parameter) {
+    stringifyParameter(parameter) {
       if ('nested' in parameter) {
         if (parameter.nested.length === 1) {
           return this.stringifyParameter(parameter.nested[0]) + '...'
@@ -152,7 +152,7 @@ export default {
       }
       return parameter.required ? `<${parameter.name}>` : `[${parameter.name}]`
     },
-    renderParameterAttributes (parameters) {
+    renderParameterAttributes(parameters) {
       return parameters
         .map(p => p.nested || [p])
         .flat()
@@ -160,7 +160,7 @@ export default {
         .filter(modifiers => modifiers !== undefined)
         .join('  \n')
     },
-    getPrarameterModifiers (parameter) {
+    getPrarameterModifiers(parameter) {
       const modifiers = []
       if (parameter.maxLength !== 1000000) {
         modifiers.push(`can at most be ${parameter.maxLength} characters long`)
@@ -182,7 +182,7 @@ export default {
         ', and '
       )}`
     },
-    smartJoin (values, separator, lastSeparator) {
+    smartJoin(values, separator, lastSeparator) {
       switch (values.length) {
         case 0:
         case 1:
@@ -194,7 +194,7 @@ export default {
           ].join(lastSeparator)
       }
     },
-    renderParameterAttribute (parameter) {
+    renderParameterAttribute(parameter) {
       switch (parameter.kind) {
         case 'literal':
           if (parameter.alias.length > 0) {
@@ -242,16 +242,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.invite-grid {
-  display: grid;
-  grid-template-columns: 40% 60%;
-  align-content: center;
-  align-items: center;
-
-  p {
-    margin: 10px;
-  }
-}
 .subtag-signature {
   margin: 1em 0;
 }

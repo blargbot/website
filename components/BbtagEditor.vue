@@ -1,7 +1,5 @@
 <template>
-  <div ref="wrapper">
-    <textarea ref="editor" />
-  </div>
+  <div ref="wrapper" />
 </template>
 
 <script>
@@ -19,23 +17,21 @@ if (process.client) {
   require('codemirror/addon/hint/show-hint')
 }
 
-const defaultValue =
-  '{//;Start by typing an opening brace.\nDocumentation is available here: https://blargbot.xyz/bbtag/}'
-
 export default {
   props: {
     value: {
       type: String,
-      default: ''
+      required: false,
+      default: null
     }
   },
-  data () {
+  data() {
     return {
       editor: null,
       subtags: []
     }
   },
-  async fetch () {
+  async fetch() {
     const subtags = await this.$axios.$get('/subtags')
     this.subtags = Object.values(subtags)
       .map(t =>
@@ -47,17 +43,27 @@ export default {
       )
       .flat()
   },
-  beforeDestroy () {
+  watch: {
+    value(newValue) {
+      if (!this.editor) {
+        return
+      }
+      const cursor = this.editor.getCursor()
+      this.editor.setValue(newValue)
+      this.editor.setCursor(cursor)
+    }
+  },
+  beforeDestroy() {
     this.$refs.wrapper.remove()
   },
-  mounted () {
+  mounted() {
     // eslint-disable-next-line nuxt/no-env-in-hooks
     if (!process.client) {
       return
     }
     const $this = this
-    const elem = this.$refs.editor
-    this.editor = CodeMirror?.fromTextArea(elem, {
+    this.editor = CodeMirror(this.$refs.wrapper, {
+      value: this.value,
       mode: 'cattag',
       lineNumbers: true,
       indentWithTabs: false,
@@ -69,39 +75,33 @@ export default {
       electricChars: true,
       lineWrapping: true,
       hintOptions: {
-        get subtags () {
+        get subtags() {
           return $this.subtags
         }
       },
       scrollbarStyle: null,
       tabMode: 'indent',
       extraKeys: {
-        'Ctrl-Space' (editor) {
+        'Ctrl-Space'(editor) {
           editor.showHint()
         },
-        'Ctrl-.' (editor) {
+        'Ctrl-.'(editor) {
           editor.showHint()
         }
       }
     })
-    this.setValue(this.value)
-    this.editor?.on('inputRead', function (editor, change) {
+    this.editor.on('inputRead', (editor, change) => {
       if (change.text[0] === '{') {
         editor.showHint()
       }
     })
-    this.editor?.on('change', function (editor) {
-      $this.$emit('input', editor.getValue())
+    this.editor.on('change', (editor) => {
+      this.$emit('input', editor.getValue())
     })
-  },
-  methods: {
-    setValue (value) {
-      this.editor?.setValue(value || defaultValue)
-    }
   }
 }
 
-function renderParameters (item, signature) {
+function renderParameters(item, signature) {
   const out = []
   for (const param of signature.parameters) {
     out.push(stringifyParameter(param))
@@ -113,7 +113,7 @@ function renderParameters (item, signature) {
     return `{${signature.subtagName || item.name}}`
   }
 }
-function stringifyParameter (parameter) {
+function stringifyParameter(parameter) {
   if ('nested' in parameter) {
     if (parameter.nested.length === 1) {
       return stringifyParameter(parameter.nested[0]) + '...'

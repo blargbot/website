@@ -1,7 +1,7 @@
 <template>
   <header>
     <div class="flexbox row">
-      <div v-if="showSidebarButton" class="show-medium sidebar-button" @click.prevent="toggleSidebar">
+      <div class="sidebar-button" @click.prevent="toggleSidebar">
         <span class="material-icons material-icons-outlined">
           menu
         </span>
@@ -50,9 +50,6 @@
 <script>
 export default {
   computed: {
-    showSidebarButton() {
-      return this.$route.path !== '/' && this.$route.path !== '/invite'
-    },
     redirect() {
       const path = this.$store.state.auth.isAuth ? '/' : this.$route.path
       return encodeURIComponent(path)
