@@ -52,7 +52,8 @@ export default {
       const result = []
       for (const [id, roleme] of Object.entries(rolemes)) {
         result.push({
-          display: `Output ${id}: ${roleme.message}`,
+          display: `#${id} (${roleme.message}) - Output message`,
+          selectDisplay: `#${id} - Output message`,
           emoji: '🎟️',
           value: `${id}/output`
         })

@@ -51,31 +51,49 @@ export default {
       const censors = await this.$axios.$get(`guilds/${this.guildId}/censors`)
       const result = [
         {
-          display: 'Default messages',
+          display: 'Defaults',
           options: [
-            { display: 'Delete message', emoji: '🗑️', value: 'deletemessage' },
-            { display: 'Ban message', emoji: '🛑', value: 'banMessage' },
-            { display: 'Kick message', emoji: '👋', value: 'kickMessage' }
+            {
+              display: 'Delete message',
+              selectDisplay: 'Default - delete message',
+              emoji: '🗑️',
+              value: 'deletemessage'
+            },
+            {
+              display: 'Ban message',
+              selectDisplay: 'Default - ban message',
+              emoji: '🛑',
+              value: 'banMessage'
+            },
+            {
+              display: 'Kick message',
+              selectDisplay: 'Default - kick message',
+              emoji: '👋',
+              value: 'kickMessage'
+            }
           ]
         }
       ]
       if (censors.list !== undefined) {
         for (const [id, censor] of Object.entries(censors.list)) {
           result.push({
-            display: `${id}: ${censor.term}`,
+            display: `#${id} (${censor.term})`,
             options: [
               {
                 display: 'Delete message',
+                selectDisplay: `#${id} - delete message`,
                 emoji: '🗑️',
                 value: `${id}/deletemessage`
               },
               {
                 display: 'Ban message',
+                selectDisplay: `#${id} - ban message`,
                 emoji: '🛑',
                 value: `${id}/banMessage`
               },
               {
                 display: 'Kick message',
+                selectDisplay: `#${id} - kick message`,
                 emoji: '👋',
                 value: `${id}/kickMessage`
               }
