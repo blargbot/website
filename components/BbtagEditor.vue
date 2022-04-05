@@ -199,7 +199,7 @@ CodeMirror?.registerHelper('hint', 'cattag', (editor, options) => {
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .CodeMirror {
   height: auto;
 
