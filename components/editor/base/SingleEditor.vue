@@ -1,26 +1,13 @@
 <template>
   <div>
     <div class="control-row v-aligned">
-      <label for="tagName" class="col-1">
-        {{ type }} name
-      </label>
-      <input v-model="tagName" name="tagName" class="input col-1">
-      <button class="button col-1" :disabled="!tagName" @click.prevent="load">
+      <button class="button col-1" @click.prevent="load">
         Load
       </button>
-      <button class="button col-1" :disabled="!tagName" @click.prevent="save">
+      <button class="button col-1 ok" @click.prevent="save">
         Save
       </button>
-    </div>
-    <div class="control-row v-aligned">
-      <label for="newName" class="col-1">
-        New name
-      </label>
-      <input v-model="newName" name="newName" class="input col-1">
-      <button class="button col-1" :disabled="!newName || !tagName" @click.prevent="rename">
-        Rename
-      </button>
-      <button class="button danger col-1 v-align" :disabled="!tagName" @click.prevent="remove">
+      <button class="button danger col-1 v-align" @click.prevent="remove">
         Delete
       </button>
     </div>
@@ -45,36 +32,16 @@ export default {
   },
   data() {
     return {
-      tagName: '',
-      newName: '',
-      lastLoad: null
-    }
-  },
-  computed: {
-    endpoint() {
-      return `/${this.route}/${encodeURIComponent(this.tagName)}`
+      hasLoaded: false
     }
   },
   mounted() {
-    this.lastLoad = null
+    this.hasLoaded = false
   },
   methods: {
-    async rename() {
-      if (!this.ensureLoaded('rename')) {
-        return
-      }
-
-      await this.updateContent(async () => {
-        await this.$axios.$patch(this.endpoint, {
-          name: this.newName
-        })
-        this.tagName = this.newName
-        this.newName = null
-      })
-    },
     async load() {
       await this.updateContent(async () => {
-        const tag = await this.$axios.$get(this.endpoint)
+        const tag = await this.$axios.$get(this.route)
         return tag.content
       })
     },
@@ -83,7 +50,7 @@ export default {
         return
       }
       await this.updateContent(async () => {
-        await this.$axios.$delete(this.endpoint)
+        await this.$axios.$delete(this.route)
         return ''
       }, '')
     },
@@ -92,24 +59,23 @@ export default {
         return
       }
       await this.updateContent(async () => {
-        await this.$axios.$put(this.endpoint, {
+        await this.$axios.$put(this.route, {
           content: this.value
         })
       })
     },
     ensureLoaded(action) {
       return (
-        this.lastLoad === this.tagName ||
+        this.hasLoaded ||
         confirm(
           `You are trying to ${action} the ${this.type} ${this.tagName} before you loaded it, are you sure?`
         )
       )
     },
     async updateContent(action, fallback) {
-      const lastLoad = this.tagName
       try {
         const content = await action()
-        this.lastLoad = lastLoad
+        this.hasLoaded = true
         this.$emit('input', content ?? this.value)
       } catch (err) {
         if (!(err instanceof Error)) {
@@ -117,7 +83,7 @@ export default {
         }
         switch (err.message) {
           case 'Request failed with status code 404':
-            this.lastLoad = lastLoad
+            this.hasLoaded = true
             this.$emit('input', fallback ?? this.value)
             break
           case 'Request failed with status code 401':
@@ -136,9 +102,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:math";
+
+$third: math.div(100%, 3);
+
 .control-row {
   display: grid;
-  grid-template-columns: 10% 60% 15% 15%;
+  grid-template-columns: $third $third $third;
 
   .col-1 {
     grid-column-end: span 1;

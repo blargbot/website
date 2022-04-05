@@ -1,14 +1,26 @@
 <template>
   <div>
     <div class="control-row v-aligned">
-      <dropdown-button v-model="selected" :options="options" :prompt="prompt" />
-      <button class="button col-1" @click.prevent="load">
+      <label for="tagName" class="col-1">
+        {{ type }} name
+      </label>
+      <input v-model="tagName" name="tagName" class="input col-1">
+      <button class="button col-1" :disabled="!tagName" @click.prevent="load">
         Load
       </button>
-      <button class="button col-1" @click.prevent="save">
+      <button class="button col-1 ok" :disabled="!tagName" @click.prevent="save">
         Save
       </button>
-      <button class="button danger col-1 v-align" @click.prevent="remove">
+    </div>
+    <div class="control-row v-aligned">
+      <label for="newName" class="col-1">
+        New name
+      </label>
+      <input v-model="newName" name="newName" class="input col-1">
+      <button class="button col-1" :disabled="!newName || !tagName" @click.prevent="rename">
+        Rename
+      </button>
+      <button class="button danger col-1 v-align" :disabled="!tagName" @click.prevent="remove">
         Delete
       </button>
     </div>
@@ -16,9 +28,7 @@
 </template>
 
 <script>
-import DropdownButton from '../DropdownButton.vue'
 export default {
-  components: { DropdownButton },
   props: {
     value: {
       type: String,
@@ -31,33 +41,37 @@ export default {
     type: {
       type: String,
       required: true
-    },
-    options: {
-      type: Array,
-      required: true
     }
   },
   data() {
     return {
-      hasLoaded: false,
-      selected: null
+      tagName: '',
+      newName: '',
+      lastLoad: null
     }
   },
   computed: {
-    prompt() {
-      if ('aieou'.includes(this.type[0].toLowerCase())) {
-        return `Pick an ${this.type}`
-      }
-      return `Pick a ${this.type}`
-    },
     endpoint() {
-      return `${this.route}/${this.selected}`
+      return `/${this.route}/${encodeURIComponent(this.tagName)}`
     }
   },
   mounted() {
-    this.hasLoaded = false
+    this.lastLoad = null
   },
   methods: {
+    async rename() {
+      if (!this.ensureLoaded('rename')) {
+        return
+      }
+
+      await this.updateContent(async () => {
+        await this.$axios.$patch(this.endpoint, {
+          name: this.newName
+        })
+        this.tagName = this.newName
+        this.newName = null
+      })
+    },
     async load() {
       await this.updateContent(async () => {
         const tag = await this.$axios.$get(this.endpoint)
@@ -72,7 +86,6 @@ export default {
         await this.$axios.$delete(this.endpoint)
         return ''
       }, '')
-      this.$emit('reload')
     },
     async save() {
       if (!this.ensureLoaded('save')) {
@@ -86,16 +99,17 @@ export default {
     },
     ensureLoaded(action) {
       return (
-        this.hasLoaded ||
+        this.lastLoad === this.tagName ||
         confirm(
           `You are trying to ${action} the ${this.type} ${this.tagName} before you loaded it, are you sure?`
         )
       )
     },
     async updateContent(action, fallback) {
+      const lastLoad = this.tagName
       try {
         const content = await action()
-        this.hasLoaded = true
+        this.lastLoad = lastLoad
         this.$emit('input', content ?? this.value)
       } catch (err) {
         if (!(err instanceof Error)) {
@@ -103,7 +117,7 @@ export default {
         }
         switch (err.message) {
           case 'Request failed with status code 404':
-            this.hasLoaded = true
+            this.lastLoad = lastLoad
             this.$emit('input', fallback ?? this.value)
             break
           case 'Request failed with status code 401':
@@ -122,13 +136,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use "sass:math";
-
-$sixth: math.div(100%, 6);
-
 .control-row {
   display: grid;
-  grid-template-columns: 50% $sixth $sixth $sixth;
+  grid-template-columns: 10% 60% 15% 15%;
 
   .col-1 {
     grid-column-end: span 1;

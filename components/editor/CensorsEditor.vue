@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import OptionsEditor from './OptionsEditor.vue'
+import OptionsEditor from './base/OptionsEditor.vue'
 
 export default {
   components: { OptionsEditor },

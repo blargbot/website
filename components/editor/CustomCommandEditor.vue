@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import CrudEditor from './CrudEditor.vue'
+import CrudEditor from './base/NamedEditor.vue'
 
 export default {
   components: { CrudEditor },

@@ -1,10 +1,11 @@
 <template>
   <div>
     <div class="control-row v-aligned">
+      <dropdown-button v-model="selected" :options="options" :prompt="prompt" />
       <button class="button col-1" @click.prevent="load">
         Load
       </button>
-      <button class="button col-1" @click.prevent="save">
+      <button class="button col-1 ok" @click.prevent="save">
         Save
       </button>
       <button class="button danger col-1 v-align" @click.prevent="remove">
@@ -15,7 +16,9 @@
 </template>
 
 <script>
+import DropdownButton from '../../DropdownButton.vue'
 export default {
+  components: { DropdownButton },
   props: {
     value: {
       type: String,
@@ -28,11 +31,27 @@ export default {
     type: {
       type: String,
       required: true
+    },
+    options: {
+      type: Array,
+      required: true
     }
   },
   data() {
     return {
-      hasLoaded: false
+      hasLoaded: false,
+      selected: null
+    }
+  },
+  computed: {
+    prompt() {
+      if ('aieou'.includes(this.type[0].toLowerCase())) {
+        return `Pick an ${this.type}`
+      }
+      return `Pick a ${this.type}`
+    },
+    endpoint() {
+      return `${this.route}/${this.selected}`
     }
   },
   mounted() {
@@ -41,7 +60,7 @@ export default {
   methods: {
     async load() {
       await this.updateContent(async () => {
-        const tag = await this.$axios.$get(this.route)
+        const tag = await this.$axios.$get(this.endpoint)
         return tag.content
       })
     },
@@ -50,16 +69,17 @@ export default {
         return
       }
       await this.updateContent(async () => {
-        await this.$axios.$delete(this.route)
+        await this.$axios.$delete(this.endpoint)
         return ''
       }, '')
+      this.$emit('reload')
     },
     async save() {
       if (!this.ensureLoaded('save')) {
         return
       }
       await this.updateContent(async () => {
-        await this.$axios.$put(this.route, {
+        await this.$axios.$put(this.endpoint, {
           content: this.value
         })
       })
@@ -104,11 +124,11 @@ export default {
 <style lang="scss" scoped>
 @use "sass:math";
 
-$third: math.div(100%, 3);
+$sixth: math.div(100%, 6);
 
 .control-row {
   display: grid;
-  grid-template-columns: $third $third $third;
+  grid-template-columns: 50% $sixth $sixth $sixth;
 
   .col-1 {
     grid-column-end: span 1;

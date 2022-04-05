@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import SingleEditor from './SingleEditor.vue'
+import SingleEditor from './base/SingleEditor.vue'
 
 export default {
   components: { SingleEditor },
