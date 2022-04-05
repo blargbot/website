@@ -1,13 +1,13 @@
 <template>
   <div>
     <div class="control-row v-aligned">
-      <button class="button col-1" @click.prevent="load">
+      <button class="button" :disabled="!canLoad" @click.prevent="load">
         Load
       </button>
-      <button class="button col-1 ok" @click.prevent="save">
+      <button class="button ok" :disabled="!canSave" @click.prevent="save">
         Save
       </button>
-      <button class="button danger col-1 v-align" @click.prevent="remove">
+      <button class="button danger" :disabled="!canDelete" @click.prevent="remove">
         Delete
       </button>
     </div>
@@ -28,11 +28,34 @@ export default {
     type: {
       type: String,
       required: true
+    },
+    loadMethod: {
+      type: String,
+      default: '$get'
+    },
+    saveMethod: {
+      type: String,
+      default: '$put'
+    },
+    deleteMethod: {
+      type: String,
+      default: '$delete'
     }
   },
   data() {
     return {
       hasLoaded: false
+    }
+  },
+  computed: {
+    canSave() {
+      return typeof this.saveMethod === 'string'
+    },
+    canLoad() {
+      return typeof this.loadMethod === 'string'
+    },
+    canDelete() {
+      return typeof this.deleteMethod === 'string'
     }
   },
   mounted() {
@@ -41,7 +64,7 @@ export default {
   methods: {
     async load() {
       await this.updateContent(async () => {
-        const tag = await this.$axios.$get(this.route)
+        const tag = await this.$axios[this.loadMethod](this.route)
         return tag.content
       })
     },
@@ -50,7 +73,7 @@ export default {
         return
       }
       await this.updateContent(async () => {
-        await this.$axios.$delete(this.route)
+        await this.$axios[this.deleteMethod](this.route)
         return ''
       }, '')
     },
@@ -59,7 +82,7 @@ export default {
         return
       }
       await this.updateContent(async () => {
-        await this.$axios.$put(this.route, {
+        await this.$axios[this.saveMethod](this.route, {
           content: this.value
         })
       })
@@ -87,7 +110,7 @@ export default {
             this.$emit('input', fallback ?? this.value)
             break
           case 'Request failed with status code 401':
-            this.$router.app.refresh()
+            window.location.reload()
             break
           case 'Request failed with status code 403':
             alert(`You dont own that ${this.type}!`)
@@ -109,12 +132,5 @@ $third: math.div(100%, 3);
 .control-row {
   display: grid;
   grid-template-columns: $third $third $third;
-
-  .col-1 {
-    grid-column-end: span 1;
-  }
-  .col-2 {
-    grid-column-end: span 2;
-  }
 }
 </style>

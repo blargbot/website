@@ -2,13 +2,13 @@
   <div>
     <div class="control-row v-aligned">
       <dropdown-button v-model="selected" :options="options" :prompt="prompt" />
-      <button class="button col-1" :disabled="selected === null" @click.prevent="load">
+      <button class="button" :disabled="!canLoad" @click.prevent="load">
         Load
       </button>
-      <button class="button col-1 ok" :disabled="selected === null" @click.prevent="save">
+      <button class="button ok" :disabled="!canSave" @click.prevent="save">
         Save
       </button>
-      <button class="button danger col-1 v-align" :disabled="selected === null" @click.prevent="remove">
+      <button class="button danger" :disabled="!canDelete" @click.prevent="remove">
         Delete
       </button>
     </div>
@@ -35,6 +35,18 @@ export default {
     options: {
       type: Array,
       required: true
+    },
+    loadMethod: {
+      type: String,
+      default: '$get'
+    },
+    saveMethod: {
+      type: String,
+      default: '$put'
+    },
+    deleteMethod: {
+      type: String,
+      default: '$delete'
     }
   },
   data() {
@@ -52,6 +64,15 @@ export default {
     },
     endpoint() {
       return `${this.route}/${this.selected}`
+    },
+    canSave() {
+      return typeof this.saveMethod === 'string' && this.selected !== null
+    },
+    canLoad() {
+      return typeof this.loadMethod === 'string' && this.selected !== null
+    },
+    canDelete() {
+      return typeof this.deleteMethod === 'string' && this.selected !== null
     }
   },
   mounted() {
@@ -60,7 +81,7 @@ export default {
   methods: {
     async load() {
       await this.updateContent(async () => {
-        const tag = await this.$axios.$get(this.endpoint)
+        const tag = await this.$axios[this.loadMethod](this.endpoint)
         return tag.content
       })
     },
@@ -69,7 +90,7 @@ export default {
         return
       }
       await this.updateContent(async () => {
-        await this.$axios.$delete(this.endpoint)
+        await this.$axios[this.deleteMethod](this.endpoint)
         return ''
       }, '')
       this.$emit('reload')
@@ -79,7 +100,7 @@ export default {
         return
       }
       await this.updateContent(async () => {
-        await this.$axios.$put(this.endpoint, {
+        await this.$axios[this.saveMethod](this.endpoint, {
           content: this.value
         })
       })
@@ -107,7 +128,7 @@ export default {
             this.$emit('input', fallback ?? this.value)
             break
           case 'Request failed with status code 401':
-            this.$router.app.refresh()
+            window.location.reload()
             break
           case 'Request failed with status code 403':
             alert(`You dont own that ${this.type}!`)
@@ -129,12 +150,5 @@ $sixth: math.div(100%, 6);
 .control-row {
   display: grid;
   grid-template-columns: 50% $sixth $sixth $sixth;
-
-  .col-1 {
-    grid-column-end: span 1;
-  }
-  .col-2 {
-    grid-column-end: span 2;
-  }
 }
 </style>

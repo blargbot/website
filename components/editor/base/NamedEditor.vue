@@ -1,26 +1,26 @@
 <template>
   <div>
     <div class="control-row v-aligned">
-      <label for="tagName" class="col-1">
+      <label for="tagName">
         {{ type }} name
       </label>
-      <input v-model="tagName" name="tagName" class="input col-1">
-      <button class="button col-1" :disabled="!tagName" @click.prevent="load">
+      <input v-model="tagName" name="tagName">
+      <button class="button" :disabled="!canLoad" @click.prevent="load">
         Load
       </button>
-      <button class="button col-1 ok" :disabled="!tagName" @click.prevent="save">
+      <button class="button ok" :disabled="!canSave" @click.prevent="save">
         Save
       </button>
     </div>
     <div class="control-row v-aligned">
-      <label for="newName" class="col-1">
+      <label for="newName">
         New name
       </label>
-      <input v-model="newName" name="newName" class="input col-1">
-      <button class="button col-1" :disabled="!newName || !tagName" @click.prevent="rename">
+      <input v-model="newName" name="newName">
+      <button class="button" :disabled="!canRename" @click.prevent="rename">
         Rename
       </button>
-      <button class="button danger col-1 v-align" :disabled="!tagName" @click.prevent="remove">
+      <button class="button danger" :disabled="!canDelete" @click.prevent="remove">
         Delete
       </button>
     </div>
@@ -41,6 +41,22 @@ export default {
     type: {
       type: String,
       required: true
+    },
+    loadMethod: {
+      type: String,
+      default: '$get'
+    },
+    saveMethod: {
+      type: String,
+      default: '$put'
+    },
+    renameMethod: {
+      type: String,
+      default: '$patch'
+    },
+    deleteMethod: {
+      type: String,
+      default: '$delete'
     }
   },
   data() {
@@ -53,6 +69,20 @@ export default {
   computed: {
     endpoint() {
       return `/${this.route}/${encodeURIComponent(this.tagName)}`
+    },
+    canSave() {
+      return typeof this.saveMethod === 'string' && this.tagName
+    },
+    canLoad() {
+      return typeof this.loadMethod === 'string' && this.tagName
+    },
+    canRename() {
+      return (
+        typeof this.renameMethod === 'string' && this.tagName && this.newName
+      )
+    },
+    canDelete() {
+      return typeof this.deleteMethod === 'string' && this.tagName
     }
   },
   mounted() {
@@ -65,7 +95,7 @@ export default {
       }
 
       await this.updateContent(async () => {
-        await this.$axios.$patch(this.endpoint, {
+        await this.$axios[this.renameMethod](this.endpoint, {
           name: this.newName
         })
         this.tagName = this.newName
@@ -74,7 +104,7 @@ export default {
     },
     async load() {
       await this.updateContent(async () => {
-        const tag = await this.$axios.$get(this.endpoint)
+        const tag = await this.$axios[this.loadMethod](this.endpoint)
         return tag.content
       })
     },
@@ -83,7 +113,7 @@ export default {
         return
       }
       await this.updateContent(async () => {
-        await this.$axios.$delete(this.endpoint)
+        await this.$axios[this.deleteMethod](this.endpoint)
         return ''
       }, '')
     },
@@ -92,7 +122,7 @@ export default {
         return
       }
       await this.updateContent(async () => {
-        await this.$axios.$put(this.endpoint, {
+        await this.$axios[this.saveMethod](this.endpoint, {
           content: this.value
         })
       })
@@ -121,7 +151,7 @@ export default {
             this.$emit('input', fallback ?? this.value)
             break
           case 'Request failed with status code 401':
-            this.$router.app.refresh()
+            window.location.reload()
             break
           case 'Request failed with status code 403':
             alert(`You dont own that ${this.type}!`)
@@ -139,12 +169,5 @@ export default {
 .control-row {
   display: grid;
   grid-template-columns: 10% 60% 15% 15%;
-
-  .col-1 {
-    grid-column-end: span 1;
-  }
-  .col-2 {
-    grid-column-end: span 2;
-  }
 }
 </style>

@@ -1,5 +1,11 @@
 <template>
-  <options-editor v-model="valueModel" :route="`guilds/${guildId}/censors`" type="Censor" :options="options" @reload="loadOptions" />
+  <options-editor
+    v-model="valueModel"
+    :route="`guilds/${guildId}/censors`"
+    type="Censor"
+    :options="options"
+    @reload="loadOptions"
+  />
 </template>
 
 <script>

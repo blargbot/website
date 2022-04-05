@@ -1,5 +1,13 @@
 <template>
-  <options-editor v-model="valueModel" :route="`guilds/${guildId}/autoresponses`" type="Autoresponse" :options="options" @reload="loadOptions" />
+  <options-editor
+    v-model="valueModel"
+    :route="`guilds/${guildId}/autoresponses`"
+    type="Autoresponse"
+    :options="options"
+    :delete-method="null"
+    save-method="$patch"
+    @reload="loadOptions"
+  />
 </template>
 
 <script>
