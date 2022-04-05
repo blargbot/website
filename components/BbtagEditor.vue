@@ -200,15 +200,16 @@ CodeMirror?.registerHelper('hint', 'cattag', (editor, options) => {
 </script>
 
 <style lang="scss" scoped>
-.CodeMirror {
-  height: auto;
-
-  .CodeMirror-sizer {
-    min-height: 10rem !important;
-  }
-}
 .bbtag-editor {
   max-width: 100%;
   width: 100vw;
+
+  &::v-deep .CodeMirror {
+    height: auto;
+
+    .CodeMirror-sizer {
+      min-height: 10rem !important;
+    }
+  }
 }
 </style>
