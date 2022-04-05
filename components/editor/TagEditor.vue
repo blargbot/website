@@ -58,7 +58,7 @@ export default {
 
       await this.updateContent(async () => {
         await this.$axios.$patch(this.endpoint, {
-          newName: this.newName
+          name: this.newName
         })
         this.tagName = this.newName
         this.newName = null
