@@ -1,13 +1,12 @@
 <template>
-  <div>
-    <div>This is the Rolemes editor</div>
-    <div>Current content is: {{ value }}</div>
-    <div>GuildId: {{ guildId }}</div>
-  </div>
+  <options-editor v-model="valueModel" :route="`guilds/${guildId}/rolemes`" type="Roleme" :options="options" @reload="loadOptions" />
 </template>
 
 <script>
+import OptionsEditor from './OptionsEditor.vue'
+
 export default {
+  components: { OptionsEditor },
   props: {
     value: {
       type: String,
@@ -15,7 +14,43 @@ export default {
     },
     guildId: {
       type: String,
-      required: true
+      default: null
+    }
+  },
+  data() {
+    return {
+      options: []
+    }
+  },
+  computed: {
+    valueModel: {
+      get() {
+        return this.value
+      },
+      set(value) {
+        this.$emit('input', value)
+      }
+    }
+  },
+  watch: {
+    async guildId() {
+      await this.loadOptions()
+    }
+  },
+  async mounted() {
+    await this.loadOptions()
+  },
+  methods: {
+    async loadOptions() {
+      const rolemes = await this.$axios.$get(`guilds/${this.guildId}/rolemes`)
+      const result = []
+      for (const [id, roleme] of Object.entries(rolemes)) {
+        result.push({
+          display: `${id}: ${roleme.message}`,
+          value: `${id}/output`
+        })
+      }
+      this.options = result
     }
   }
 }

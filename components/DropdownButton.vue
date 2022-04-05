@@ -7,8 +7,10 @@
       <div class="dropdown-collapsable" :class="{ open: active }">
         <div class="dropdown-options-wrapper">
           <div class="dropdown-options">
-            <template v-for="(entry, i) in options">
-              <hr v-if="i > 0" :key="`${i}_hr`">
+            <template v-if="options.length === 0">
+              No options available
+            </template>
+            <template v-for="(entry, i) in options" v-else>
               <div v-if="entry.options !== undefined" :key="i" class="dropdown-option-group">
                 <div class="dropdown-option-group-header">
                   {{ entry.display }}
@@ -50,18 +52,18 @@ export default {
       default: 0
     }
   },
-  data () {
+  data() {
     return {
       active: false,
       value: null,
       display: this.prompt
     }
   },
-  mounted () {
+  mounted() {
     this.$emit('input', this.value)
   },
   methods: {
-    selectOption (option) {
+    selectOption(option) {
       if (option == null) {
         this.value = null
         this.display = this.prompt

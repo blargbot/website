@@ -74,6 +74,7 @@ export default {
       styleActiveLine: true,
       matchBrackets: true,
       smartIndent: true,
+      viewportMargin: Infinity,
       autoCloseBrackets: false,
       theme: 'monokai',
       electricChars: true,
@@ -200,7 +201,7 @@ CodeMirror?.registerHelper('hint', 'cattag', (editor, options) => {
 
 <style lang="scss">
 .CodeMirror {
-  height: 100%;
+  height: auto;
 
   .CodeMirror-sizer {
     min-height: 10rem !important;

@@ -1,13 +1,12 @@
 <template>
-  <div>
-    <div>This is the Greeting editor</div>
-    <div>Current content is: {{ value }}</div>
-    <div>GuildId: {{ guildId }}</div>
-  </div>
+  <single-editor v-model="valueModel" :route="`guilds/${guildId}/greeting`" type="Greeting" />
 </template>
 
 <script>
+import SingleEditor from './SingleEditor.vue'
+
 export default {
+  components: { SingleEditor },
   props: {
     value: {
       type: String,
@@ -15,7 +14,17 @@ export default {
     },
     guildId: {
       type: String,
-      required: true
+      default: null
+    }
+  },
+  computed: {
+    valueModel: {
+      get() {
+        return this.value
+      },
+      set(value) {
+        this.$emit('input', value)
+      }
     }
   }
 }

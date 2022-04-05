@@ -1,13 +1,12 @@
 <template>
-  <div>
-    <div>This is the Autoresponses editor</div>
-    <div>Current content is: {{ value }}</div>
-    <div>GuildId: {{ guildId }}</div>
-  </div>
+  <options-editor v-model="valueModel" :route="`guilds/${guildId}/autoresponses`" type="Autoresponse" :options="options" @reload="loadOptions" />
 </template>
 
 <script>
+import OptionsEditor from './OptionsEditor.vue'
+
 export default {
+  components: { OptionsEditor },
   props: {
     value: {
       type: String,
@@ -15,7 +14,48 @@ export default {
     },
     guildId: {
       type: String,
-      required: true
+      default: null
+    }
+  },
+  data() {
+    return {
+      options: []
+    }
+  },
+  computed: {
+    valueModel: {
+      get() {
+        return this.value
+      },
+      set(value) {
+        this.$emit('input', value)
+      }
+    }
+  },
+  watch: {
+    async guildId() {
+      await this.loadOptions()
+    }
+  },
+  async mounted() {
+    await this.loadOptions()
+  },
+  methods: {
+    async loadOptions() {
+      const ars = await this.$axios.$get(`guilds/${this.guildId}/autoresponses`)
+      const result = []
+      if (ars.everything !== undefined) {
+        result.push({ display: 'Everything Autoresponse', value: 'everything' })
+      }
+      if (ars.filtered !== undefined) {
+        for (const [id, ar] of Object.entries(ars.filtered)) {
+          result.push({
+            display: `${id}: ${ar.term}`,
+            value: id
+          })
+        }
+      }
+      this.options = result
     }
   }
 }
