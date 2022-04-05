@@ -140,8 +140,14 @@ $dropdown-background: #28343a;
           }
 
           .dropdown-option-group {
+            background: rgba(256, 256, 256, 0.06);
+            border: 1px solid black;
+            border-radius: 3px;
+            margin: 3px;
+
             .dropdown-option-group-header {
               padding: 0.5rem;
+              border-bottom: 1px solid black;
             }
           }
         }

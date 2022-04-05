@@ -113,7 +113,7 @@ export default {
             window.location.reload()
             break
           case 'Request failed with status code 403':
-            alert(`You dont own that ${this.type}!`)
+            alert(`You don't own that ${this.type}!`)
             break
           default:
             throw err

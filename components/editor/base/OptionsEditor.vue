@@ -104,6 +104,7 @@ export default {
           content: this.value
         })
       })
+      this.$emit('reload')
     },
     ensureLoaded(action) {
       return (

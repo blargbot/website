@@ -52,7 +52,7 @@ export default {
       const result = []
       for (const [id, roleme] of Object.entries(rolemes)) {
         result.push({
-          display: `${id}: ${roleme.message}`,
+          display: `Output ${id}: ${roleme.message}`,
           value: `${id}/output`
         })
       }
