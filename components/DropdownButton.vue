@@ -81,18 +81,14 @@ export default {
 <style lang="scss" scoped>
 @import "../assets/scss/variables";
 
-$dropdown-closed: #33424b;
-$dropdown-open: #2e3b42;
+$dropdown-background: #28343a;
 
 .dropdown {
   .dropdown-display {
     text-align: left;
-    background: $dropdown-closed;
-
-    &.open {
-      &.flat {
-        background: $dropdown-open;
-      }
+    background: $dropdown-background;
+    &:hover {
+      background: $dropdown-background;
     }
   }
 
@@ -117,12 +113,12 @@ $dropdown-open: #2e3b42;
         max-height: 50vh;
 
         .dropdown-options-wrapper {
-          background: $dropdown-open;
+          background: $dropdown-background;
         }
       }
 
       .dropdown-options-wrapper {
-        background: $dropdown-closed;
+        background: $dropdown-background;
         border-radius: 3px;
         padding: 0.5rem;
         max-height: inherit;
