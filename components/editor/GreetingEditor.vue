@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>This is the Greeting editor</div>
-    <div>Current content is: {{ tagContent }}</div>
+    <div>Current content is: {{ value }}</div>
     <div>GuildId: {{ guildId }}</div>
   </div>
 </template>
@@ -9,7 +9,7 @@
 <script>
 export default {
   props: {
-    tagContent: {
+    value: {
       type: String,
       default: null
     },

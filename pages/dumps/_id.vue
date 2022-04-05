@@ -6,7 +6,7 @@
         <div v-html="content" />
         <hr>
         <p>This page will expire {{ expiry }} ({{ delta }})</p>
-        <a :href="'/api/dumps/' + id" :download="id + '.json'" class="button shadow-1">Download</a>
+        <a :href="'/dumps/' + id + '.txt'" :download="id + '.txt'" class="button shadow-1">Download</a>
       </div>
     </section>
   </div>
@@ -28,7 +28,7 @@ dayjs.extend(advancedFormat)
 export * from 'highlight.js/scss/base16/solarized-dark.scss'
 
 export default {
-  async asyncData ({ params, $axios }) {
+  async asyncData({ params, $axios }) {
     const dump = await $axios.$get('/dumps/' + params.id)
     let expiry = 'never'
     let delta = 'never'
@@ -75,12 +75,12 @@ const converter = new Converter({
   extensions: [
     {
       type: 'output',
-      filter (text, converter, options) {
+      filter(text, converter, options) {
         // use new shodown's regexp engine to conditionally parse codeblocks
         const left = '<pre><code\\b[^>]*>'
         const right = '</code></pre>'
         const flags = 'g'
-        function replacement (wholeMatch, match, left, right) {
+        function replacement(wholeMatch, match, left, right) {
           // unescape match to prevent double escaping
           match = match
             .replace(/&amp;/g, '&')

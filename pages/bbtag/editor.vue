@@ -3,8 +3,8 @@
     <div class="card">
       <h1>BBTag IDE</h1>
       <dropdown-button v-model="destination" :options="targetTree" prompt="Select a Tag destination" />
-      <component :is="destination.component" v-if="destination != null" :tag-content="tagContent" :guild-id="destination.id" />
-      <bbtag-editor ref="editor" v-model="tagContent" />
+      <component :is="destination.component" v-if="destination != null" v-model="content" :guild-id="destination.id" />
+      <bbtag-editor ref="editor" v-model="content" />
     </div>
   </section>
 </template>
@@ -80,20 +80,20 @@ export default {
 
     return {
       destination: null,
-      tagContent: null,
+      content: null,
       targetTree,
       targets
     }
   },
   watch: {
-    tagContent(newVal) {
-      localStorage.setItem('tagContent', newVal)
+    content(newVal) {
+      localStorage.setItem('content', newVal)
     }
   },
   mounted() {
-    const content = localStorage.getItem('tagContent')
+    const content = localStorage.getItem('content')
     if (content) {
-      this.tagContent = content
+      this.content = content
     }
   }
 }

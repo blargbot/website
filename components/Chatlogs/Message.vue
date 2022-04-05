@@ -18,6 +18,7 @@
           <span class="username">{{ user.username }}#{{ user.discriminator }}</span>
           <span class="timestamp">{{ formattedTimestamp }}</span>
         </div>
+        <!-- eslint-disable-next-line vue/no-v-html -->
         <div class="content" v-html="sanitized" />
       </div>
     </div>
@@ -39,28 +40,31 @@ export default {
     }
   },
   computed: {
-    user () {
+    user() {
       return this.userCache[this.message.userid]
     },
-    formattedTimestamp () {
+    formattedTimestamp() {
       const time = dayjs(this.message.msgtime)
 
       return time.format('YYYY/MM/DD hh:mm:ss A')
     },
-    formattedType () {
+    formattedType() {
       switch (this.message.type) {
-        case 0: return 'Create'
-        case 1: return 'Update'
-        case 2: return 'Delete'
-        default: return 'Unknown'
+        case 0:
+          return 'Create'
+        case 1:
+          return 'Update'
+        case 2:
+          return 'Delete'
+        default:
+          return 'Unknown'
       }
     },
-    sanitized () {
+    sanitized() {
       return this.$sanitize(this.message.content)
     }
   },
-  mounted () {
-  }
+  mounted() {}
 }
 </script>
 

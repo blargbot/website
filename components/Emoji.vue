@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable-next-line vue/no-v-html -->
   <span class="twemoji" v-html="renderedContent" />
 </template>
 
@@ -13,7 +14,7 @@ export default {
     }
   },
   computed: {
-    renderedContent () {
+    renderedContent() {
       const a = twemoji.parse(this.content)
       return a
     }

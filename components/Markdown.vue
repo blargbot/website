@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable-next-line vue/no-v-html -->
   <div class="markdown" v-html="renderedContent" />
 </template>
 
@@ -29,12 +30,17 @@ export default {
     }
   },
   computed: {
-    renderedContent () {
+    renderedContent() {
       let content = this.content
       if (this.autoNewLines) {
         content = content.replace(/\n/g, '  \n')
       }
-      return render(content, this.options, this.markdownOptions, this.xssOptions)
+      return render(
+        content,
+        this.options,
+        this.markdownOptions,
+        this.xssOptions
+      )
     }
   }
 }

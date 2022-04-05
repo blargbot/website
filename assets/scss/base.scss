@@ -120,23 +120,31 @@ h1 {
   &.flat {
     background: none;
     margin: 1px;
-    &:hover {
+    &:hover:not(:disabled) {
       background: rgba(0, 0, 0, 0.1);
     }
   }
   &.full {
     width: 100%;
   }
-  &:hover {
+  &:hover:not(:disabled) {
     background: nth(map-get($colors, "primary"), 2);
     color: $primary-text;
     cursor: pointer;
   }
+  &:disabled {
+    background: mix(nth(map-get($colors, "primary"), 1), #000, 50%);
+    color: mix($primary-text, #000, 50%);
+  }
   @each $i in $colors {
     &.#{nth($i, 1)} {
       background: nth(nth($i, 2), 1);
-      &:hover {
+      &:hover:not(:disabled) {
         background: nth(nth($i, 2), 2);
+      }
+      &:disabled {
+        background: mix(nth(nth($i, 2), 2), #000, 50%);
+        color: mix($primary-text, #000, 50%);
       }
     }
   }
