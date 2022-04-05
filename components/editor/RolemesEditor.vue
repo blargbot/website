@@ -53,6 +53,7 @@ export default {
       for (const [id, roleme] of Object.entries(rolemes)) {
         result.push({
           display: `Output ${id}: ${roleme.message}`,
+          emoji: '🎟️',
           value: `${id}/output`
         })
       }

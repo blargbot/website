@@ -53,12 +53,17 @@ export default {
       const ars = await this.$axios.$get(`guilds/${this.guildId}/autoresponses`)
       const result = []
       if (ars.everything !== undefined) {
-        result.push({ display: 'Everything Autoresponse', value: 'everything' })
+        result.push({
+          display: 'Everything Autoresponse',
+          emoji: '🌍',
+          value: 'everything'
+        })
       }
       if (ars.filtered !== undefined) {
         for (const [id, ar] of Object.entries(ars.filtered)) {
           result.push({
             display: `${id}: ${ar.term}`,
+            emoji: '💬',
             value: id
           })
         }

@@ -53,9 +53,9 @@ export default {
         {
           display: 'Default messages',
           options: [
-            { display: 'Delete message', value: 'deletemessage' },
-            { display: 'Ban message', value: 'banMessage' },
-            { display: 'Kick message', value: 'kickMessage' }
+            { display: 'Delete message', emoji: '🗑️', value: 'deletemessage' },
+            { display: 'Ban message', emoji: '🛑', value: 'banMessage' },
+            { display: 'Kick message', emoji: '👋', value: 'kickMessage' }
           ]
         }
       ]
@@ -64,9 +64,21 @@ export default {
           result.push({
             display: `${id}: ${censor.term}`,
             options: [
-              { display: 'Delete message', value: `${id}/deletemessage` },
-              { display: 'Ban message', value: `${id}/banMessage` },
-              { display: 'Kick message', value: `${id}/kickMessage` }
+              {
+                display: 'Delete message',
+                emoji: '🗑️',
+                value: `${id}/deletemessage`
+              },
+              {
+                display: 'Ban message',
+                emoji: '🛑',
+                value: `${id}/banMessage`
+              },
+              {
+                display: 'Kick message',
+                emoji: '👋',
+                value: `${id}/kickMessage`
+              }
             ]
           })
         }

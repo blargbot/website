@@ -23,7 +23,7 @@ export default {
   middleware: 'authenticated',
   data() {
     const targetTree = [
-      { display: 'Public tags', value: { component: TagEditor } }
+      { display: 'Public tags', emoji: '👥', value: { component: TagEditor } }
     ]
     const targets = [...targetTree]
     for (const guild of this.$store.state.guilds.list) {
@@ -32,42 +32,49 @@ export default {
       if (guild.ccommands) {
         group.options.push({
           display: 'Custom Commands',
+          emoji: '⚙️',
           value: { component: CustomCommandEditor }
         })
       }
       if (guild.censors) {
         group.options.push({
           display: 'Censors',
+          emoji: '🛡️',
           value: { component: CensorsEditor }
         })
       }
       if (guild.autoresponses) {
         group.options.push({
           display: 'Autoresponses',
+          emoji: '💬',
           value: { component: AutoresponseEditor }
         })
       }
       if (guild.rolemes) {
         group.options.push({
           display: 'Rolemes',
+          emoji: '🎟️',
           value: { component: RolemesEditor }
         })
       }
       if (guild.interval) {
         group.options.push({
           display: 'Interval',
+          emoji: '⏱️',
           value: { component: IntervalEditor }
         })
       }
       if (guild.greeting) {
         group.options.push({
           display: 'Greeting',
+          emoji: '📣',
           value: { component: GreetingEditor }
         })
       }
       if (guild.farewell) {
         group.options.push({
           display: 'Farewell',
+          emoji: '👋',
           value: { component: FarewellEditor }
         })
       }
