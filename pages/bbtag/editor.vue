@@ -88,9 +88,6 @@ export default {
   watch: {
     tagContent(newVal) {
       localStorage.setItem('tagContent', newVal)
-    },
-    destination(newVal) {
-      console.log(newVal)
     }
   },
   mounted() {

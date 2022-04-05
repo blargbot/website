@@ -14,6 +14,9 @@
         <nuxt-link to="/bbtag/subtags" class="sidebar-button child">
           Subtags
         </nuxt-link>
+        <nuxt-link to="/bbtag/editor" class="sidebar-button child">
+          Editor
+        </nuxt-link>
       </div>
     </div>
     <div v-if="opened" class="sidebar-behind show-medium" @click.prevent="closeSidebar" />
@@ -61,11 +64,9 @@ export default {
     top: 80px;
     left: 0;
     bottom: 0;
-
     transition-duration: 0.1s;
     z-index: 10;
   }
-
   .sidebar-behind {
     position: fixed;
     z-index: 1;
@@ -75,28 +76,23 @@ export default {
     right: 0;
     bottom: 0;
   }
-
   @media screen and (max-width: 1400px) {
     .sidebar {
       left: -300px;
-
       &.opened {
         left: 0;
       }
     }
   }
 }
-
 .built-in {
   flex: 0 0 300px;
-
   .sidebar {
     position: fixed;
     top: 80px;
     transition-duration: 0.1s;
     z-index: 10;
   }
-
   .sidebar-behind {
     position: fixed;
     z-index: 1;
@@ -106,16 +102,13 @@ export default {
     right: 0;
     bottom: 0;
   }
-
   @media screen and (max-width: 800px) {
     & {
       position: fixed;
     }
-
     .sidebar {
       position: fixed;
       left: -300px;
-
       &.opened {
         left: 0;
       }
@@ -125,45 +118,16 @@ export default {
 .button-container {
   display: flex;
   flex-direction: column;
-
   padding-top: 1rem;
-
   .sidebar-button {
     padding: 1rem 2rem;
     color: white;
-
     &:hover {
       background: rgba(0, 0, 0, 0.1);
     }
-
     &.child {
       padding-left: 4rem;
     }
   }
 }
-/*
-.sidebar {
-  left: -300px;
-  position: fixed;
-  top: 80px;
-  bottom: 0;
-
-  transition-duration: 0.1s;
-  z-index: 10;
-
-  &.opened {
-    left: 0;
-  }
-}
-
-.sidebar-behind {
-  position: fixed;
-  z-index: 1;
-  background: rgba(0, 0, 0, 0.4);
-  top: 80px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-*/
 </style>

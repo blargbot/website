@@ -37,6 +37,7 @@ import Banner from '~/components/Banner.vue'
 
 export default {
   components: { Banner },
+  layout: 'home',
   data: () => ({
     base:
       'https://discordapp.com/oauth2/authorize?client_id=170237838334492682&scope=bot'
