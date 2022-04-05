@@ -2,13 +2,13 @@
   <div>
     <div class="control-row v-aligned">
       <dropdown-button v-model="selected" :options="options" :prompt="prompt" />
-      <button class="button col-1" @click.prevent="load">
+      <button class="button col-1" :disabled="selected === null" @click.prevent="load">
         Load
       </button>
-      <button class="button col-1 ok" @click.prevent="save">
+      <button class="button col-1 ok" :disabled="selected === null" @click.prevent="save">
         Save
       </button>
-      <button class="button danger col-1 v-align" @click.prevent="remove">
+      <button class="button danger col-1 v-align" :disabled="selected === null" @click.prevent="remove">
         Delete
       </button>
     </div>
