@@ -1,25 +1,27 @@
 <template>
   <div class="cluster-wrapper">
-    <div class="card">
+    <div class="card" :class="status">
       <h3 class="cluster-header">
-        Cluster {{ cluster.id }}
+        Cluster {{ id }}
       </h3>
       <hr>
       <div class="cluster-stats">
+        <span class="label">Status</span>
+        <code>{{ status }}</code>
         <span class="label">Guilds</span>
-        <code>{{ cluster.guilds }}</code>
+        <code>{{ guilds }}</code>
         <span class="label">Memory</span>
-        <code>{{ formatMemory(cluster.rss) }}</code>
+        <code>{{ formatMemory(rss) }}</code>
         <span class="label">User CPU</span>
-        <code>{{ formatPercent(cluster.userCpu) }}</code>
+        <code>{{ formatPercent(userCpu) }}</code>
         <span class="label">System CPU</span>
-        <code>{{ formatPercent(cluster.systemCpu) }}</code>
+        <code>{{ formatPercent(systemCpu) }}</code>
         <span class="label">Uptime</span>
-        <code>{{ formatDuration(cluster.readyTime, cluster.time) }}</code>
+        <code>{{ formatDuration(readyTime, time) }}</code>
         <span class="label">Last update</span>
-        <code>{{ formatTime(cluster.time) }}</code>
+        <code>{{ formatTime(time) }}</code>
         <span class="label">Shards</span>
-        <code>{{ cluster.shardCount }}</code>
+        <code>{{ shardCount }}</code>
       </div>
     </div>
   </div>
@@ -42,7 +44,15 @@ export default {
   },
   data() {
     return {
+      ...this.cluster,
+      status: 'ready',
       updater: setInterval(() => this.tick(), 1000)
+    }
+  },
+  watch: {
+    cluster(newValue) {
+      Object.assign(this, newValue)
+      this.status = 'ready'
     }
   },
   destroyed() {
@@ -50,12 +60,24 @@ export default {
   },
   methods: {
     tick() {
-      this.now = Date.now()
+      if (Date.now() - this.time > 60000) {
+        this.rss = NaN
+        this.userCpu = NaN
+        this.systemCpu = NaN
+        this.readyTime = NaN
+        this.status = 'unknown'
+      }
     },
     formatPercent(value) {
+      if (isNaN(value) || typeof value !== 'number') {
+        return '--'
+      }
       return (Math.round(value * 10000) / 100).toFixed(2) + '%'
     },
     formatMemory(value) {
+      if (isNaN(value) || typeof value !== 'number') {
+        return '--'
+      }
       const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB']
       const i = Math.floor(Math.log(value) / Math.log(1024))
       return (
@@ -64,6 +86,14 @@ export default {
       )
     },
     formatDuration(from, to) {
+      if (
+        isNaN(from) ||
+        typeof from !== 'number' ||
+        isNaN(to) ||
+        typeof to !== 'number'
+      ) {
+        return '--'
+      }
       const duration = dayjs.duration(to - from, 'ms')
       const hoursStr = duration
         .hours()
@@ -72,6 +102,9 @@ export default {
       return `${hoursStr}:${duration.format('mm:ss')}`
     },
     formatTime(value) {
+      if (isNaN(value) || typeof value !== 'number') {
+        return '--'
+      }
       return dayjs(value, 'ms').format('HH:mm:ss')
     }
   }
@@ -79,20 +112,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.cluster-header {
-  text-align: center;
-  text-transform: uppercase;
-}
-.cluster-stats {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  .label {
-    text-align: right;
-    margin: 2px;
-  }
+@import "../../assets/scss/_variables";
 
-  code {
-    margin: 2px;
+.cluster-wrapper {
+  > .card {
+    border-top: 3px solid nth(map-get($colors, "danger"), 2);
+
+    &.ready {
+      border-top-color: nth(map-get($colors, "ok"), 1);
+    }
+
+    .cluster-header {
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .cluster-stats {
+      display: grid;
+      grid-template-columns: 50% 50%;
+      .label {
+        text-align: right;
+        margin: 2px;
+      }
+
+      code {
+        margin: 2px;
+      }
+    }
   }
 }
 </style>

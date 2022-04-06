@@ -4,7 +4,14 @@
       <nuxt-link to="/privacy">
         Privacy Policy
       </nuxt-link>
-      &copy; 2016-2022 | stupid cat
+      |
+      <nuxt-link to="/status">
+        Status
+      </nuxt-link>
+      |
+      &copy; 2016-2022
+      |
+      stupid cat
     </div>
   </footer>
 </template>

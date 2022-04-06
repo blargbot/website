@@ -1,19 +1,21 @@
 <template>
   <div class="shard-wrapper">
-    <div class="card" :class="shard.status">
+    <div class="card" :class="status">
       <h3 class="shard-header">
-        Shard {{ shard.id }}
+        Shard {{ id }}
       </h3>
       <hr>
       <div class="shard-stats">
+        <span class="label">Status</span>
+        <code>{{ status }}</code>
         <span class="label">Guilds</span>
-        <code>{{ shard.guilds }}</code>
+        <code>{{ guilds }}</code>
         <span class="label">Latency</span>
-        <code>{{ formatMs(shard.latency) }}</code>
+        <code>{{ formatMs(latency) }}</code>
         <span class="label">Last update</span>
-        <code>{{ formatTime(shard.time) }}</code>
+        <code>{{ formatTime(time) }}</code>
         <span class="label">Cluster</span>
-        <code>{{ shard.cluster }}</code>
+        <code>{{ cluster }}</code>
       </div>
     </div>
   </div>
@@ -36,7 +38,13 @@ export default {
   },
   data() {
     return {
+      ...this.shard,
       updater: setInterval(() => this.tick(), 1000)
+    }
+  },
+  watch: {
+    shard(newValue) {
+      Object.assign(this, newValue)
     }
   },
   destroyed() {
@@ -44,14 +52,20 @@ export default {
   },
   methods: {
     tick() {
-      this.now = Date.now()
+      if (Date.now() - this.time > 60000) {
+        this.status = 'unknown'
+        this.latency = NaN
+      }
     },
     formatTime(value) {
+      if (isNaN(value) || typeof value !== 'number') {
+        return '--'
+      }
       return dayjs(value, 'ms').format('HH:mm:ss')
     },
     formatMs(value) {
-      if (isNaN(value)) {
-        return '- ms'
+      if (isNaN(value) || typeof value !== 'number') {
+        return '--'
       }
       return `${value} ms`
     }
@@ -63,7 +77,7 @@ export default {
 @import "../../assets/scss/_variables";
 
 .shard-wrapper {
-  .card {
+  > .card {
     border-top: 3px solid nth(map-get($colors, "danger"), 2);
     &.connecting {
       border-top-color: nth(map-get($colors, "gold"), 2);
@@ -83,22 +97,22 @@ export default {
     &.resuming {
       border-top-color: nth(map-get($colors, "gold"), 2);
     }
-  }
 
-  .shard-header {
-    text-align: center;
-    text-transform: uppercase;
-  }
-  .shard-stats {
-    display: grid;
-    grid-template-columns: 50% 50%;
-    .label {
-      text-align: right;
-      margin: 2px;
+    .shard-header {
+      text-align: center;
+      text-transform: uppercase;
     }
+    .shard-stats {
+      display: grid;
+      grid-template-columns: 50% 50%;
+      .label {
+        text-align: right;
+        margin: 2px;
+      }
 
-    code {
-      margin: 2px;
+      code {
+        margin: 2px;
+      }
     }
   }
 }
