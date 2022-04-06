@@ -24,17 +24,14 @@
               Donate
             </nuxt-link>
           </div>
-          <template v-if="$store.state.auth.user">
+          <template v-if="user">
             <div class="child">
               <nuxt-link to="/dashboard" class="button flat">
                 Dashboard
               </nuxt-link>
             </div>
             <div class="child avatar-wrapper">
-              <img
-                class="avatar"
-                :src="`https://cdn.discordapp.com/avatars/${$store.state.auth.user.id}/${$store.state.auth.user.avatar}.png`"
-              >
+              <img class="avatar" :src="avatarUrl">
               <nuxt-link :to="`/logout?redirect=${redirect}`" class="button flat">
                 Logout
               </nuxt-link>
@@ -77,6 +74,17 @@ export default {
     redirect() {
       const path = this.$store.state.auth.isAuth ? '/' : this.$route.path
       return encodeURIComponent(path)
+    },
+    user() {
+      return this.$store.state.auth.user
+    },
+    avatarUrl() {
+      if (!this.user?.avatar) {
+        const discrim = parseInt(this.user.discriminator)
+        return `https://cdn.discordapp.com/embed/avatars/${discrim % 5}.png`
+      }
+      const ext = this.user?.avatar?.startsWith('a_') ? 'gif' : 'png'
+      return `https://cdn.discordapp.com/avatars/${this.user.id}/${this.user.avatar}.${ext}`
     }
   },
   methods: {
