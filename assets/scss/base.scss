@@ -335,3 +335,26 @@ input {
     vertical-align: bottom;
   }
 }
+
+$mentionColors: red, pink;
+
+.mention {
+  background-color: #414675;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 3px;
+
+  &:hover {
+    background-color: #5865f2;
+  }
+
+  @each $color in $mentionColors {
+    &.#{"" + $color} {
+      background-color: rgba($color, 0.1);
+      color: $color;
+      &:hover {
+        background-color: rgba($color, 0.3);
+      }
+    }
+  }
+}

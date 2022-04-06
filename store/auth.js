@@ -32,7 +32,7 @@ export const actions = {
       const user = await this.$axios.$get('/users/@me')
       commit('setUser', user)
 
-      await dispatch('guilds/reload', null, { root: true })
+      await dispatch('guilds/reloadMine', null, { root: true })
     } catch (err) {
       this.$axios.setToken(false)
       this.$cookies.remove('token')
