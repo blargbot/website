@@ -1,6 +1,6 @@
 <template>
   <div class="shard-wrapper">
-    <div class="card" :class="status">
+    <div class="card shadow-2" :class="status">
       <h3 class="shard-header">
         Shard {{ id }}
       </h3>

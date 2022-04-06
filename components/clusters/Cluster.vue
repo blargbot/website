@@ -1,6 +1,6 @@
 <template>
   <div class="cluster-wrapper">
-    <div class="card" :class="status">
+    <div class="card shadow-2" :class="status">
       <h3 class="cluster-header">
         Cluster {{ id }}
       </h3>
