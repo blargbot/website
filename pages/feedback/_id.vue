@@ -1,7 +1,14 @@
 <template>
-  <div>
-    <section>
-      <!-- TODO Feedback page -->This will eventually show the dumps/output with id {{ params.id }}
-    </section>
-  </div>
+  <section>
+    Redirecting you to the feedback page...
+  </section>
 </template>
+
+<script>
+export default {
+  async mounted() {
+    const url = await this.$axios.$get(`/feedback/${this.$route.params.id}/url`)
+    window.location.href = url
+  }
+}
+</script>
