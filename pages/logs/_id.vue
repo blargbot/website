@@ -33,7 +33,16 @@
       </div>
       <div class="card-contents">
         <div class="message-wrapper">
-          <message v-for="message in messages" :key="message.id" :message="message" :user-cache="userCache" />
+          <client-side>
+            <message
+              v-for="message in messages"
+              :key="message.id"
+              :message="message"
+              :user-cache="userCache"
+              :channel-cache="channelCache"
+              :role-cache="roleCache"
+            />
+          </client-side>
         </div>
       </div>
     </div>
@@ -41,11 +50,11 @@
 </template>
 
 <script>
-import Message from '@/components/Chatlogs/Message.vue'
+import Message from '@/components/chatlogs/Message.vue'
 
 export default {
   components: { Message },
-  async asyncData ({ params, $axios }) {
+  async asyncData({ params, $axios }) {
     const logs = await $axios.$get('/chatlogs/' + params.id)
     logs.messages.sort((a, b) => {
       return new Date(a.msgtime) - new Date(b.msgtime)
@@ -60,16 +69,18 @@ export default {
       messages: logs.messages,
       types: logs.types,
       users: logs.users,
-      userCache: logs.parsedUsers
+      userCache: logs.parsedUsers,
+      channelCache: logs.parsedChannels,
+      roleCache: logs.parsedRoles
     }
   },
-  data () {
+  data() {
     return {
       typeMap: ['create', 'update', 'delete']
     }
   },
   computed: {
-    formattedTypes () {
+    formattedTypes() {
       if (this.types.length === 0) {
         return 'create, update, delete'
       } else {

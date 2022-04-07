@@ -38,7 +38,7 @@ export default {
           ]
         case 'role':
           return [
-            '<span class="mention red">@Some Role</span>',
+            '<span class="mention colored" style="--red: 255; --green: 0; --blue: 0;">@Some Role</span>',
             '"Some Role"',
             '49387539584735734'
           ]

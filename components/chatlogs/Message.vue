@@ -16,10 +16,9 @@
       <div class="message-content">
         <div class="header">
           <span class="username">{{ user.username }}#{{ user.discriminator }}</span>
-          <span class="timestamp">{{ formattedTimestamp }}</span>
+          <timestamp :value="message.msgtime" />
         </div>
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <div class="content" v-html="sanitized" />
+        <message-content class="content" :content="message.content" :channel-map="channelCache" :role-map="roleCache" :user-map="userCache" />
       </div>
     </div>
   </div>
@@ -27,14 +26,25 @@
 
 <script>
 import dayjs from 'dayjs'
+import MessageContent from '../MessageContent.vue'
+import Timestamp from '../Timestamp.vue'
 
 export default {
+  components: { MessageContent, Timestamp },
   props: {
     message: {
       type: Object,
       default: () => ({})
     },
     userCache: {
+      type: Object,
+      default: () => ({})
+    },
+    roleCache: {
+      type: Object,
+      default: () => ({})
+    },
+    channelCache: {
       type: Object,
       default: () => ({})
     }
@@ -59,9 +69,6 @@ export default {
         default:
           return 'Unknown'
       }
-    },
-    sanitized() {
-      return this.$sanitize(this.message.content)
     }
   },
   mounted() {}

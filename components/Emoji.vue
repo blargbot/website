@@ -1,6 +1,6 @@
 <template>
   <!-- eslint-disable-next-line vue/no-v-html -->
-  <span class="twemoji" v-html="renderedContent" />
+  <span v-html="renderedContent" />
 </template>
 
 <script>

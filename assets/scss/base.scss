@@ -214,6 +214,11 @@ h1 {
         background: rgba(0, 0, 0, 0.1);
         border-radius: 0.5rem;
 
+        .emoji {
+          margin-right: 0;
+          margin-bottom: -0.25em;
+        }
+
         &:hover {
           background: rgba(0, 0, 0, 0.4);
         }
@@ -336,25 +341,35 @@ input {
   }
 }
 
-$mentionColors: red, pink;
-
 .mention {
-  background-color: #414675;
+  --red: 89;
+  --green: 102;
+  --blue: 214;
+  --opacity: 0.3;
+  --hover-opacity: 1;
+  background-color: rgba(var(--red), var(--green), var(--blue), var(--opacity));
   color: white;
   padding: 2px 4px;
   border-radius: 3px;
 
-  &:hover {
-    background-color: #5865f2;
+  &.colored {
+    --opacity: 0.1;
+    --hover-opacity: 0.3;
+    color: rgba(var(--red), var(--green), var(--blue));
   }
 
-  @each $color in $mentionColors {
-    &.#{"" + $color} {
-      background-color: rgba($color, 0.1);
-      color: $color;
-      &:hover {
-        background-color: rgba($color, 0.3);
-      }
-    }
+  &:hover {
+    background-color: rgba(
+      var(--red),
+      var(--green),
+      var(--blue),
+      var(--hover-opacity)
+    );
   }
+}
+
+.timestamp {
+  background-color: rgba(79, 84, 92, 0.48);
+  border-radius: 3px;
+  padding: 0 2px;
 }

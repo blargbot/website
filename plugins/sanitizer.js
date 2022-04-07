@@ -1,14 +1,13 @@
 import Vue from 'vue'
-import twemoji from 'twemoji'
+
+const sanitizeMap = {
+  '<': '&lt;',
+  '>': '&gt;',
+  '&': '&amp;',
+  ';': '&semi;'
+}
+const sanitizeRegex = new RegExp(`[${Object.keys(sanitizeMap).join('')}]`, 'g')
 
 Vue.prototype.$sanitize = (message) => {
-  const cleansed = message
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/&/g, '&amp;')
-    .replace(/;/g, '&semi;')
-
-  const emojified = twemoji.parse(cleansed)
-
-  return emojified
+  return message.replace(sanitizeRegex, m => sanitizeMap[m])
 }
