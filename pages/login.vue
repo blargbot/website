@@ -17,7 +17,9 @@ export default {
       })
 
       if (token) {
-        this.$cookies.set('token', token, { secure: true })
+        this.$cookies.set('token', token, {
+          secure: window.location.protocol === 'https:'
+        })
         await this.$store.dispatch('auth/processAuth')
         const route = localStorage.getItem('redirect')
         localStorage.removeItem('redirect')
