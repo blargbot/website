@@ -47,8 +47,10 @@ export default {
     }
   },
   destroyed() {
-    this.connection.onclose = undefined
-    this.connection?.close()
+    if (this.connection) {
+      this.connection.onclose = null
+      this.connection.close()
+    }
   },
   mounted() {
     this.reconnect()
@@ -57,9 +59,9 @@ export default {
     reconnect() {
       this.connection?.close()
 
-      const scheme = window.location.porotocol === 'https' ? 'wss' : 'ws'
+      const protocol = window.location.protocol === 'https' ? 'wss' : 'ws'
       this.connection = new WebSocket(
-        `${scheme}://${window.location.host}${this.$axios.defaults.baseURL}clusters`
+        `${protocol}://${window.location.host}${this.$axios.defaults.baseURL}clusters`
       )
       this.connection.onmessage = (msg) => {
         this.clusterStats = JSON.parse(msg.data)
