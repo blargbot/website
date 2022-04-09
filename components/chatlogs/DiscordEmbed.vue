@@ -104,7 +104,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../assets/scss/_text";
+
 $background: rgba(46, 48, 54, 0.3);
+$gutter: 5px;
 
 @mixin display-flex {
   display: -webkit-box;
@@ -112,33 +115,32 @@ $background: rgba(46, 48, 54, 0.3);
   display: flex;
 }
 
-@mixin font-text {
+@mixin title {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: $gutter;
+}
+
+@mixin text {
+  color: hsla(0, 0%, 100%, 0.8);
   font-size: 14px;
   font-weight: 500;
-  color: hsla(0, 0%, 100%, 0.8);
   display: block;
 }
 
-@mixin font-footer {
+@mixin footer {
+  color: hsla(0, 0%, 100%, 0.8);
   font-size: 12px;
   font-weight: 600;
-  color: hsla(0, 0%, 100%, 0.8);
   display: inline-block;
-}
-
-@mixin font-title {
-  font-size: 14px;
-  font-weight: 600;
-  display: inline-block;
-  &:not(a) {
-    color: #fff;
-  }
 }
 
 .embed {
   @include display-flex;
   position: relative;
-  margin-top: 5px;
+  margin-top: $gutter;
   max-width: 520px;
   > :last-child {
     margin-bottom: 0 !important;
@@ -155,17 +157,15 @@ $background: rgba(46, 48, 54, 0.3);
     position: relative;
     background-color: $background;
     border-color: $background;
-    padding: 8px 10px;
+    padding: $gutter * 2;
     box-sizing: border-box;
     border-radius: 0 3px 3px 0;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
     .embed-content {
       @include display-flex;
       width: 100%;
-      margin-bottom: 10px;
+      margin-bottom: $gutter * 2;
       .embed-content-inner {
         -webkit-box-flex: 1;
         -ms-flex: 1;
@@ -175,26 +175,28 @@ $background: rgba(46, 48, 54, 0.3);
           -webkit-box-align: center;
           -ms-flex-align: center;
           align-items: center;
-          margin-bottom: 5px;
+          margin-bottom: $gutter;
           .embed-author-name {
-            @include font-title;
+            @include title;
+            margin-bottom: 0;
           }
           .embed-author-icon {
-            margin-right: 9px;
-            width: 20px;
-            height: 20px;
+            margin-right: $gutter * 2;
+            width: $gutter * 4;
+            height: $gutter * 4;
             -o-object-fit: contain;
             object-fit: contain;
             border-radius: 50%;
           }
         }
         .embed-title {
-          @include font-title;
-          margin-bottom: 4px;
+          @include title;
+        }
+        a.embed-title {
+          @include link;
         }
         .embed-description {
-          @include font-text;
-          margin-bottom: 10px;
+          @include text;
           white-space: pre-line;
           margin-top: 0 !important;
           pre {
@@ -209,13 +211,13 @@ $background: rgba(46, 48, 54, 0.3);
           flex-direction: row;
           -ms-flex-wrap: wrap;
           flex-wrap: wrap;
-          margin-top: -10px;
-          margin-bottom: 10px;
+          margin-top: -$gutter * 2;
+          margin-bottom: $gutter * 2;
           .embed-field {
             -webkit-box-flex: 0;
             -ms-flex: 0;
             flex: 0;
-            padding-top: 10px;
+            padding-top: $gutter * 2;
             min-width: 100%;
             max-width: 506px;
             &.embed-field-inline {
@@ -227,11 +229,10 @@ $background: rgba(46, 48, 54, 0.3);
               flex-basis: auto;
             }
             .embed-field-name {
-              @include font-title;
-              margin-bottom: 4px;
+              @include title;
             }
             .embed-field-value {
-              @include font-text;
+              @include text;
             }
           }
         }
@@ -245,24 +246,21 @@ $background: rgba(46, 48, 54, 0.3);
         object-fit: contain;
         -ms-flex-negative: 0;
         flex-shrink: 0;
-        margin-left: 20px;
-      }
-      &:last-child {
-        margin-bottom: 0 !important;
+        margin-left: $gutter * 4;
       }
     }
     .embed-image {
       position: relative;
       display: inline-block;
-      margin-bottom: 10px;
+      margin-bottom: $gutter * 2;
     }
     .embed-footer {
-      @include font-footer;
+      @include footer;
     }
     .embed-footer-icon {
-      margin-right: 10px;
-      height: 18px;
-      width: 18px;
+      margin-right: $gutter * 2;
+      height: $gutter * 4;
+      width: $gutter * 4;
       -o-object-fit: contain;
       object-fit: contain;
       float: left;

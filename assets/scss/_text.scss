@@ -1,3 +1,5 @@
+@import "_variables";
+
 .primary-text {
   color: $primary-text;
 }
@@ -7,13 +9,16 @@ p {
   line-height: 1.3em;
 }
 
-a {
+@mixin link {
   color: $accent-color;
   text-decoration: none;
+  &:hover {
+    color: $secondary-accent-color;
+  }
 }
 
-a:hover {
-  color: $secondary-accent-color;
+a {
+  @include link;
 }
 
 code {
