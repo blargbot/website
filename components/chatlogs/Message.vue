@@ -18,13 +18,11 @@
           <span class="username">{{ user.username }}#{{ user.discriminator }}</span>
           <discord-timestamp :value="message.msgtime" />
         </div>
-        <rich-text
-          class="message-content"
-          :content="message.content"
-          :context="{ userMap: userCache, roleMap: roleCache, channelMap: channelCache }"
-          :features="messageFeatures"
-        />
+        <rich-text class="message-content" :content="message.content" :context="richContext" :features="messageFeatures" />
       </div>
+    </div>
+    <div class="message-embeds">
+      <discord-embed v-for="(embed, i) in message.embeds" :key="i" :embed="embed" :context="richContext" />
     </div>
     <div v-if="message.attachments && message.attachments.length">
       <hr>
@@ -44,10 +42,11 @@
 <script>
 import dayjs from 'dayjs'
 import DiscordTimestamp from '../richText/DiscordTimestamp.vue'
-import RichText, { messageFeatures } from '../RichText.vue'
+import RichText, { messageFeatures } from '../richText/Index.vue'
+import DiscordEmbed from './DiscordEmbed.vue'
 
 export default {
-  components: { DiscordTimestamp, RichText },
+  components: { DiscordTimestamp, RichText, DiscordEmbed },
   props: {
     message: {
       type: Object,
@@ -72,6 +71,13 @@ export default {
     }
   },
   computed: {
+    richContext() {
+      return {
+        userMap: this.userCache,
+        roleMap: this.roleCache,
+        channelMap: this.channelCache
+      }
+    },
     user() {
       return this.userCache[this.message.userid]
     },

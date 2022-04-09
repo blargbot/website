@@ -33,16 +33,14 @@
       </div>
       <div class="card-contents">
         <div class="message-wrapper">
-          <client-side>
-            <message
-              v-for="message in messages"
-              :key="message.id"
-              :message="message"
-              :user-cache="userCache"
-              :channel-cache="channelCache"
-              :role-cache="roleCache"
-            />
-          </client-side>
+          <message
+            v-for="message in messages"
+            :key="message.id"
+            :message="message"
+            :user-cache="userCache"
+            :channel-cache="channelCache"
+            :role-cache="roleCache"
+          />
         </div>
       </div>
     </div>
