@@ -15,7 +15,7 @@ export default {
     },
     value: {
       type: String,
-      required: true
+      default: null
     },
     details: {
       type: String,
@@ -39,7 +39,9 @@ export default {
   },
   methods: {
     copyValue() {
-      window.navigator.clipboard.writeText(this.value)
+      if (this.value !== null) {
+        window.navigator.clipboard.writeText(this.value)
+      }
     }
   }
 }

@@ -1,8 +1,8 @@
 <template>
   <div class="card">
     <h3>
-      <div class="v-aligned">
-        <emoji content="ℹ️ " />{{ setting.name }} (<code>{{ setting.key }}</code>)
+      <div v-twemoji class="v-aligned">
+        ℹ️ {{ setting.name }} (<code>{{ setting.key }}</code>)
       </div>
     </h3>
     <p>{{ setting.desc }}</p>

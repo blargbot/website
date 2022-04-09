@@ -25,6 +25,7 @@
     "sass": "^1.39.0",
     "sass-loader": "^10.1.1",
     "showdown": "^2.0.3",
+    "simple-markdown": "^0.7.3",
     "twemoji": "^13.1.0",
     "xss": "^1.0.11"
   },

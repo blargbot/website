@@ -17,14 +17,12 @@
                 </div>
                 <div class="dropdown-options">
                   <div v-for="(option, j) in entry.options" :key="j" class="dropdown-option" @click="selectOption(option)">
-                    <emoji v-if="option.emoji" :content="option.emoji" />
-                    <span>{{ option.display }}</span>
+                    <span v-twemoji>{{ option.display }}</span>
                   </div>
                 </div>
               </div>
               <div v-else :key="i" class="dropdown-option" @click="selectOption(entry)">
-                <emoji v-if="entry.emoji" :content="entry.emoji" />
-                <span>{{ entry.display }}</span>
+                <span v-twemoji>{{ entry.display }}</span>
               </div>
             </template>
           </div>
@@ -35,9 +33,7 @@
 </template>
 
 <script>
-import Emoji from './Emoji.vue'
 export default {
-  components: { Emoji },
   props: {
     options: {
       type: Array,

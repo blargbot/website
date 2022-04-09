@@ -22,8 +22,8 @@
         <div class="badges">
           <span v-if="item.deprecated" class="badge warning">Deprecated</span>
           <span class="badge">{{ (categories[item.category] || {}).name }}</span>
-          <div class="copy" title="Copy URL" @click.prevent="copyUrl(item, $event)">
-            <emoji content="🔗" />
+          <div v-twemoji class="copy" title="Copy URL" @click.prevent="copyUrl(item, $event)">
+            🔗"
           </div>
         </div>
         <div :id="item.name" class="anchor" />
@@ -50,9 +50,8 @@
 
         <div v-for="signature, i of getSignatures(item)" :key="i" class="subtag-signature">
           <h3>
-            <div class="v-aligned">
-              <emoji content="ℹ️ " />
-              <pre><code>{{ renderParameters(item, signature) }}</code></pre>
+            <div v-twemoji class="v-aligned">
+              ℹ️ <pre><code>{{ renderParameters(item, signature) }}</code></pre>
             </div>
           </h3>
           <div class="quote">
@@ -78,11 +77,10 @@
 <script>
 import { render } from '@bots-gg/markup'
 import ItemList from '@/components/ItemList.vue'
-import Emoji from '~/components/Emoji.vue'
 import Markdown from '~/components/Markdown.vue'
 
 export default {
-  components: { Emoji, ItemList, Markdown },
+  components: { ItemList, Markdown },
   data() {
     const list = Object.values(this.$store.state.subtags.list)
     list.sort((a, b) => {

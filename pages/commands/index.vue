@@ -23,8 +23,8 @@
 
         <div class="badges">
           <span class="badge">{{ item.category }}</span>
-          <div class="copy" title="Copy URL" @click.prevent="copyUrl(item, $event)">
-            <emoji content="📎" />
+          <div v-twemoji class="copy" title="Copy URL" @click.prevent="copyUrl(item, $event)">
+            📎
           </div>
         </div>
         <div :id="item.name" class="anchor" />
@@ -40,9 +40,8 @@
 
         <div v-for="signature, i of getSignatures(item)" :key="i">
           <h3>
-            <div class="v-aligned">
-              <emoji content="ℹ️ " />
-              {{ renderParameters(item, signature.parameters) }}
+            <div v-twemoji class="v-aligned">
+              ℹ️ {{ renderParameters(item, signature.parameters) }}
             </div>
           </h3>
           <div class="quote">
@@ -58,11 +57,10 @@
 <script>
 import { render } from '@bots-gg/markup'
 import ItemList from '@/components/ItemList.vue'
-import Emoji from '~/components/Emoji.vue'
 import Markdown from '~/components/Markdown.vue'
 
 export default {
-  components: { Emoji, ItemList, Markdown },
+  components: { ItemList, Markdown },
   data() {
     return {
       commands: Object.values(this.$store.state.commands.list)

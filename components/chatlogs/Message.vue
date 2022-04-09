@@ -13,24 +13,41 @@
     </div>
     <div class="message-wrapper">
       <img class="avatar" :src="user.avatarURL">
-      <div class="message-content">
+      <div class="message-body">
         <div class="header">
           <span class="username">{{ user.username }}#{{ user.discriminator }}</span>
-          <timestamp :value="message.msgtime" />
+          <discord-timestamp :value="message.msgtime" />
         </div>
-        <message-content class="content" :content="message.content" :channel-map="channelCache" :role-map="roleCache" :user-map="userCache" />
+        <rich-text
+          class="message-content"
+          :content="message.content"
+          :context="{ userMap: userCache, roleMap: roleCache, channelMap: channelCache }"
+          :features="messageFeatures"
+        />
       </div>
+    </div>
+    <div v-if="message.attachments && message.attachments.length">
+      <hr>
+      <div>Attachments</div>
+      <ul class="message-attachments">
+        <li v-for="(attachment, i) in message.attachments" :key="i" class="message-attachment">
+          <a :href="attachment" target="_blank">{{ attachment.split('/').slice(-1)[0] }}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>
     </div>
   </div>
 </template>
 
 <script>
 import dayjs from 'dayjs'
-import MessageContent from '../MessageContent.vue'
-import Timestamp from '../Timestamp.vue'
+import DiscordTimestamp from '../richText/DiscordTimestamp.vue'
+import RichText, { messageFeatures } from '../RichText.vue'
 
 export default {
-  components: { MessageContent, Timestamp },
+  components: { DiscordTimestamp, RichText },
   props: {
     message: {
       type: Object,
@@ -47,6 +64,11 @@ export default {
     channelCache: {
       type: Object,
       default: () => ({})
+    }
+  },
+  data() {
+    return {
+      messageFeatures
     }
   },
   computed: {
@@ -117,7 +139,27 @@ export default {
     margin-right: 0.5rem;
   }
 
-  .message-content {
+  .message-attachments {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    .message-attachment {
+      display: inline-block;
+
+      &:after {
+        content: "|";
+        padding: 0 3px;
+      }
+
+      &:last-child:after {
+        content: "";
+        padding: 0;
+      }
+    }
+  }
+
+  .message-body {
     flex: 1 1 auto;
 
     .header {
@@ -135,7 +177,7 @@ export default {
       }
     }
 
-    .content {
+    .message-content {
       white-space: pre-wrap;
       line-height: 1.375em;
     }

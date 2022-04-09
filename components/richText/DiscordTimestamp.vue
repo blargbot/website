@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import { defaultRules } from 'simple-markdown'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -10,7 +12,30 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(duration)
 dayjs.extend(relativeTime)
 
-export default {
+export const discordTimestampRules = {
+  /** @type {import('simple-markdown').ParserRule} */
+  discordTimestamp: {
+    order: defaultRules.strong.order,
+    match: source => /^<t:(\d+)(?::([tTdDfFR]))?>/.exec(source),
+    parse(capture) {
+      return {
+        value: capture[1],
+        format: capture[2]
+      }
+    },
+    vue(node) {
+      return {
+        component,
+        props: {
+          value: node.value,
+          format: node.format
+        }
+      }
+    }
+  }
+}
+
+const component = Vue.extend({
   props: {
     value: {
       type: String,
@@ -25,6 +50,11 @@ export default {
     return {
       now: dayjs(),
       tickId: null
+    }
+  },
+  computed: {
+    display() {
+      return this.value
     }
   },
   destroyed() {
@@ -65,5 +95,6 @@ export default {
       }
     }
   }
-}
+})
+export default component
 </script>
