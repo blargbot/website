@@ -18,7 +18,7 @@
           <span class="username">{{ user.username }}#{{ user.discriminator }}</span>
           <discord-timestamp :value="message.msgtime" />
         </div>
-        <rich-text class="message-content" :content="message.content" :context="richContext" :features="messageFeatures" />
+        <rich-text class="message-content" :content="message.content" :context="richContext" :disable="['link']" />
       </div>
     </div>
     <div class="message-embeds">
@@ -42,7 +42,7 @@
 <script>
 import dayjs from 'dayjs'
 import DiscordTimestamp from '../richText/DiscordTimestamp.vue'
-import RichText, { messageFeatures } from '../richText/Index.vue'
+import RichText from '../richText/Index.vue'
 import DiscordEmbed from './DiscordEmbed.vue'
 
 export default {
@@ -63,11 +63,6 @@ export default {
     channelCache: {
       type: Object,
       default: () => ({})
-    }
-  },
-  data() {
-    return {
-      messageFeatures
     }
   },
   computed: {

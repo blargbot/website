@@ -15,12 +15,6 @@ export const linkRules = {
   /** @type {import('simple-markdown').ParserRule} */
   link: {
     ...defaultRules.link,
-    match(source, state, ...args) {
-      if (!state.allowLinks) {
-        return null
-      }
-      return defaultRules.link.match(source, state, ...args)
-    },
     vue(node, output, state) {
       return {
         component,

@@ -60,17 +60,26 @@ const rules = {
   ...discordEveryoneRules
 }
 
+for (const [key, rule] of Object.entries(rules)) {
+  if (typeof rule.match !== 'function') {
+    continue
+  }
+  const realMatch = rule.match
+  rule.match = (source, state, ...args) => {
+    if (state.disable[key]) {
+      return null
+    }
+    return state.disable?.includes(key)
+      ? null
+      : realMatch.call(rule, source, state, ...args)
+  }
+}
+
 const parser = markdown.parserFor(rules)
 const toComponentTree = markdown.outputFor(rules, 'vue')
 
 function parseRichText(content, state) {
   return toComponentTree(parser(content, state), state)
-}
-
-export const embedFeatures = {}
-
-export const messageFeatures = {
-  aliasedLinks: false
 }
 
 export default {
@@ -84,16 +93,16 @@ export default {
       type: Object,
       default: () => ({})
     },
-    features: {
-      type: Object,
-      default: () => ({})
+    disable: {
+      type: Array,
+      default: () => []
     }
   },
   computed: {
     components() {
       return parseRichText(this.content, {
         context: this.context,
-        allowLinks: this.features.aliasedLinks !== false,
+        disable: this.disable,
         inline: true,
         inQuote: false,
         inEmphasis: false

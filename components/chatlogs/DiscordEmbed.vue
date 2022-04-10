@@ -10,9 +10,9 @@
             <span v-else class="embed-author-name">{{ embed.author.name }}</span>
           </div>
           <template v-if="embed.title">
-            <a v-if="embed.url" :href="embed.url" class="embed-title"><rich-text :content="embed.title" :context="context" :features="messageFeatures" /></a>
+            <a v-if="embed.url" :href="embed.url" class="embed-title"><rich-text :content="embed.title" :context="context" :disable="['link', 'autolink', 'url']" /></a>
             <div v-else :href="embed.url" class="embed-title">
-              <rich-text :content="embed.title" :context="context" :features="messageFeatures" />
+              <rich-text :content="embed.title" :context="context" :disable="['link', 'autolink', 'url']" />
             </div>
           </template>
           <div v-if="embed.description" class="embed-description markup">
@@ -21,7 +21,7 @@
           <div v-if="embed.fields && embed.fields.length" class="embed-fields">
             <div v-for="(field, i) in embed.fields" :key="i" class="embed-field" :class="{ 'embed-field-inline': field.inline }">
               <div class="embed-field-name">
-                <rich-text :content="field.name" :context="context" :features="messageFeatures" />
+                <rich-text :content="field.name" :context="context" :disable="['link']" />
               </div>
               <div class="embed-field-value markup">
                 <rich-text :content="field.value" :context="context" />
@@ -59,7 +59,7 @@
 <script>
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
-import RichText, { messageFeatures } from '../richText/Index.vue'
+import RichText from '../richText/Index.vue'
 
 dayjs.extend(advancedFormat)
 
@@ -74,9 +74,6 @@ export default {
       type: Object,
       default: null
     }
-  },
-  data() {
-    return { messageFeatures }
   },
   computed: {
     footerText() {
