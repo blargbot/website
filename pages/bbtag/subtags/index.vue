@@ -23,7 +23,7 @@
           <span v-if="item.deprecated" class="badge warning">Deprecated</span>
           <span class="badge">{{ (categories[item.category] || {}).name }}</span>
           <div v-twemoji class="copy" title="Copy URL" @click.prevent="copyUrl(item, $event)">
-            🔗"
+            🔗
           </div>
         </div>
         <div :id="item.name" class="anchor" />
