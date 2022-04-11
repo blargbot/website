@@ -1,30 +1,30 @@
 export const state = () => ({
   list: [],
-  categories: []
+  categories: {}
 })
 
 export const mutations = {
-  setList (state, subtags) {
+  setList(state, subtags) {
     state.list = subtags
   },
-  setCategories (state, categories) {
+  setCategories(state, categories) {
     state.categories = categories
   }
 }
 
 export const actions = {
-  async reload ({ dispatch }) {
+  async reload({ dispatch }) {
     await Promise.all([
       dispatch('reloadListOnly'),
       dispatch('reloadCategories')
     ])
   },
-  async reloadListOnly ({ commit }) {
+  async reloadListOnly({ commit }) {
     const subtags = await this.$axios.$get('/subtags')
     await commit('setList', subtags)
   },
-  async reloadCategories ({ commit }) {
+  async reloadCategories({ commit }) {
     const categories = await this.$axios.$get('/subtags/meta/categories')
-    await commit('setCategories', Object.keys(categories).map(i => categories[i]))
+    await commit('setCategories', categories)
   }
 }
