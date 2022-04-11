@@ -74,20 +74,16 @@ export default {
   },
   computed: {
     filteredItemGroups() {
-      try {
-        const filter = this.filter.toLowerCase()
-        if (filter.length === 0) {
-          return this.itemGroups
-        }
+      const filter = this.filter.toLowerCase()
+      if (filter.length === 0) {
         return this.itemGroups
-          .map(g => ({
-            category: g.category,
-            items: g.items.filter(i => i.labels.some(l => l.includes(filter)))
-          }))
-          .filter(g => g.items.length > 0)
-      } finally {
-        console.log('Item groups filtered')
       }
+      return this.itemGroups
+        .map(g => ({
+          category: g.category,
+          items: g.items.filter(i => i.labels.some(l => l.includes(filter)))
+        }))
+        .filter(g => g.items.length > 0)
     }
   },
   watch: {
