@@ -3,7 +3,7 @@
     <section>
       <div class="child card shadow-2">
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <div v-html="content" />
+        <div v-twemoji v-html="content" />
         <hr>
         <p>This page will expire {{ expiry }} ({{ delta }})</p>
         <a :href="'/dumps/' + id + '.txt'" :download="id + '.txt'" class="button shadow-1">Download</a>
