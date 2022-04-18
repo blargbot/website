@@ -23,9 +23,9 @@
 
         <div class="badges">
           <span class="badge">{{ item.category }}</span>
-          <div v-twemoji class="copy" title="Copy URL" @click.prevent="copyUrl(item, $event)">
+          <span v-twemoji class="badge copy" title="Copy URL" @click.prevent="copyUrl(item, $event)">
             🔗
-          </div>
+          </span>
         </div>
         <div :id="item.name" class="anchor" />
       </template>

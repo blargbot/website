@@ -1,4 +1,5 @@
 @import "_variables";
+@import "_mixins";
 
 .primary-text {
   color: $primary-text;
@@ -6,7 +7,7 @@
 
 p {
   font-size: 1.1em;
-  line-height: 1.3em;
+  @include line-height(1.3em);
 }
 
 @mixin link {
@@ -28,7 +29,7 @@ code {
   display: inline;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 3px;
-  line-height: 1.25em;
+  @include line-height(1.25em);
   white-space: pre-wrap;
   border: none;
 }
@@ -44,8 +45,9 @@ blockquote {
 }
 
 .emoji {
-  height: 1.25em;
-  margin-right: 0.25em;
+  height: var(--line-height);
+  vertical-align: middle;
+  margin-top: calc(var(--line-height) / -5)
 }
 
 .quote {

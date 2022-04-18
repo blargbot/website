@@ -99,6 +99,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../assets/scss/_mixins";
+
 .message {
   padding: 15px;
   position: relative;
@@ -180,7 +182,7 @@ export default {
 
     .message-content {
       white-space: pre-wrap;
-      line-height: 1.375em;
+      @include line-height(1.375em);
     }
   }
 }

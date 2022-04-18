@@ -52,57 +52,39 @@ export default {
       const result = [
         {
           display: 'Defaults',
-          options: [
-            {
-              display: 'Delete message',
-              selectDisplay: 'Default - delete message',
-              emoji: '🗑️',
-              value: 'deletemessage'
-            },
-            {
-              display: 'Ban message',
-              selectDisplay: 'Default - ban message',
-              emoji: '🛑',
-              value: 'banMessage'
-            },
-            {
-              display: 'Kick message',
-              selectDisplay: 'Default - kick message',
-              emoji: '👋',
-              value: 'kickMessage'
-            }
-          ]
+          options: getCensorTypes('Default')
         }
       ]
       if (censors.list !== undefined) {
         for (const [id, censor] of Object.entries(censors.list)) {
           result.push({
             display: `#${id} (${censor.term})`,
-            options: [
-              {
-                display: 'Delete message',
-                selectDisplay: `#${id} - delete message`,
-                emoji: '🗑️',
-                value: `${id}/deletemessage`
-              },
-              {
-                display: 'Ban message',
-                selectDisplay: `#${id} - ban message`,
-                emoji: '🛑',
-                value: `${id}/banMessage`
-              },
-              {
-                display: 'Kick message',
-                selectDisplay: `#${id} - kick message`,
-                emoji: '👋',
-                value: `${id}/kickMessage`
-              }
-            ]
+            options: getCensorTypes(`#${id}`, t => `${id}/${t}`)
           })
         }
       }
       this.options = result
     }
   }
+}
+
+function getCensorTypes(id, getValue = v => v) {
+  return [
+    {
+      display: '🗑️ Delete message',
+      selectDisplay: `${id} - delete message`,
+      value: getValue('deletemessage')
+    },
+    {
+      display: '🛑 Ban message',
+      selectDisplay: `${id} - ban message`,
+      value: getValue('banmessage')
+    },
+    {
+      display: '👋 Kick message',
+      selectDisplay: `${id} - kick message`,
+      value: getValue('kickmessage')
+    }
+  ]
 }
 </script>

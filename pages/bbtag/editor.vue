@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import DropdownButton from '~/components/DropdownButton.vue'
 import AutoresponseEditor from '~/components/editor/AutoresponseEditor.vue'
 import CensorsEditor from '~/components/editor/CensorsEditor.vue'
 import CustomCommandEditor from '~/components/editor/CustomCommandEditor.vue'
@@ -20,6 +21,7 @@ import RolemesEditor from '~/components/editor/RolemesEditor.vue'
 import TagEditor from '~/components/editor/TagEditor.vue'
 
 export default {
+  components: { DropdownButton },
   middleware: 'authenticated',
   data() {
     const targetTree = [
@@ -31,50 +33,43 @@ export default {
       targetTree.push(group)
       if (guild.ccommands) {
         group.options.push({
-          display: 'Custom Commands',
-          emoji: '⚙️',
+          display: '⚙️ Custom Commands',
           value: { component: CustomCommandEditor }
         })
       }
       if (guild.censors) {
         group.options.push({
-          display: 'Censors',
-          emoji: '🛡️',
+          display: '🛡️ Censors',
           value: { component: CensorsEditor }
         })
       }
       if (guild.autoresponses) {
         group.options.push({
-          display: 'Autoresponses',
-          emoji: '💬',
+          display: '💬 Autoresponses',
           value: { component: AutoresponseEditor }
         })
       }
       if (guild.rolemes) {
         group.options.push({
-          display: 'Rolemes',
-          emoji: '🎟️',
+          display: '🎟️ Rolemes',
           value: { component: RolemesEditor }
         })
       }
       if (guild.interval) {
         group.options.push({
-          display: 'Interval',
-          emoji: '⏱️',
+          display: '⏱️ Interval',
           value: { component: IntervalEditor }
         })
       }
       if (guild.greeting) {
         group.options.push({
-          display: 'Greeting',
-          emoji: '📣',
+          display: '📣 Greeting',
           value: { component: GreetingEditor }
         })
       }
       if (guild.farewell) {
         group.options.push({
-          display: 'Farewell',
-          emoji: '👋',
+          display: '👋 Farewell',
           value: { component: FarewellEditor }
         })
       }

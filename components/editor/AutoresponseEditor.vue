@@ -54,16 +54,16 @@ export default {
       const result = []
       if (ars.everything !== undefined) {
         result.push({
-          display: 'Everything Autoresponse',
-          emoji: '🌍',
+          display: '🌍 Everything Autoresponse',
+          selectDisplay: 'Everything Autoresponse',
           value: 'everything'
         })
       }
       if (ars.filtered !== undefined) {
         for (const [id, ar] of Object.entries(ars.filtered)) {
           result.push({
-            display: `${id}: ${ar.term}`,
-            emoji: '💬',
+            display: `💬 ${id}: ${ar.term}`,
+            selectDisplay: `${id}: ${ar.term}`,
             value: id
           })
         }

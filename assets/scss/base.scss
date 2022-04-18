@@ -1,4 +1,5 @@
 @import "variables";
+@import "mixins";
 @import "forms";
 @import "text";
 
@@ -199,6 +200,7 @@ h1 {
         padding: 0.5rem;
         background: rgba(0, 0, 0, 0.4);
         border-radius: 0.5rem;
+        @include line-height(1em);
 
         &:not(:last-child) {
           margin-right: 0.5rem;
@@ -207,20 +209,14 @@ h1 {
         &.warning {
           background: rgb(126, 0, 0) !important;
         }
-      }
+        &.copy {
+          padding: 0.5rem;
+          background: rgba(0, 0, 0, 0.1);
+          border-radius: 0.5rem;
 
-      .copy {
-        padding: 0.5rem;
-        background: rgba(0, 0, 0, 0.1);
-        border-radius: 0.5rem;
-
-        .emoji {
-          margin-right: 0;
-          margin-bottom: -0.25em;
-        }
-
-        &:hover {
-          background: rgba(0, 0, 0, 0.4);
+          &:hover {
+            background: rgba(0, 0, 0, 0.4);
+          }
         }
       }
     }
@@ -331,14 +327,7 @@ input {
 }
 
 .content {
-  line-height: 1.375em;
-
-  img.emoji {
-    height: 1.375em;
-    width: 1.375em;
-    object-fit: contain;
-    vertical-align: bottom;
-  }
+  @include line-height(1.375em);
 }
 
 .mention {

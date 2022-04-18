@@ -25,7 +25,7 @@ export default {
       default: ''
     }
   },
-  data () {
+  data() {
     return {
       collapsed: true,
       boundCollapse: this.collapse.bind(this),
@@ -35,20 +35,20 @@ export default {
     }
   },
   computed: {
-    style () {
+    style() {
       return {
         height: this.collapsed ? 0 : this.height + 'px'
       }
     }
   },
   watch: {
-    $route (to) {
+    $route(to) {
       if (to.hash === '#' + this.name) {
         this.expand()
       }
     }
   },
-  mounted () {
+  mounted() {
     this.$root.$on('expandAll', this.boundExpand)
     this.$root.$on('collapseAll', this.boundCollapse)
     window.addEventListener('resize', this.boundSetHeight)
@@ -59,26 +59,26 @@ export default {
       this.$el.scrollIntoView()
     }
   },
-  destroyed () {
+  destroyed() {
     this.$root.$off('expandAll', this.boundExpand)
     this.$root.$off('collapseAll', this.boundCollapse)
     window.removeEventListener('resize', this.boundSetHeight)
   },
   methods: {
-    collapse () {
+    collapse() {
       this.collapsed = true
     },
-    expand () {
+    expand() {
       this.collapsed = false
     },
-    toggleCollapsed () {
+    toggleCollapsed() {
       if (this.collapsed) {
         this.expand()
       } else {
         this.collapse()
       }
     },
-    setHeight () {
+    setHeight() {
       this.height = this.$refs.content.scrollHeight
     }
   }
@@ -108,17 +108,6 @@ export default {
 
     &:hover {
       background: rgba(0, 0, 0, 0.2);
-    }
-
-    .badges {
-      display: flex;
-
-      .badge {
-        display: block;
-        padding: 0.5rem;
-        background: rgba(0, 0, 0, 0.4);
-        border-radius: 0.5rem;
-      }
     }
   }
 

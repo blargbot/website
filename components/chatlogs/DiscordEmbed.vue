@@ -208,7 +208,6 @@ $gutter: 5px;
           flex-direction: row;
           -ms-flex-wrap: wrap;
           flex-wrap: wrap;
-          margin-top: -$gutter * 2;
           margin-bottom: $gutter * 2;
           .embed-field {
             -webkit-box-flex: 0;
@@ -217,6 +216,9 @@ $gutter: 5px;
             padding-top: $gutter * 2;
             min-width: 100%;
             max-width: 506px;
+            &:first-child {
+              padding-top: 0;
+            }
             &.embed-field-inline {
               -webkit-box-flex: 1;
               -ms-flex: 1;
