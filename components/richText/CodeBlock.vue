@@ -50,7 +50,7 @@ const component = Vue.extend({
         return hljs.highlight(this.content, {
           language: this.lang,
           ignoreIllegals: true
-        })
+        }).value
       }
       return this.$sanitize(this.content)
     },
