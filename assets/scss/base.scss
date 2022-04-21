@@ -16,6 +16,7 @@ html,
   color: $primary-text;
   font-family: $primary-typeface;
   box-sizing: border-box;
+  --line-height: 1.35em;
 }
 
 * {
