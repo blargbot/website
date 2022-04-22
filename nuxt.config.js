@@ -1,3 +1,4 @@
+import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin'
 import * as config from './config.json'
 
 export default {
@@ -74,14 +75,23 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     extend(config, ctx) {
-      config.module.rules.push({
-        test: /\.md$/,
-        loader: 'raw-loader'
-      })
+      config.module.rules.push(
+        {
+          test: /\.md$/,
+          loader: 'raw-loader'
+        },
+        {
+          test: /\.ttf$/,
+          use: ['file-loader']
+        }
+      )
       if (ctx.isDev) {
         config.devtool = ctx.isClient ? 'source-map' : 'inline-source-map'
       }
-    }
+    },
+    plugins: [
+      new MonacoWebpackPlugin()
+    ]
   },
 
   publicRuntimeConfig: {

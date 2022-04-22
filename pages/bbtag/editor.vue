@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import BbtagEditor from '~/components/BbtagEditor.vue'
 import DropdownButton from '~/components/DropdownButton.vue'
 import AutoresponseEditor from '~/components/editor/AutoresponseEditor.vue'
 import CensorsEditor from '~/components/editor/CensorsEditor.vue'
@@ -20,8 +21,17 @@ import IntervalEditor from '~/components/editor/IntervalEditor.vue'
 import RolemesEditor from '~/components/editor/RolemesEditor.vue'
 import TagEditor from '~/components/editor/TagEditor.vue'
 
+class Test {
+  _field
+  abc() {
+    return false
+  }
+}
+
+new Test().abc()
+
 export default {
-  components: { DropdownButton },
+  components: { DropdownButton, BbtagEditor },
   middleware: 'authenticated',
   data() {
     const targetTree = [
