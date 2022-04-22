@@ -19,9 +19,7 @@ monaco.languages.setLanguageConfiguration('bbtag', {
   },
   indentationRules: {
     increaseIndentPattern: /{/,
-    decreaseIndentPattern: /}/,
-    indentNextLinePattern: /{/,
-    unIndentedLinePattern: /}/
+    decreaseIndentPattern: /}/
   },
   comments: {
     blockComment: ['{//;', '}']
@@ -79,10 +77,11 @@ monaco.languages.registerHoverProvider('bbtag', {
     const subtags = model.subtags?.() ?? []
     const prevBrace = model.findPreviousMatch('[{;}]', position, true)?.range
     const nextBrace = model.findNextMatch('[{}]', position, true)?.range
-    if (prevBrace == null || nextBrace == null || model.getValueInRange(prevBrace) !== '{' || model.getValueInRange(nextBrace) === '}') {
+    if (prevBrace == null || nextBrace == null || model.getValueInRange(prevBrace) !== '{' || model.getValueInRange(nextBrace) === '{') {
       return undefined
     }
-    const name = model.getWordAtPosition(position)?.word.toLowerCase()
+    const word = model.getWordAtPosition(position)
+    const name = word?.word.toLowerCase()
     const subtag = subtags.find(s => s.name === name) || subtags.find(s => s.aliases?.includes(name))
     if (subtag === undefined) {
       return undefined
@@ -103,10 +102,10 @@ monaco.languages.registerHoverProvider('bbtag', {
     }
     return {
       range: {
-        endColumn: nextBrace.endColumn,
-        startColumn: prevBrace.startColumn,
-        endLineNumber: nextBrace.endLineNumber,
-        startLineNumber: prevBrace.startLineNumber
+        startLineNumber: position.lineNumber,
+        endLineNumber: position.lineNumber,
+        startColumn: word.startColumn,
+        endColumn: word.endColumn
       },
       contents
     }
