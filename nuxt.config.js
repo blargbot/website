@@ -79,10 +79,6 @@ export default {
         {
           test: /\.md$/,
           loader: 'raw-loader'
-        },
-        {
-          test: /\.ttf$/,
-          use: ['file-loader']
         }
       )
       if (ctx.isDev) {

@@ -3,6 +3,30 @@ import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
 // let _subtags = []
 
 monaco.languages.register({ id: 'bbtag' })
+monaco.languages.setLanguageConfiguration('bbtag', {
+  wordPattern: /[^{};\s]+/,
+  autoClosingPairs: [
+    { open: '{', close: '}' }
+  ],
+  brackets: [
+    ['{', '}']
+  ],
+  folding: {
+    markers: {
+      start: /{/,
+      end: /}/
+    }
+  },
+  indentationRules: {
+    increaseIndentPattern: /{/,
+    decreaseIndentPattern: /}/,
+    indentNextLinePattern: /{/,
+    unIndentedLinePattern: /}/
+  },
+  comments: {
+    blockComment: ['{//;', '}']
+  }
+})
 
 monaco.languages.setMonarchTokensProvider('bbtag', {
   brackets: [
@@ -43,54 +67,146 @@ monaco.languages.setMonarchTokensProvider('bbtag', {
 
 monaco.languages.registerCompletionItemProvider('bbtag', {
   triggerCharacters: ['{'],
-  provideCompletionItems(model, position, context) {
-    let prevBrace = model.findPreviousMatch('([{}])', position, true)?.range
-    if (prevBrace == null || model.getValueInRange(prevBrace) === '}') {
-      prevBrace = {
-        startColumn: model.getWordUntilPosition(position).startColumn,
-        startLineNumber: position.lineNumber
-      }
-    }
-    const subtags = model.subtags?.() ?? []
-    const range = {
-      startColumn: prevBrace.startColumn,
-      startLineNumber: prevBrace.startLineNumber,
-      endColumn: position.column,
-      endLineNumber: position.lineNumber
-    }
-    const sugg = subtags.map(t => t.signatures.map(s => renderTemplate(t, s).map(t => ({
-      ...t,
-      documentation: s.description,
-      kind: monaco.languages.CompletionItemKind.Keyword,
-      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-      range
-    })))).flat().flat()
+  provideCompletionItems(model, position) {
     return {
-      suggestions: sugg
+      suggestions: [...getSubtagCompletions(model, position)]
     }
   }
 })
 
-function renderTemplate(subtag, signature) {
-  const parameters = [...signature.parameters]
-  for (let i = 0; i < parameters.length; i++) {
-    if (Array.isArray(parameters[i]?.nested)) {
-      parameters.splice(i, 1, ...parameters[i--].nested)
+monaco.languages.registerHoverProvider('bbtag', {
+  provideHover(model, position) {
+    const subtags = model.subtags?.() ?? []
+    const prevBrace = model.findPreviousMatch('[{;}]', position, true)?.range
+    const nextBrace = model.findNextMatch('[{}]', position, true)?.range
+    if (prevBrace == null || nextBrace == null || model.getValueInRange(prevBrace) !== '{' || model.getValueInRange(nextBrace) === '}') {
+      return undefined
     }
-  }
-  const patterns = [[]]
-  for (const parameter of parameters) {
-    if (parameter.required) {
-      for (const pattern of patterns) {
-        pattern.push(parameter.name)
+    const name = model.getWordAtPosition(position)?.word.toLowerCase()
+    const subtag = subtags.find(s => s.name === name) || subtags.find(s => s.aliases?.includes(name))
+    if (subtag === undefined) {
+      return undefined
+    }
+    /** @type {monaco.IMarkdownString[]} */
+    const contents = [
+      { value: `\`\`\`bbtag\n{${subtag.name}} Subtag\n\`\`\`` }
+    ]
+    if (subtag.description) {
+      contents.push({ value: subtag.description })
+    }
+    for (const signature of subtag.signatures) {
+      let markdown = `\`\`\`bbtag\n${stringifySignature(subtag, signature)}\n\`\`\``
+      if (signature.description) {
+        markdown += `\n\n${signature.description}`
       }
-    } else {
-      patterns.push([...patterns[0]])
-      patterns[0].push(parameter.name)
+      contents.push({ value: markdown })
+    }
+    return {
+      range: {
+        endColumn: nextBrace.endColumn,
+        startColumn: prevBrace.startColumn,
+        endLineNumber: nextBrace.endLineNumber,
+        startLineNumber: prevBrace.startLineNumber
+      },
+      contents
     }
   }
-  return patterns.map(p => ({
-    label: `{${[signature.subtagName || subtag.name, ...p].join(';')}}`,
-    insertText: `{${[signature.subtagName || subtag.name, ...p.map((p, i) => `\${${i + 1}:${p}}`)].join(';')}}`
-  }))
+})
+
+/**
+ * @param {monaco.editor.ITextModel} model
+ * @param {monaco.Position} position
+ * @returns {Generator<monaco.languages.CompletionItem>}
+ */
+function* getSubtagCompletions(model, position) {
+  let prevBrace = model.findPreviousMatch('[{;}]', position, true)?.range
+  let nextBrace = model.findNextMatch('[{;}]', position, true)?.range
+  if (prevBrace == null || model.getValueInRange(prevBrace) !== '{') {
+    prevBrace = {
+      startColumn: model.getWordUntilPosition(position).startColumn,
+      startLineNumber: position.lineNumber
+    }
+  }
+  if (nextBrace == null || model.getValueInRange(nextBrace) !== '}') {
+    nextBrace = {
+      endColumn: position.column,
+      endLineNumber: position.lineNumber
+    }
+  }
+  const subtags = model.subtags?.() ?? []
+  const range = {
+    startColumn: prevBrace.startColumn,
+    startLineNumber: prevBrace.startLineNumber,
+    endColumn: nextBrace.endColumn,
+    endLineNumber: nextBrace.endLineNumber
+  }
+
+  for (const subtag of subtags) {
+    for (const signature of subtag.signatures) {
+      const parameters = [...signature.parameters]
+      for (let i = 0; i < parameters.length; i++) {
+        if (Array.isArray(parameters[i]?.nested)) {
+          parameters.splice(i, 1, ...parameters[i--].nested)
+        }
+      }
+      const patterns = [[]]
+      for (const parameter of parameters) {
+        if (parameter.required) {
+          for (const pattern of patterns) {
+            pattern.push(parameter.name)
+          }
+        } else {
+          patterns.push([...patterns[0]])
+          patterns[0].push(parameter.name)
+        }
+      }
+      const names = signature.subtagName === undefined ? [subtag.name, ...subtag.aliases || []] : [signature.subtagName]
+      for (const name of names) {
+        for (const pattern of patterns) {
+          yield {
+            label: `{${[name, ...pattern].join(';')}}`,
+            insertText: `{${[name, ...pattern.map((p, i) => `\${${i + 1}:{//;${p}\\}}`)].join(';')}}`,
+            documentation: subtag.description,
+            kind: monaco.languages.CompletionItemKind.Keyword,
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            range
+          }
+        }
+      }
+    }
+  }
+  if (subtags.some(s => s.name === 'function')) {
+    yield {
+      label: '{func.name;[args]...}',
+      // eslint-disable-next-line no-template-curly-in-string
+      insertText: '{func.${1:{//;name\\}};${2:{//;arguments\\}}}',
+      documentation: 'Call a user defined function',
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+      range
+    }
+  }
+}
+
+function stringifySignature(subtag, signature) {
+  const out = []
+  for (const param of signature.parameters) {
+    out.push(stringifyParameter(param))
+  }
+
+  if (out.length > 0) {
+    return `{${signature.subtagName || subtag.name};${out.join(';')}}`
+  } else {
+    return `{${signature.subtagName || subtag.name}}`
+  }
+}
+
+function stringifyParameter(parameter) {
+  if ('nested' in parameter) {
+    if (parameter.nested.length === 1) {
+      return stringifyParameter(parameter.nested[0]) + '...'
+    }
+    return `(${parameter.nested.map(stringifyParameter).join(';')})...`
+  }
+  return parameter.required ? `<${parameter.name}>` : `[${parameter.name}]`
 }
