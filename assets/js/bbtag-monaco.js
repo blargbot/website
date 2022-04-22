@@ -88,12 +88,18 @@ monaco.languages.registerHoverProvider('bbtag', {
     }
     /** @type {monaco.IMarkdownString[]} */
     const contents = [
-      { value: `\`\`\`bbtag\n{${subtag.name}} Subtag\n\`\`\`` }
+      { value: `\`\`\`bbtag\n{${subtag.name}} Subtag\n\`\`\`` },
+      { value: `[Subtag documentation page](${window.location.origin}/bbtag/subtags#${subtag.name})` }
     ]
     if (subtag.description) {
       contents.push({ value: subtag.description })
     }
-    for (const signature of subtag.signatures) {
+    let signatures = subtag.signatures.filter(s => s.subtagName === name)
+    if (signatures.length === 0) {
+      signatures = subtag.signatures
+    }
+
+    for (const signature of signatures) {
       let markdown = `\`\`\`bbtag\n${stringifySignature(subtag, signature)}\n\`\`\``
       if (signature.description) {
         markdown += `\n\n${signature.description}`
@@ -161,6 +167,9 @@ function* getSubtagCompletions(model, position) {
       }
       const names = signature.subtagName === undefined ? [subtag.name, ...subtag.aliases || []] : [signature.subtagName]
       for (const name of names) {
+        if (/^[^a-zA-Z]/.test(name)) {
+          continue
+        }
         for (const pattern of patterns) {
           yield {
             label: `{${[name, ...pattern].join(';')}}`,
@@ -168,6 +177,7 @@ function* getSubtagCompletions(model, position) {
             documentation: subtag.description,
             kind: monaco.languages.CompletionItemKind.Function,
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            sortText: `${name}|${pattern.length.toString().padStart(4, '0')}|${pattern.join('|')}`,
             range
           }
         }
@@ -182,6 +192,7 @@ function* getSubtagCompletions(model, position) {
       documentation: 'Call a user defined function',
       kind: monaco.languages.CompletionItemKind.Function,
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+      sortText: 'func|0000',
       range
     }
   }
