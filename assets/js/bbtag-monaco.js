@@ -76,7 +76,7 @@ monaco.languages.registerHoverProvider('bbtag', {
   provideHover(model, position) {
     const subtags = model.subtags?.() ?? []
     const prevBrace = model.findPreviousMatch('[{;}]', position, true)?.range
-    const nextBrace = model.findNextMatch('[{}]', position, true)?.range
+    const nextBrace = model.findNextMatch('[{;}]', position, true)?.range
     if (prevBrace == null || nextBrace == null || model.getValueInRange(prevBrace) !== '{' || model.getValueInRange(nextBrace) === '{') {
       return undefined
     }
@@ -166,7 +166,7 @@ function* getSubtagCompletions(model, position) {
             label: `{${[name, ...pattern].join(';')}}`,
             insertText: `{${[name, ...pattern.map((p, i) => `\${${i + 1}:{//;${p}\\}}`)].join(';')}}`,
             documentation: subtag.description,
-            kind: monaco.languages.CompletionItemKind.Keyword,
+            kind: monaco.languages.CompletionItemKind.Function,
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             range
           }
@@ -180,7 +180,7 @@ function* getSubtagCompletions(model, position) {
       // eslint-disable-next-line no-template-curly-in-string
       insertText: '{func.${1:{//;name\\}};${2:{//;arguments\\}}}',
       documentation: 'Call a user defined function',
-      kind: monaco.languages.CompletionItemKind.Keyword,
+      kind: monaco.languages.CompletionItemKind.Function,
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       range
     }
