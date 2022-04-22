@@ -17,10 +17,6 @@ monaco.languages.setLanguageConfiguration('bbtag', {
       end: /}/
     }
   },
-  indentationRules: {
-    increaseIndentPattern: /{/,
-    decreaseIndentPattern: /}/
-  },
   comments: {
     blockComment: ['{//;', '}']
   }
@@ -37,10 +33,10 @@ monaco.languages.setMonarchTokensProvider('bbtag', {
       [/}/, 'invalid']
     ],
     text: [
+      [/{\s*\/\/\s*[;}]/, { token: 'comment', next: '@comment' }],
       [/{/, { token: '@rematch', next: '@subtag' }]
     ],
     subtag: [
-      [/{\s*\/\/\s*[;}]/, { token: 'comment', next: '@comment' }],
       [/{/, { token: '@brackets', next: '@subtagName' }],
       [/;/, { token: 'type', next: '@subtagArg' }],
       [/}/, { token: '@brackets', next: '@pop' }]
@@ -48,12 +44,12 @@ monaco.languages.setMonarchTokensProvider('bbtag', {
     subtagName: [
       { include: '@text' },
       [/[^{};]/, { token: 'keyword' }],
-      [/;|}/, { token: '@rematch', next: '@pop' }]
+      [/[;}]/, { token: '@rematch', next: '@pop' }]
     ],
     subtagArg: [
       { include: '@text' },
       [/[^{};]/, { token: 'string' }],
-      [/;|}/, { token: '@rematch', next: '@pop' }]
+      [/[;}]/, { token: '@rematch', next: '@pop' }]
     ],
     comment: [
       [/{/, { token: 'comment', next: '@comment' }],
