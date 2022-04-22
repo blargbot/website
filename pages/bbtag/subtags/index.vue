@@ -124,23 +124,6 @@ export default {
         return `{${signature.subtagName || item.name}}`
       }
     },
-    renderParameter(parameter) {
-      switch (parameter.kind) {
-        case 'literal':
-          return parameter.name
-        case 'singleVar':
-        case 'concatVar':
-          if (parameter.required) {
-            return `<${parameter.name}>`
-          }
-          return `[${parameter.name}]`
-        case 'greedyVar':
-          if (parameter.minLength === 0) {
-            return `[...${parameter.name}]`
-          }
-          return `<...${parameter.name}>`
-      }
-    },
     stringifyParameter(parameter) {
       if ('nested' in parameter) {
         if (parameter.nested.length === 1) {
