@@ -72,7 +72,7 @@ export default {
       if (isNaN(value) || typeof value !== 'number') {
         return '--'
       }
-      return (Math.round(value * 10000) / 100).toFixed(2) + '%'
+      return (Math.round(value * 100) / 100).toFixed(2) + '%'
     },
     formatMemory(value) {
       if (isNaN(value) || typeof value !== 'number') {
