@@ -95,5 +95,9 @@ export default {
     callback: config.callback
   },
 
-  serverMiddleware: ['~/server-middleware/output-text']
+  serverMiddleware: [
+    '~/server-middleware/output-text',
+    '~/server-middleware/json-chatlogs',
+    '~/server-middleware/color-route'
+  ]
 }
