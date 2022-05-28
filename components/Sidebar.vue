@@ -9,9 +9,9 @@
         <nuxt-link to="/bbtag/editor" class="sidebar-button">
           BBTag Editor
         </nuxt-link>
-        <nuxt-link to="/dashboard" class="sidebar-button">
+        <!-- <nuxt-link to="/dashboard" class="sidebar-button">
           Dashboard
-        </nuxt-link>
+        </nuxt-link> -->
         <nuxt-link to="/donate" class="sidebar-button">
           Donate
         </nuxt-link>
