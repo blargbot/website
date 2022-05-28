@@ -33,7 +33,7 @@
       <div class="info-flex">
         <div class="child card shadow-2">
           <h2>Commands</h2>
-          <p>blargbot has a large variety of built-in commands. Wanna find out what time it is somewhere else in the world, or convert between currencies? Need to ban or kick someone? Have a craving for some meme image generation? <del>Just want some porn?</del> blargbot has got your back.</p>
+          <p>blargbot has a large variety of built-in commands. Wanna find out what time it is somewhere else in the world, or convert between currencies? Need to ban or kick someone? Have a craving for some meme image generation? blargbot has got your back.</p>
           <p>Every command can be restricted to any role, and most can be disabled altogether.</p>
           <nuxt-link to="commands" class="button flat">
             Documentation
