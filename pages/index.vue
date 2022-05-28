@@ -1,34 +1,32 @@
 <template>
   <div>
-    <div class="full-height">
-      <Banner />
-      <section>
-        <h1 class="center">
-          blargbot
-        </h1>
-        <div class="button-grid">
-          <nuxt-link to="/invite" class="child-2 button shadow-2 green">
-            Invite
-          </nuxt-link>
-          <nuxt-link to="/commands" class="child-1 button shadow-2">
-            Commands
-          </nuxt-link>
-          <nuxt-link to="/bbtag" class="child-1 button shadow-2">
-            BBTag
-          </nuxt-link>
-          <nuxt-link to="/dashboard" class="child-2 button shadow-2">
-            Dashboard
-          </nuxt-link>
-          <nuxt-link to="/donate" class="child-2 button shadow-2 gold">
-            Donate
-          </nuxt-link>
-        </div>
+    <Banner />
+    <section>
+      <h1 class="center">
+        blargbot
+      </h1>
+      <div class="button-grid">
+        <nuxt-link to="/invite" class="child-2 button shadow-2 green">
+          Invite
+        </nuxt-link>
+        <nuxt-link to="/commands" class="child-1 button shadow-2">
+          Commands
+        </nuxt-link>
+        <nuxt-link to="/bbtag" class="child-1 button shadow-2">
+          BBTag
+        </nuxt-link>
+        <nuxt-link to="/dashboard" class="child-2 button shadow-2">
+          Dashboard
+        </nuxt-link>
+        <nuxt-link to="/donate" class="child-2 button shadow-2 gold">
+          Donate
+        </nuxt-link>
+      </div>
 
-        <p class="center larger">
-          blargbot is a multi-purposed bot for the <a href="https://discordapp.com">Discord</a> chat platform, designed with customizability in mind.
-        </p>
-      </section>
-    </div>
+      <p class="center larger">
+        blargbot is a multi-purposed bot for the <a href="https://discordapp.com">Discord</a> chat platform, designed with customizability in mind.
+      </p>
+    </section>
     <section>
       <div class="info-flex">
         <div class="child card shadow-2">
