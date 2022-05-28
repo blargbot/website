@@ -2,6 +2,19 @@
   <div :class="builtIn ? 'built-in' : 'loose'">
     <div class="sidebar" :class="{opened}">
       <div class="button-container">
+        <nuxt-link to="/invite" class="sidebar-button show-small">
+          Invite
+        </nuxt-link>
+        <a href="https://support.blargbot.xyz" class="sidebar-button show-small">Support Guild</a>
+        <nuxt-link to="/bbtag/editor" class="sidebar-button">
+          BBTag Editor
+        </nuxt-link>
+        <nuxt-link to="/dashboard" class="sidebar-button">
+          Dashboard
+        </nuxt-link>
+        <nuxt-link to="/donate" class="sidebar-button">
+          Donate
+        </nuxt-link>
         <nuxt-link to="/commands/usage" class="sidebar-button">
           Command Usage
         </nuxt-link>
@@ -13,9 +26,6 @@
         </nuxt-link>
         <nuxt-link to="/bbtag/subtags" class="sidebar-button child">
           Subtags
-        </nuxt-link>
-        <nuxt-link to="/bbtag/editor" class="sidebar-button child">
-          Editor
         </nuxt-link>
       </div>
     </div>
@@ -59,6 +69,8 @@ export default {
 
 <style lang="scss" scoped>
 .loose {
+  z-index: 100;
+
   .sidebar {
     position: fixed;
     top: 80px;
@@ -87,6 +99,8 @@ export default {
 }
 .built-in {
   flex: 0 0 300px;
+  z-index: 100;
+
   .sidebar {
     position: fixed;
     top: 80px;
@@ -107,7 +121,6 @@ export default {
       position: fixed;
     }
     .sidebar {
-      position: fixed;
       left: -300px;
       &.opened {
         left: 0;

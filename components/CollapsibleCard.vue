@@ -88,6 +88,8 @@ export default {
 <style lang="scss" scoped>
 .card-wrapper {
   scroll-margin-top: 100px;
+  max-width: 96vw;
+  margin: 0 auto;
 }
 
 .card {

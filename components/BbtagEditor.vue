@@ -58,6 +58,6 @@ export default {
 <style lang="scss" scoped>
 .bbtag-editor {
   max-width: 100%;
-  width: 100vw;
+  width: 100%;
 }
 </style>

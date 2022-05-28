@@ -152,4 +152,14 @@ $sixth: math.div(100%, 6);
   display: grid;
   grid-template-columns: 50% $sixth $sixth $sixth;
 }
+
+@media screen and (max-width: 800px) {
+  .control-row {
+    grid-template-columns: 1fr 1fr 1fr;
+
+    :first-child {
+      grid-column-end: span 3;
+    }
+  }
+}
 </style>

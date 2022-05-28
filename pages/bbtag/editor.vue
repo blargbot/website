@@ -1,7 +1,7 @@
 <template>
   <section class="wider">
     <div class="card">
-      <h1>BBTag IDE</h1>
+      <h1>BBTag Editor</h1>
       <dropdown-button v-model="destination" :options="targetTree" prompt="Select a Tag destination" />
       <component :is="destination.component" v-if="destination != null" v-model="content" :guild-id="destination.id" />
       <bbtag-editor ref="editor" v-model="content" />

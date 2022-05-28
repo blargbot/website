@@ -79,7 +79,7 @@ import Banner from '~/components/Banner.vue'
 
 export default {
   components: { Banner },
-  layout: 'home'
+  layout: 'loose-sidebar'
 }
 </script>
 
@@ -88,16 +88,7 @@ export default {
   min-height: 100vh;
   margin-bottom: -80px;
 }
-.button-grid {
-  display: grid;
-  grid-template-columns: 50% 50%;
-  .child-1 {
-    grid-column-end: span 1;
-  }
-  .child-2 {
-    grid-column-end: span 2;
-  }
-}
+
 .info-flex {
   display: flex;
   flex-flow: row wrap;

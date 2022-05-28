@@ -40,7 +40,7 @@
 
         <div v-for="signature, i of getSignatures(item)" :key="i">
           <h3>
-            <div v-twemoji class="v-aligned">
+            <div v-twemoji class="v-aligned gap">
               ℹ️ {{ renderParameters(item, signature.parameters) }}
             </div>
           </h3>

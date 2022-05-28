@@ -19,17 +19,7 @@
           <div class="child hide-small">
             <a href="https://support.blargbot.xyz" class="button flat">Support Guild</a>
           </div>
-          <div class="child hide-small">
-            <nuxt-link to="/donate" class="button flat">
-              Donate
-            </nuxt-link>
-          </div>
           <template v-if="user">
-            <div class="child">
-              <nuxt-link to="/dashboard" class="button flat">
-                Dashboard
-              </nuxt-link>
-            </div>
             <div class="child avatar-wrapper">
               <img class="avatar" :src="avatarUrl">
               <nuxt-link :to="`/logout?redirect=${redirect}`" class="button flat">
@@ -37,7 +27,7 @@
               </nuxt-link>
             </div>
           </template>
-          <div v-else class="child">
+          <div v-else class="child hide-small">
             <nuxt-link :to="`/login?redirect=${redirect}`" class="button flat">
               Login
             </nuxt-link>

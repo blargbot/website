@@ -5,10 +5,10 @@
         {{ type }} name
       </label>
       <input v-model="tagName" name="tagName">
-      <button class="button" :disabled="!canLoad" @click.prevent="load">
+      <button class="button hide-small" :disabled="!canLoad" @click.prevent="load">
         Load
       </button>
-      <button class="button ok" :disabled="!canSave" @click.prevent="save">
+      <button class="button ok hide-small" :disabled="!canSave" @click.prevent="save">
         Save
       </button>
     </div>
@@ -17,6 +17,21 @@
         New name
       </label>
       <input v-model="newName" name="newName">
+      <button class="button hide-small" :disabled="!canRename" @click.prevent="rename">
+        Rename
+      </button>
+      <button class="button danger hide-small" :disabled="!canDelete" @click.prevent="remove">
+        Delete
+      </button>
+    </div>
+
+    <div class="control-row v-aligned show-small">
+      <button class="button" :disabled="!canLoad" @click.prevent="load">
+        Load
+      </button>
+      <button class="button ok" :disabled="!canSave" @click.prevent="save">
+        Save
+      </button>
       <button class="button" :disabled="!canRename" @click.prevent="rename">
         Rename
       </button>
@@ -169,5 +184,15 @@ export default {
 .control-row {
   display: grid;
   grid-template-columns: 10% 60% 15% 15%;
+}
+
+@media screen and (max-width: 800px) {
+  .control-row {
+    grid-template-columns: 1fr 1fr;
+
+    label, input {
+      grid-column-end: span 3;
+    }
+  }
 }
 </style>
