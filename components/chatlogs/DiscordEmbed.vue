@@ -5,7 +5,7 @@
       <div class="embed-content">
         <div class="embed-content-inner">
           <div v-if="embed.author && embed.author.name" class="embed-author">
-            <img v-if="embed.author.icon_url" :src="embed.author.icon_url" role="presentation" class="embed-author-icon">
+            <img v-if="embed.author.proxy_icon_url" :src="embed.author.proxy_icon_url" role="presentation" class="embed-author-icon">
             <a v-if="embed.author.url" :href="embed.author.url" class="embed-author-name">{{ embed.author.name }}</a>
             <span v-else class="embed-author-name">{{ embed.author.name }}</span>
           </div>
@@ -30,20 +30,25 @@
           </div>
         </div>
         <img
-          v-if="embed.thumbnail && embed.thumbnail.url"
-          :src="embed.thumbnail.url"
+          v-if="embed.thumbnail && embed.thumbnail.proxy_url && embed.type !== 'article'"
+          :src="embed.thumbnail.proxy_url"
           role="presentation"
           class="embed-thumbnail"
           width="80"
           height="80"
         >
       </div>
-      <span v-if="embed.image && embed.image.url" class="embed-image"><img class="image" role="presentation" :src="embed.image.url"></span>
+      <span v-if="embed.image && embed.image.proxy_url" class="embed-image">
+        <img class="image" role="presentation" :src="embed.image.proxy_url">
+      </span>
+      <span v-if="embed.type === 'article' && embed.thumbnail && embed.thumbnail.proxy_url" class="embed-image">
+        <img class="image" role="presentation" :src="embed.thumbnail.proxy_url">
+      </span>
       <template v-if="footerText">
         <div>
           <img
-            v-if="embed.footer && embed.footer.icon_url"
-            :src="embed.footer.icon_url"
+            v-if="embed.footer && embed.footer.proxy_icon_url"
+            :src="embed.footer.proxy_icon_url"
             class="embed-footer-icon"
             role="presentation"
             width="20"
@@ -77,12 +82,16 @@ export default {
   },
   computed: {
     footerText() {
-      const time = dayjs(this.embed.timestamp)
-      const timeText = time.isValid()
-        ? time.format('ddd MMM Do, YYYY [at] h:mm A')
-        : null
+      const parts = [this.embed.footer?.text]
+      if (this.embed.timestamp) {
+        const time = dayjs(this.embed.timestamp)
+        const timeText = time.isValid()
+          ? time.format('ddd MMM Do, YYYY [at] h:mm A')
+          : null
+        parts.push(timeText)
+      }
 
-      return [this.embed.footer?.text, timeText].filter(v => !!v).join(' | ')
+      return parts.filter(v => !!v).join(' | ')
     }
   },
   methods: {
@@ -274,6 +283,7 @@ $gutter: 5px;
       user-select: text;
       overflow: hidden;
       border-radius: 2px;
+      max-width: 100%;
     }
   }
 }

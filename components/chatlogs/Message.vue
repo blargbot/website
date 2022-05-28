@@ -30,6 +30,9 @@
       <ul class="message-attachments">
         <li v-for="(attachment, i) in message.attachments" :key="i" class="message-attachment">
           <a :href="attachment" target="_blank">{{ attachment.split('/').slice(-1)[0] }}</a>
+          <div v-if="isImage(attachment)" class="message-attachment-image">
+            <img :src="attachment">
+          </div>
         </li>
       </ul>
     </div>
@@ -94,7 +97,14 @@ export default {
       }
     }
   },
-  mounted() {}
+  mounted() {
+    console.log({ ...this.message })
+  },
+  methods: {
+    isImage(url) {
+      return /\.(gif|jpg|jpeg|tiff|png|webp)$/i.test(url)
+    }
+  }
 }
 </script>
 
@@ -158,6 +168,11 @@ export default {
       &:last-child:after {
         content: "";
         padding: 0;
+      }
+
+      .message-attachment-image img {
+        max-width: 100%;
+        max-height: 500px;
       }
     }
   }

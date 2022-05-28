@@ -22,6 +22,10 @@
         <p class="center">
           Click on a mention to copy the user's ID.
         </p>
+
+        <a :href="url" target="_blank" class="button shadow-2">
+          Download Logs
+        </a>
       </div>
     </div>
 
@@ -83,6 +87,13 @@ export default {
         return 'create, update, delete'
       } else {
         return this.types.map(t => this.typeMap[t]).join(', ')
+      }
+    },
+    url() {
+      try {
+        return this.$route.path + '.json'
+      } catch (e) {
+        return ''
       }
     }
   }
