@@ -15,9 +15,9 @@
         <nuxt-link to="/bbtag" class="child-1 button shadow-2">
           BBTag
         </nuxt-link>
-        <nuxt-link to="/dashboard" class="child-2 button shadow-2">
+        <!-- <nuxt-link to="/dashboard" class="child-2 button shadow-2">
           Dashboard
-        </nuxt-link>
+        </nuxt-link> -->
         <nuxt-link to="/donate" class="child-2 button shadow-2 gold">
           Donate
         </nuxt-link>
