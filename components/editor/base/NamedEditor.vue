@@ -24,21 +24,6 @@
         Delete
       </button>
     </div>
-
-    <div class="control-row v-aligned show-small">
-      <button class="button" :disabled="!canLoad" @click.prevent="load">
-        Load
-      </button>
-      <button class="button ok" :disabled="!canSave" @click.prevent="save">
-        Save
-      </button>
-      <button class="button" :disabled="!canRename" @click.prevent="rename">
-        Rename
-      </button>
-      <button class="button danger" :disabled="!canDelete" @click.prevent="remove">
-        Delete
-      </button>
-    </div>
   </div>
 </template>
 
@@ -190,7 +175,8 @@ export default {
   .control-row {
     grid-template-columns: 1fr 1fr;
 
-    label, input {
+    label,
+    input {
       grid-column-end: span 3;
     }
   }
