@@ -304,31 +304,28 @@ input {
   height: 100%;
 }
 
-.show-medium {
-  display: none;
-}
 
-.show-small {
-  display: none;
+
+
+@media screen and (min-width: 801px) {
+  .show-small {
+    display: none !important;
+  }
 }
 
 @media screen and (max-width: 800px) {
   .hide-small {
-    display: none;
+    display: none !important;
   }
 
-  .show-small {
-    display: initial;
+  .show-medium {
+    display: none !important;
   }
 }
 
 @media screen and (max-width: 1400px) {
   .hide-medium {
-    display: none;
-  }
-
-  .show-medium {
-    display: block;
+    display: none !important;
   }
 }
 
