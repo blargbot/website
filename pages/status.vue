@@ -59,7 +59,7 @@ export default {
     reconnect() {
       this.connection?.close()
 
-      const protocol = window.location.protocol === 'https' ? 'wss' : 'ws'
+      const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
       this.connection = new WebSocket(
         `${protocol}://${window.location.host}${this.$axios.defaults.baseURL}clusters`
       )
