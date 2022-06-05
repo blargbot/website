@@ -70,7 +70,7 @@ export default {
     copyUrl(item, event) {
       event.stopPropagation()
       this.$router.push(`#${item.name}`)
-      window.navigator.clipboard.writeText(window.location.href)
+      window.navigator.clipboard.writeText(this.$router.fullPath)
     },
     renderMarkup(...args) {
       return render(...args)
