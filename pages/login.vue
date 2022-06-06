@@ -34,7 +34,8 @@ export default {
         '&scope=identify' +
         '&response_type=code' +
         '&redirect_uri=' +
-        this.$config.callback
+        this.$config.callback +
+        '&prompt=none'
     }
   }
 }
