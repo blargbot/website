@@ -1,5 +1,5 @@
 <template>
-  <section class="wider">
+  <section class="full">
     <div class="card">
       <h1>BBTag Editor</h1>
       <dropdown-button v-model="destination" :options="targetTree" prompt="Select a Tag destination" />
@@ -110,3 +110,15 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 0;
+  background: transparent;
+  padding: 0 1rem;
+}
+</style>

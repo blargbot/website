@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div ref="wrapper" class="bbtag-editor" style="height: 500px" />
+  <div class="editor">
+    <div ref="wrapper" class="bbtag-editor" />
     <p>
       Font size and wordwrapping can be enabled in the command pallet.
       To access the command pallet, press F1 while focused on the editor.
@@ -38,6 +38,7 @@ export default {
   },
   beforeDestroy() {
     this.$refs.wrapper.remove()
+    window.removeEventListener('resize', this.resize.bind(this))
   },
   mounted() {
     const monaco = require('monaco-editor/esm/vs/editor/editor.api')
@@ -48,6 +49,7 @@ export default {
       language: 'bbtag',
       wordWrap: localStorage.getItem('editor-wordwrap')
     }))
+    window.editor = editor
     editor.addAction({
       id: 'editor.action.enableWordWrap',
       label: 'Enable word wrapping',
@@ -69,10 +71,24 @@ export default {
     model.onDidChangeContent(() => {
       this.$emit('input', model.getValue())
     })
+
+    window.addEventListener('resize', this.resize.bind(this))
+    this.resize()
   },
   methods: {
     clearHistory() {
       this.editor?.clearHistory()
+    },
+    resize() {
+      if (this.editor && this.$refs.wrapper) {
+        this.editor?.layout({ height: 0, width: 0 })
+        const rect = this.$refs.wrapper.getBoundingClientRect()
+
+        this.editor.layout({
+          height: Math.floor(rect.height),
+          width: Math.floor(rect.width)
+        })
+      }
     }
   }
 }
@@ -82,5 +98,12 @@ export default {
 .bbtag-editor {
   max-width: 100%;
   width: 100%;
+  flex: 1 0 auto;
+}
+
+.editor {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
 }
 </style>
