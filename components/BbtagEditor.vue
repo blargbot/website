@@ -1,5 +1,11 @@
 <template>
-  <div ref="wrapper" class="bbtag-editor" style="height: 500px" />
+  <div>
+    <div ref="wrapper" class="bbtag-editor" style="height: 500px" />
+    <p>
+      Font size and wordwrapping can be enabled in the command pallet.
+      To access the command pallet, press F1 while focused on the editor.
+    </p>
+  </div>
 </template>
 
 <script>
@@ -39,8 +45,25 @@ export default {
     const editor = (this.editor = monaco.editor.create(this.$refs.wrapper, {
       value: this.value || '',
       theme: 'vs-dark',
-      language: 'bbtag'
+      language: 'bbtag',
+      wordWrap: localStorage.getItem('editor-wordwrap')
     }))
+    editor.addAction({
+      id: 'editor.action.enableWordWrap',
+      label: 'Enable word wrapping',
+      run() {
+        localStorage.setItem('editor-wordwrap', 'bounded')
+        editor.updateOptions({ wordWrap: 'bounded' })
+      }
+    })
+    editor.addAction({
+      id: 'editor.action.disableWordWrap',
+      label: 'Disable word wrapping',
+      run() {
+        localStorage.setItem('editor-wordwrap', 'off')
+        editor.updateOptions({ wordWrap: 'off' })
+      }
+    })
     const model = editor.getModel()
     model.subtags = () => this.subtags
     model.onDidChangeContent(() => {
