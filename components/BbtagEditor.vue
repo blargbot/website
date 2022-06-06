@@ -47,7 +47,8 @@ export default {
       value: this.value || '',
       theme: 'vs-dark',
       language: 'bbtag',
-      wordWrap: localStorage.getItem('editor-wordwrap')
+      wordWrap: localStorage.getItem('editor-wordwrap'),
+      wordWrapColumn: 9999999
     }))
     window.editor = editor
     editor.addAction({
