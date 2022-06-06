@@ -18,6 +18,9 @@
         <!-- <nuxt-link to="/dashboard" class="child-2 button shadow-2">
           Dashboard
         </nuxt-link> -->
+        <a href="https://github.com/blargbot/blargbot" class="child-2 button shadow-2" target="_blank">
+          Source Code
+        </a>
         <nuxt-link to="/donate" class="child-2 button shadow-2 gold">
           Donate
         </nuxt-link>

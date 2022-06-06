@@ -27,6 +27,9 @@
         <nuxt-link to="/bbtag/subtags" class="sidebar-button child">
           Subtags
         </nuxt-link>
+        <a href="https://github.com/blargbot/blargbot" class="sidebar-button" target="_blank">
+          Source Code
+        </a>
       </div>
     </div>
     <div v-if="opened" class="sidebar-behind show-medium" @click.prevent="closeSidebar" />
