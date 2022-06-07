@@ -9,8 +9,8 @@
         Collapse All
       </button>
     </div>
-    <template v-for="group, i in filteredItemGroups">
-      <div :key="i">
+    <template v-for="group in filteredItemGroups">
+      <div :key="group">
         <template v-if="typeof group.category === 'object'">
           <h2 class="center">
             {{ group.category.name }} {{ itemLabel }}
@@ -24,7 +24,7 @@
             {{ group.category }} {{ itemLabel }}
           </h2>
         </template>
-        <collapsible-card v-for="(item, j) in group.items" :key="`${i}_${j}`" :name="item.value.name">
+        <collapsible-card v-for="item in group.items" :key="item" :name="item.value.name">
           <template #title-bar>
             <slot :item="item.value" name="title-bar" />
           </template>
