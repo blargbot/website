@@ -62,6 +62,12 @@ export default {
         delta
       }
     } catch (err) {
+      if (err === null || typeof err !== 'object') {
+        throw err
+      }
+      if (err.message !== 'Request failed with status code 404') {
+        throw err
+      }
       return {
         id: null
       }
