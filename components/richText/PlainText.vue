@@ -47,3 +47,8 @@ const component = Vue.extend({
 })
 export default component
 </script>
+<style lang="scss" scoped>
+.plain-text {
+  word-break: break-word;
+}
+</style>

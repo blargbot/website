@@ -1,13 +1,24 @@
 <template>
   <div>
     <section>
-      <div class="child card shadow-2">
+      <div v-if="id != null" class="child card shadow-2">
         <!-- eslint-disable-next-line vue/no-v-html -->
         <div v-twemoji v-html="content" />
+        <discord-embed
+          v-for="embed in embeds"
+          :key="JSON.stringify(embed)"
+          :embed="embed"
+          :context="{}"
+        />
         <hr>
         <p>This page will expire {{ expiry }} ({{ delta }})</p>
         <a :href="'/dumps/' + id + '.txt'" :download="id + '.txt'" class="button shadow-1">Download</a>
       </div>
+      <template v-else>
+        <p>
+          That dump is either invalid or has expired!
+        </p>
+      </template>
     </section>
   </div>
 </template>
@@ -20,6 +31,7 @@ import advancedFormat from 'dayjs/plugin/advancedFormat'
 import showdown, { Converter } from 'showdown'
 import hljs from 'highlight.js'
 import xss from 'xss'
+import DiscordEmbed from '~/components/chatlogs/DiscordEmbed.vue'
 
 dayjs.extend(duration)
 dayjs.extend(relativeTime)
@@ -28,24 +40,31 @@ dayjs.extend(advancedFormat)
 export * from 'highlight.js/scss/base16/solarized-dark.scss'
 
 export default {
+  components: { DiscordEmbed },
   async asyncData({ params, $axios }) {
-    const dump = await $axios.$get('/dumps/' + params.id)
-    let expiry = 'never'
-    let delta = 'never'
-    if (dump.expiry > 0) {
-      expiry = dayjs()
-        .add(dump.expiry, 's')
-        .format('MMMM Do, YYYY')
-      delta = dayjs.duration(dump.expiry, 's').humanize(true)
-    }
-
-    return {
-      id: dump.id,
-      channelid: dump.channelid,
-      content: xss(converter.makeHtml(dump.content), { whiteList }),
-      embeds: dump.embeds,
-      expiry,
-      delta
+    let dump
+    try {
+      dump = await $axios.$get('/dumps/' + params.id)
+      let expiry = 'never'
+      let delta = 'never'
+      if (dump.expiry > 0) {
+        expiry = dayjs()
+          .add(dump.expiry, 's')
+          .format('MMMM Do, YYYY')
+        delta = dayjs.duration(dump.expiry, 's').humanize(true)
+      }
+      return {
+        id: dump.id,
+        channelid: dump.channelid,
+        content: xss(converter.makeHtml(dump.content), { whiteList }),
+        embeds: dump.embeds,
+        expiry,
+        delta
+      }
+    } catch (err) {
+      return {
+        id: null
+      }
     }
   }
 }

@@ -97,9 +97,6 @@ export default {
       }
     }
   },
-  mounted() {
-    console.log({ ...this.message })
-  },
   methods: {
     isImage(url) {
       return /\.(gif|jpg|jpeg|tiff|png|webp)$/i.test(url)
