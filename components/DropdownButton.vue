@@ -8,7 +8,7 @@
         <div class="dropdown-options-wrapper">
           <div class="dropdown-options">
             <template v-if="options.length === 0">
-              No options available
+              {{ emptyText }}
             </template>
             <template v-for="(entry, i) in options" v-else>
               <div v-if="entry.options !== undefined" :key="i" class="dropdown-option-group">
@@ -16,12 +16,19 @@
                   {{ entry.display }}
                 </div>
                 <div class="dropdown-options">
-                  <div v-for="(option, j) in entry.options" :key="j" class="dropdown-option" @click="selectOption(option)">
-                    <span v-twemoji>{{ option.display }}</span>
-                  </div>
+                  <template v-if="entry.options.length > 0">
+                    <div v-for="(option, j) in entry.options" :key="j" class="dropdown-option dropdown-option-button" @click="selectOption(option)">
+                      <span v-twemoji>{{ option.display }}</span>
+                    </div>
+                  </template>
+                  <template v-else>
+                    <div class="dropdown-option">
+                      {{ entry.emptyText }}
+                    </div>
+                  </template>
                 </div>
               </div>
-              <div v-else :key="i" class="dropdown-option" @click="selectOption(entry)">
+              <div v-else :key="i" class="dropdown-option dropdown-option-button" @click="selectOption(entry)">
                 <span v-twemoji>{{ entry.display }}</span>
               </div>
             </template>
@@ -38,6 +45,11 @@ export default {
     options: {
       type: Array,
       required: true
+    },
+    emptyText: {
+      type: String,
+      required: false,
+      default: 'No options available'
     },
     prompt: {
       type: String,
@@ -130,10 +142,12 @@ $dropdown-background: #28343a;
           .dropdown-option {
             padding: 0.5rem;
             border-radius: 3px;
-            cursor: pointer;
 
-            &:hover {
-              background: nth(map-get($colors, "primary"), 1);
+            &.dropdown-option-button {
+              cursor: pointer;
+              &:hover {
+                background: nth(map-get($colors, "primary"), 1);
+              }
             }
           }
 
