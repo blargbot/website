@@ -21,80 +21,90 @@ import IntervalEditor from '~/components/editor/IntervalEditor.vue'
 import RolemesEditor from '~/components/editor/RolemesEditor.vue'
 import TagEditor from '~/components/editor/TagEditor.vue'
 
-class Test {
-  _field
-  abc() {
-    return false
+const types = [
+  {
+    key: 'ccommands',
+    display: '⚙️ Custom Commands',
+    editor: CustomCommandEditor
+  },
+  {
+    key: 'censors',
+    display: '🛡️ Censors',
+    editor: CensorsEditor
+  },
+  {
+    key: 'autoresponses',
+    display: '💬 Autoresponses',
+    editor: AutoresponseEditor
+  },
+  {
+    key: 'rolemes',
+    display: '🎟️ Rolemes',
+    editor: RolemesEditor
+  },
+  {
+    key: 'interval',
+    display: '⏱️ Interval',
+    editor: IntervalEditor
+  },
+  {
+    key: 'greeting',
+    display: '📣 Greeting',
+    editor: GreetingEditor
+  },
+  {
+    key: 'farewell',
+    display: '👋 Farewell',
+    editor: FarewellEditor
   }
-}
-
-new Test().abc()
+]
 
 export default {
   components: { DropdownButton, BbtagEditor },
   middleware: 'authenticated',
   data() {
-    const targetTree = [
-      { display: 'Public tags', emoji: '👥', value: { component: TagEditor } }
-    ]
-    const targets = [...targetTree]
+    const targetTree = []
+    const unavailable = []
     for (const guild of this.$store.state.guilds.list) {
-      const group = { display: `Guild: ${guild.guild.name}`, options: [] }
-      targetTree.push(group)
-      if (guild.ccommands) {
-        group.options.push({
-          display: '⚙️ Custom Commands',
-          value: { component: CustomCommandEditor }
-        })
+      const group = {
+        display: `Guild: ${guild.guild.name}`,
+        options: [],
+        emptyText: "You don't have permission to use BBTag here"
       }
-      if (guild.censors) {
-        group.options.push({
-          display: '🛡️ Censors',
-          value: { component: CensorsEditor }
-        })
+      for (const type of types) {
+        if (guild[type.key]) {
+          group.options.push({
+            display: type.display,
+            value: { component: type.editor }
+          })
+        }
       }
-      if (guild.autoresponses) {
-        group.options.push({
-          display: '💬 Autoresponses',
-          value: { component: AutoresponseEditor }
-        })
-      }
-      if (guild.rolemes) {
-        group.options.push({
-          display: '🎟️ Rolemes',
-          value: { component: RolemesEditor }
-        })
-      }
-      if (guild.interval) {
-        group.options.push({
-          display: '⏱️ Interval',
-          value: { component: IntervalEditor }
-        })
-      }
-      if (guild.greeting) {
-        group.options.push({
-          display: '📣 Greeting',
-          value: { component: GreetingEditor }
-        })
-      }
-      if (guild.farewell) {
-        group.options.push({
-          display: '👋 Farewell',
-          value: { component: FarewellEditor }
-        })
+      if (guild.guild.name === 'Git Outta My Server') {
+        group.options.length = 0
       }
       group.options.forEach((opt) => {
         opt.selectDisplay = `${guild.guild.name} ${opt.display}`
         opt.value.id = guild.guild.id
-        targets.push(opt)
       })
+      if (group.options.length === 0) {
+        unavailable.push(group)
+      } else {
+        targetTree.push(group)
+      }
     }
 
     return {
       destination: null,
       content: null,
-      targetTree,
-      targets
+      targetTree: [
+        {
+          display: 'Public tags',
+          emoji: '👥',
+          value: { component: TagEditor }
+        },
+        ...targetTree.sort((a, b) => (a.display < b.display ? -1 : 1)),
+        ...unavailable
+      ]
     }
   },
   watch: {
