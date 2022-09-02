@@ -56,6 +56,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/toast',
     'cookie-universal-nuxt'
   ],
 
@@ -63,6 +64,11 @@ export default {
   axios: {
     prefix: '/api/',
     proxy: true
+  },
+
+  toast: {
+    position: 'bottom-right',
+    duration: 5000
   },
 
   proxy: {

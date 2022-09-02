@@ -1,5 +1,5 @@
 <template>
-  <crud-editor v-model="valueModel" route="tags" type="Tag" />
+  <crud-editor v-model="valueModel" route="tags" type="tag" />
 </template>
 
 <script>

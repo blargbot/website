@@ -1,5 +1,5 @@
 <template>
-  <crud-editor v-model="valueModel" :route="`guilds/${guildId}/ccommands`" type="Command" />
+  <crud-editor v-model="valueModel" :route="`guilds/${guildId}/ccommands`" type="command" />
 </template>
 
 <script>

@@ -16,9 +16,10 @@
 </template>
 
 <script>
-import DropdownButton from '../../DropdownButton.vue'
+import bbtagEditor from '~/mixins/bbtagEditor'
+
 export default {
-  components: { DropdownButton },
+  mixins: [bbtagEditor],
   props: {
     value: {
       type: String,
@@ -51,11 +52,13 @@ export default {
   },
   data() {
     return {
-      hasLoaded: false,
       selected: null
     }
   },
   computed: {
+    name() {
+      return `${this.type} ${this.selected}`
+    },
     prompt() {
       if ('aieou'.includes(this.type[0].toLowerCase())) {
         return `Pick an ${this.type}`
@@ -66,78 +69,18 @@ export default {
       return `${this.route}/${this.selected}`
     },
     canSave() {
-      return typeof this.saveMethod === 'string' && this.selected !== null
+      return this.checkAction('saveMethod')
     },
     canLoad() {
-      return typeof this.loadMethod === 'string' && this.selected !== null
+      return this.checkAction('loadMethod')
     },
     canDelete() {
-      return typeof this.deleteMethod === 'string' && this.selected !== null
+      return this.checkAction('deleteMethod')
     }
   },
-  mounted() {
-    this.hasLoaded = false
-  },
   methods: {
-    async load() {
-      await this.updateContent(async () => {
-        const tag = await this.$axios[this.loadMethod](this.endpoint)
-        return tag.content
-      })
-    },
-    async remove() {
-      if (!this.ensureLoaded('delete')) {
-        return
-      }
-      await this.updateContent(async () => {
-        await this.$axios[this.deleteMethod](this.endpoint)
-        return ''
-      }, '')
-      this.$emit('reload')
-    },
-    async save() {
-      if (!this.ensureLoaded('save')) {
-        return
-      }
-      await this.updateContent(async () => {
-        await this.$axios[this.saveMethod](this.endpoint, {
-          content: this.value
-        })
-      })
-      this.$emit('reload')
-    },
-    ensureLoaded(action) {
-      return (
-        this.hasLoaded ||
-        confirm(
-          `You are trying to ${action} the ${this.type} ${this.tagName} before you loaded it, are you sure?`
-        )
-      )
-    },
-    async updateContent(action, fallback) {
-      try {
-        const content = await action()
-        this.hasLoaded = true
-        this.$emit('input', content ?? this.value)
-      } catch (err) {
-        if (!(err instanceof Error)) {
-          throw err
-        }
-        switch (err.message) {
-          case 'Request failed with status code 404':
-            this.hasLoaded = true
-            this.$emit('input', fallback ?? this.value)
-            break
-          case 'Request failed with status code 401':
-            window.location.reload()
-            break
-          case 'Request failed with status code 403':
-            alert(`You dont own that ${this.type}!`)
-            break
-          default:
-            throw err
-        }
-      }
+    checkAction(name) {
+      return !this.loading && typeof this[name] === 'string' && this.selected
     }
   }
 }

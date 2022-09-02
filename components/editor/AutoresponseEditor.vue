@@ -2,7 +2,7 @@
   <options-editor
     v-model="valueModel"
     :route="`guilds/${guildId}/autoresponses`"
-    type="Autoresponse"
+    type="autoresponse"
     :options="options"
     :delete-method="null"
     save-method="$patch"
