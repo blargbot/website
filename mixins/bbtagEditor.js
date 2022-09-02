@@ -38,8 +38,8 @@ export default {
       await this.updateContent({
         action: {
           do: 'delete',
-          doing: 'saving',
-          done: 'saved'
+          doing: 'deleting',
+          done: 'deleted'
         },
         fallback: '',
         async request() {
