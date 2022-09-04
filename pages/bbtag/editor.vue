@@ -79,9 +79,6 @@ export default {
           })
         }
       }
-      if (guild.guild.name === 'Git Outta My Server') {
-        group.options.length = 0
-      }
       group.options.forEach((opt) => {
         opt.selectDisplay = `${guild.guild.name} ${opt.display}`
         opt.value.id = guild.guild.id

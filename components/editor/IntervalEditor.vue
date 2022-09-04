@@ -1,5 +1,5 @@
 <template>
-  <single-editor v-model="valueModel" :route="`guilds/${guildId}/interval`" type="Interval" />
+  <single-editor v-model="valueModel" :route="`guilds/${guildId}/interval`" type="interval" />
 </template>
 
 <script>

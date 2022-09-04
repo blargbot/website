@@ -2,7 +2,7 @@
   <options-editor
     v-model="valueModel"
     :route="`guilds/${guildId}/rolemes`"
-    type="Roleme"
+    type="roleme"
     :options="options"
     @reload="loadOptions"
   />

@@ -1,5 +1,5 @@
 <template>
-  <single-editor v-model="valueModel" :route="`guilds/${guildId}/greeting`" type="Greeting" />
+  <single-editor v-model="valueModel" :route="`guilds/${guildId}/greeting`" type="greeting" />
 </template>
 
 <script>

@@ -2,7 +2,7 @@
   <options-editor
     v-model="valueModel"
     :route="`guilds/${guildId}/censors`"
-    type="Censor"
+    type="censor"
     :options="options"
     @reload="loadOptions"
   />

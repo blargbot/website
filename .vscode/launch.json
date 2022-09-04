@@ -2,11 +2,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "pwa-msedge",
+      "type": "msedge",
       "request": "launch",
       "name": "client: edge",
       "url": "http://localhost:8085",
-      "console": "integratedTerminal",
       "webRoot": "${workspaceFolder}"
     },
     {

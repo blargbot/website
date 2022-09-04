@@ -15,7 +15,9 @@
 </template>
 
 <script>
+import bbtagEditor from '~/mixins/bbtagEditor'
 export default {
+  mixins: [bbtagEditor],
   props: {
     value: {
       type: String,
@@ -42,83 +44,26 @@ export default {
       default: '$delete'
     }
   },
-  data() {
-    return {
-      hasLoaded: false
-    }
-  },
   computed: {
+    name() {
+      return this.type
+    },
+    endpoint() {
+      return this.route
+    },
     canSave() {
-      return typeof this.saveMethod === 'string'
+      return this.checkAction('saveMethod')
     },
     canLoad() {
-      return typeof this.loadMethod === 'string'
+      return this.checkAction('loadMethod')
     },
     canDelete() {
-      return typeof this.deleteMethod === 'string'
+      return this.checkAction('deleteMethod')
     }
   },
-  mounted() {
-    this.hasLoaded = false
-  },
   methods: {
-    async load() {
-      await this.updateContent(async () => {
-        const tag = await this.$axios[this.loadMethod](this.route)
-        return tag.content
-      })
-    },
-    async remove() {
-      if (!this.ensureLoaded('delete')) {
-        return
-      }
-      await this.updateContent(async () => {
-        await this.$axios[this.deleteMethod](this.route)
-        return ''
-      }, '')
-    },
-    async save() {
-      if (!this.ensureLoaded('save')) {
-        return
-      }
-      await this.updateContent(async () => {
-        await this.$axios[this.saveMethod](this.route, {
-          content: this.value
-        })
-      })
-    },
-    ensureLoaded(action) {
-      return (
-        this.hasLoaded ||
-        confirm(
-          `You are trying to ${action} the ${this.type} ${this.tagName} before you loaded it, are you sure?`
-        )
-      )
-    },
-    async updateContent(action, fallback) {
-      try {
-        const content = await action()
-        this.hasLoaded = true
-        this.$emit('input', content ?? this.value)
-      } catch (err) {
-        if (!(err instanceof Error)) {
-          throw err
-        }
-        switch (err.message) {
-          case 'Request failed with status code 404':
-            this.hasLoaded = true
-            this.$emit('input', fallback ?? this.value)
-            break
-          case 'Request failed with status code 401':
-            window.location.reload()
-            break
-          case 'Request failed with status code 403':
-            alert(`You don't own that ${this.type}!`)
-            break
-          default:
-            throw err
-        }
-      }
+    checkAction(name) {
+      return !this.loading && typeof this[name] === 'string'
     }
   }
 }

@@ -2,7 +2,7 @@
   <div>
     <div class="control-row v-aligned">
       <label for="tagName">
-        {{ type }} name
+        {{ type.slice(0, 1).toUpperCase() + type.slice(1) }} name
       </label>
       <input v-model="tagName" name="tagName">
       <button class="button hide-small" :disabled="!canLoad" @click.prevent="load">
@@ -43,7 +43,10 @@
 </template>
 
 <script>
+import bbtagEditor from '~/mixins/bbtagEditor'
+
 export default {
+  mixins: [bbtagEditor],
   props: {
     value: {
       type: String,
@@ -77,104 +80,48 @@ export default {
   data() {
     return {
       tagName: '',
-      newName: '',
-      lastLoad: null
+      newName: ''
     }
   },
   computed: {
+    name() {
+      return `${this.type} ${this.tagName}`
+    },
     endpoint() {
       return `/${this.route}/${encodeURIComponent(this.tagName)}`
     },
     canSave() {
-      return typeof this.saveMethod === 'string' && this.tagName
+      return this.checkAction('saveMethod')
     },
     canLoad() {
-      return typeof this.loadMethod === 'string' && this.tagName
+      return this.checkAction('loadMethod')
     },
     canRename() {
-      return (
-        typeof this.renameMethod === 'string' && this.tagName && this.newName
-      )
+      return this.checkAction('renameMethod') && this.newName
     },
     canDelete() {
-      return typeof this.deleteMethod === 'string' && this.tagName
+      return this.checkAction('deleteMethod')
     }
   },
-  mounted() {
-    this.lastLoad = null
-  },
   methods: {
+    checkAction(name) {
+      return !this.loading && typeof this[name] === 'string' && this.tagName
+    },
     async rename() {
-      if (!this.ensureLoaded('rename')) {
-        return
-      }
-
-      await this.updateContent(async () => {
-        await this.$axios[this.renameMethod](this.endpoint, {
-          name: this.newName
-        })
-        this.tagName = this.newName
-        this.newName = null
-      })
-    },
-    async load() {
-      await this.updateContent(async () => {
-        const tag = await this.$axios[this.loadMethod](this.endpoint)
-        return tag.content
-      })
-    },
-    async remove() {
-      if (!this.ensureLoaded('delete')) {
-        return
-      }
-      await this.updateContent(async () => {
-        await this.$axios[this.deleteMethod](this.endpoint)
-        return ''
-      }, '')
-    },
-    async save() {
-      if (!this.ensureLoaded('save')) {
-        return
-      }
-      await this.updateContent(async () => {
-        await this.$axios[this.saveMethod](this.endpoint, {
-          content: this.value
-        })
-      })
-    },
-    ensureLoaded(action) {
-      return (
-        this.lastLoad === this.tagName ||
-        confirm(
-          `You are trying to ${action} the ${this.type} ${this.tagName} before you loaded it, are you sure?`
-        )
-      )
-    },
-    async updateContent(action, fallback) {
-      const lastLoad = this.tagName
-      try {
-        const content = await action()
-        this.lastLoad = lastLoad
-        this.$emit('input', content ?? this.value)
-      } catch (err) {
-        if (!(err instanceof Error)) {
-          throw err
+      await this.updateContent({
+        action: {
+          do: 'rename',
+          doing: 'renaming',
+          done: 'renamed'
+        },
+        async request() {
+          await this.$axios[this.renameMethod](this.endpoint, {
+            name: this.newName
+          })
+          this.tagName = this.newName
+          this.newName = null
         }
-        switch (err.message) {
-          case 'Request failed with status code 404':
-            this.lastLoad = lastLoad
-            this.$emit('input', fallback ?? this.value)
-            break
-          case 'Request failed with status code 401':
-            window.location.reload()
-            break
-          case 'Request failed with status code 403':
-            alert(`You dont own that ${this.type}!`)
-            break
-          default:
-            throw err
-        }
-      }
+      })
     }
   }
 }
