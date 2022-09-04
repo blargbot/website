@@ -21,37 +21,44 @@ import TagEditor from '~/components/editor/TagEditor.vue'
 const types = [
   {
     key: 'ccommands',
-    display: '⚙️ Custom Commands',
+    icon: '⚙️',
+    name: 'Custom Commands',
     editor: CustomCommandEditor
   },
   {
     key: 'censors',
-    display: '🛡️ Censors',
+    icon: '🛡️',
+    name: 'Censors',
     editor: CensorsEditor
   },
   {
     key: 'autoresponses',
-    display: '💬 Autoresponses',
+    icon: '💬',
+    name: 'Autoresponses',
     editor: AutoresponseEditor
   },
   {
     key: 'rolemes',
-    display: '🎟️ Rolemes',
+    icon: '🎟️',
+    name: 'Rolemes',
     editor: RolemesEditor
   },
   {
     key: 'interval',
-    display: '⏱️ Interval',
+    icon: '⏱️',
+    name: 'Interval',
     editor: IntervalEditor
   },
   {
     key: 'greeting',
-    display: '📣 Greeting',
+    icon: '📣',
+    name: 'Greeting',
     editor: GreetingEditor
   },
   {
     key: 'farewell',
-    display: '👋 Farewell',
+    icon: '👋',
+    name: 'Farewell',
     editor: FarewellEditor
   }
 ]
@@ -70,15 +77,12 @@ export default {
       for (const type of types) {
         if (guild[type.key]) {
           group.options.push({
-            display: type.display,
-            value: { component: type.editor }
+            display: `${type.icon} ${type.name}`,
+            selectDisplay: `${guild.guild.name} ${type.name}`,
+            value: { component: type.editor, id: guild.guild.id }
           })
         }
       }
-      group.options.forEach((opt) => {
-        opt.selectDisplay = `${guild.guild.name} ${opt.display}`
-        opt.value.id = guild.guild.id
-      })
       if (group.options.length === 0) {
         unavailable.push(group)
       } else {
