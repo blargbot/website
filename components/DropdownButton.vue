@@ -68,8 +68,7 @@ export default {
   },
   data() {
     return {
-      active: false,
-      selected: null
+      active: false
     }
   },
   computed: {
@@ -78,14 +77,17 @@ export default {
         return this.prompt
       }
       return this.selected.selectDisplay || this.selected.display
-    }
-  },
-  watch: {
-    value() {
-      this.updateSelected()
     },
-    options() {
-      this.updateSelected()
+    selected() {
+      const result = this.options
+        .flatMap(opt => [opt, ...(opt.options ?? [])])
+        .find(opt => opt.value === this.value)
+
+      if (this.value !== null && result === undefined) {
+        this.$emit('input', null)
+      }
+
+      return result
     }
   },
   methods: {
@@ -93,15 +95,6 @@ export default {
       this.selected = option
       this.$emit('input', option?.value)
       this.active = false
-    },
-    updateSelected() {
-      this.selected = this.options
-        .flatMap(opt => [opt, ...(opt.options ?? [])])
-        .find(opt => opt.value === this.value)
-
-      if (this.selected === undefined) {
-        this.$emit('input', null)
-      }
     }
   }
 }
