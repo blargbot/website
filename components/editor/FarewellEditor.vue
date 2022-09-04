@@ -1,5 +1,5 @@
 <template>
-  <single-editor v-model="valueModel" :route="`guilds/${guildId}/farewell`" type="farewell" />
+  <single-editor :route="`guilds/${guildId}/farewell`" type="farewell" />
 </template>
 
 <script>
@@ -15,16 +15,6 @@ export default {
     guildId: {
       type: String,
       default: null
-    }
-  },
-  computed: {
-    valueModel: {
-      get() {
-        return this.value
-      },
-      set(value) {
-        this.$emit('input', value)
-      }
     }
   }
 }

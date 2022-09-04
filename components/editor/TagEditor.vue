@@ -1,5 +1,5 @@
 <template>
-  <crud-editor v-model="valueModel" route="tags" type="tag" />
+  <crud-editor route="tags" type="tag" />
 </template>
 
 <script>
@@ -11,16 +11,6 @@ export default {
     value: {
       type: String,
       default: null
-    }
-  },
-  computed: {
-    valueModel: {
-      get() {
-        return this.value
-      },
-      set(value) {
-        this.$emit('input', value)
-      }
     }
   }
 }

@@ -14,6 +14,7 @@ export default {
   mounted() {
     this.lastLoad = null
   },
+  emits: ['reload'],
   methods: {
     checkLastLoad(action) {
       return this.lastLoad === this.name || confirm(
@@ -77,7 +78,7 @@ export default {
         }
       )
       try {
-        const content = await options.request.call(this)
+        this.value = await options.request.call(this) ?? this.value
         this.lastLoad = this.name
         this.$toast.success(
           sentenceCase(`${options.action.done} ${this.name}`),
@@ -85,7 +86,6 @@ export default {
             icon: 'check'
           }
         )
-        this.$emit('input', content ?? this.value)
       } catch (err) {
         if (!(err instanceof Error)) {
           throw err
@@ -98,7 +98,7 @@ export default {
                 icon: 'error'
               }
             )
-            this.$emit('input', options.fallback ?? this.value)
+            this.value = options.fallback ?? this.value
             break
           case 401:
             window.location.reload()

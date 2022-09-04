@@ -12,6 +12,7 @@
         Delete
       </button>
     </div>
+    <editor-bbtag-monaco v-model="value" @save="canSave && save()" />
   </div>
 </template>
 
@@ -21,10 +22,6 @@ import bbtagEditor from '~/mixins/bbtagEditor'
 export default {
   mixins: [bbtagEditor],
   props: {
-    value: {
-      type: String,
-      default: null
-    },
     route: {
       type: String,
       required: true
@@ -52,7 +49,8 @@ export default {
   },
   data() {
     return {
-      selected: null
+      selected: null,
+      value: ''
     }
   },
   computed: {

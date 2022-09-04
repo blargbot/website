@@ -1,5 +1,5 @@
 <template>
-  <crud-editor v-model="valueModel" :route="`guilds/${guildId}/ccommands`" type="command" />
+  <crud-editor :route="`guilds/${guildId}/ccommands`" type="command" />
 </template>
 
 <script>
@@ -15,16 +15,6 @@ export default {
     guildId: {
       type: String,
       default: null
-    }
-  },
-  computed: {
-    valueModel: {
-      get() {
-        return this.value
-      },
-      set(value) {
-        this.$emit('input', value)
-      }
     }
   }
 }

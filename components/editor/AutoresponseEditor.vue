@@ -1,6 +1,5 @@
 <template>
   <options-editor
-    v-model="valueModel"
     :route="`guilds/${guildId}/autoresponses`"
     type="autoresponse"
     :options="options"
@@ -30,18 +29,9 @@ export default {
       options: []
     }
   },
-  computed: {
-    valueModel: {
-      get() {
-        return this.value
-      },
-      set(value) {
-        this.$emit('input', value)
-      }
-    }
-  },
   watch: {
     async guildId() {
+      this.options = []
       await this.loadOptions()
     }
   },

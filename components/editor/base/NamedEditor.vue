@@ -4,7 +4,7 @@
       <label for="tagName">
         {{ type.slice(0, 1).toUpperCase() + type.slice(1) }} name
       </label>
-      <input v-model="tagName" name="tagName">
+      <input v-model="tagName" name="tagName" @keyup.enter="canLoad && load()">
       <button class="button hide-small" :disabled="!canLoad" @click.prevent="load">
         Load
       </button>
@@ -16,7 +16,7 @@
       <label for="newName">
         New name
       </label>
-      <input v-model="newName" name="newName">
+      <input v-model="newName" name="newName" @keyup.enter="canRename && rename()">
       <button class="button hide-small" :disabled="!canRename" @click.prevent="rename">
         Rename
       </button>
@@ -39,6 +39,7 @@
         Delete
       </button>
     </div>
+    <editor-bbtag-monaco v-model="value" @save="canSave && save()" />
   </div>
 </template>
 
@@ -48,10 +49,6 @@ import bbtagEditor from '~/mixins/bbtagEditor'
 export default {
   mixins: [bbtagEditor],
   props: {
-    value: {
-      type: String,
-      default: null
-    },
     route: {
       type: String,
       required: true
@@ -80,7 +77,8 @@ export default {
   data() {
     return {
       tagName: '',
-      newName: ''
+      newName: '',
+      value: ''
     }
   },
   computed: {

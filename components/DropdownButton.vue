@@ -60,29 +60,48 @@ export default {
       type: Number,
       required: false,
       default: 0
+    },
+    value: {
+      type: null,
+      required: true
     }
   },
   data() {
     return {
       active: false,
-      value: null,
-      display: this.prompt
+      selected: null
     }
   },
-  mounted() {
-    this.$emit('input', this.value)
+  computed: {
+    display() {
+      if (!this.selected) {
+        return this.prompt
+      }
+      return this.selected.selectDisplay || this.selected.display
+    }
+  },
+  watch: {
+    value() {
+      this.updateSelected()
+    },
+    options() {
+      this.updateSelected()
+    }
   },
   methods: {
     selectOption(option) {
-      if (option == null) {
-        this.value = null
-        this.display = this.prompt
-      } else {
-        this.value = option.value
-        this.display = option.selectDisplay || option.display
-      }
+      this.selected = option
+      this.$emit('input', option?.value)
       this.active = false
-      this.$emit('input', this.value)
+    },
+    updateSelected() {
+      this.selected = this.options
+        .flatMap(opt => [opt, ...(opt.options ?? [])])
+        .find(opt => opt.value === this.value)
+
+      if (this.selected === undefined) {
+        this.$emit('input', null)
+      }
     }
   }
 }

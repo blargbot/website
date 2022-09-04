@@ -1,8 +1,17 @@
 {
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
-    },
-    "vetur.format.defaultFormatter.html": "none",
-    "vetur.format.defaultFormatter.js": "prettier-eslint"
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "vetur.format.defaultFormatter.html": "none",
+  "vetur.format.defaultFormatter.js": "prettier-eslint",
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/node_modules": true
+  }
 }

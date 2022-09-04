@@ -1,5 +1,5 @@
 <template>
-  <div class="editor">
+  <div class="bbtag-editor-wrapper">
     <div ref="wrapper" class="bbtag-editor" />
     <p>
       Font size and wordwrapping can be enabled in the command pallet.
@@ -16,6 +16,7 @@ export default {
       default: null
     }
   },
+  emits: ['save'],
   data() {
     return {
       editor: null,
@@ -50,7 +51,10 @@ export default {
       wordWrap: localStorage.getItem('editor-wordwrap'),
       wordWrapColumn: 9999999
     }))
-    window.editor = editor
+    const content = localStorage.getItem('content')
+    if (content) {
+      editor.setValue(content)
+    }
     editor.addAction({
       id: 'editor.action.enableWordWrap',
       label: 'Enable word wrapping',
@@ -67,10 +71,15 @@ export default {
         editor.updateOptions({ wordWrap: 'off' })
       }
     })
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () =>
+      this.$emit('save')
+    )
     const model = editor.getModel()
     model.subtags = () => this.subtags
     model.onDidChangeContent(() => {
-      this.$emit('input', model.getValue())
+      const value = model.getValue()
+      localStorage.setItem('content', value)
+      this.$emit('input', value)
     })
 
     window.addEventListener('resize', this.resize.bind(this))
@@ -102,7 +111,7 @@ export default {
   flex: 1 0 auto;
 }
 
-.editor {
+.bbtag-editor-wrapper {
   flex: 1 0 auto;
   display: flex;
   flex-direction: column;

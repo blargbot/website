@@ -2,16 +2,13 @@
   <section class="full">
     <div class="card">
       <h1>BBTag Editor</h1>
-      <dropdown-button v-model="destination" :options="targetTree" prompt="Select a Tag destination" />
-      <component :is="destination.component" v-if="destination != null" v-model="content" :guild-id="destination.id" />
-      <bbtag-editor ref="editor" v-model="content" />
+      <dropdown-button v-model="editor" :options="editors" prompt="Select a Tag destination" />
+      <component :is="editor.component" v-if="editor != null" v-model="content" :guild-id="editor.id" class="editor" />
     </div>
   </section>
 </template>
 
 <script>
-import BbtagEditor from '~/components/BbtagEditor.vue'
-import DropdownButton from '~/components/DropdownButton.vue'
 import AutoresponseEditor from '~/components/editor/AutoresponseEditor.vue'
 import CensorsEditor from '~/components/editor/CensorsEditor.vue'
 import CustomCommandEditor from '~/components/editor/CustomCommandEditor.vue'
@@ -60,10 +57,9 @@ const types = [
 ]
 
 export default {
-  components: { DropdownButton, BbtagEditor },
   middleware: 'authenticated',
   data() {
-    const targetTree = []
+    const editors = []
     const unavailable = []
     for (const guild of this.$store.state.guilds.list) {
       const group = {
@@ -86,22 +82,22 @@ export default {
       if (group.options.length === 0) {
         unavailable.push(group)
       } else {
-        targetTree.push(group)
+        editors.push(group)
       }
     }
 
+    editors.sort((a, b) => (a.display < b.display ? -1 : 1))
+    editors.unshift({
+      display: 'Public tags',
+      emoji: '👥',
+      value: { component: TagEditor }
+    })
+    editors.push(...unavailable)
+
     return {
-      destination: null,
+      editor: editors[0].value,
       content: null,
-      targetTree: [
-        {
-          display: 'Public tags',
-          emoji: '👥',
-          value: { component: TagEditor }
-        },
-        ...targetTree.sort((a, b) => (a.display < b.display ? -1 : 1)),
-        ...unavailable
-      ]
+      editors
     }
   },
   watch: {
@@ -119,13 +115,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.card {
+.card,
+.editor {
   height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   margin: 0;
   background: transparent;
+}
+.card {
   padding: 0 1rem;
+}
+.editor {
+  padding: 0;
 }
 </style>
