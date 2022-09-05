@@ -27,17 +27,13 @@ export default {
   },
   data() {
     return {
-      collapsed: true,
-      boundCollapse: this.collapse.bind(this),
-      boundExpand: this.expand.bind(this),
-      boundSetHeight: this.setHeight.bind(this),
-      height: 'initial'
+      collapsed: true
     }
   },
   computed: {
     style() {
       return {
-        height: this.collapsed ? 0 : this.height + 'px'
+        height: this.collapsed ? 0 : this.$refs.content.scrollHeight + 'px'
       }
     }
   },
@@ -49,20 +45,10 @@ export default {
     }
   },
   mounted() {
-    this.$root.$on('expandAll', this.boundExpand)
-    this.$root.$on('collapseAll', this.boundCollapse)
-    window.addEventListener('resize', this.boundSetHeight)
-    this.setHeight()
-
     if (this.name && '#' + this.name === window.location.hash) {
       this.expand()
       this.$el.scrollIntoView()
     }
-  },
-  destroyed() {
-    this.$root.$off('expandAll', this.boundExpand)
-    this.$root.$off('collapseAll', this.boundCollapse)
-    window.removeEventListener('resize', this.boundSetHeight)
   },
   methods: {
     collapse() {
@@ -72,14 +58,7 @@ export default {
       this.collapsed = false
     },
     toggleCollapsed() {
-      if (this.collapsed) {
-        this.expand()
-      } else {
-        this.collapse()
-      }
-    },
-    setHeight() {
-      this.height = this.$refs.content.scrollHeight
+      this.collapsed = !this.collapsed
     }
   }
 }

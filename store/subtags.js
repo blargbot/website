@@ -21,7 +21,7 @@ export const actions = {
   },
   async reloadListOnly({ commit }) {
     const subtags = await this.$axios.$get('/subtags')
-    await commit('setList', subtags)
+    await commit('setList', Object.values(subtags))
   },
   async reloadCategories({ commit }) {
     const categories = await this.$axios.$get('/subtags/meta/categories')

@@ -10,48 +10,43 @@
         </nuxt-link>
       </div>
     </section>
-    <item-list :items="subtags" item-label="Subtags" :categories="categories">
-      <template #title-bar="{ item }">
+    <item-list :items="listItems">
+      <template #title-bar="{ value }">
         <h2 class="title">
-          {{ item.name }}
-          <template v-if="item.aliases.length > 0">
-            ({{ item.aliases.join(', ') }})
+          {{ value.name }}
+          <template v-if="value.aliases.length > 0">
+            ({{ value.aliases.join(', ') }})
           </template>
         </h2>
 
         <div class="badges">
-          <span v-if="item.deprecated" class="badge warning">Deprecated</span>
-          <span class="badge">{{ (categories[item.category] || {}).name }}</span>
-          <span v-twemoji class="badge copy" title="Copy URL" @click.prevent="copyUrl(item, $event)">
+          <span v-if="value.deprecated" class="badge warning">Deprecated</span>
+          <span class="badge">{{ (categories[value.category] || {}).name }}</span>
+          <span v-twemoji class="badge copy" title="Copy URL" @click.prevent="copyUrl(value, $event)">
             🔗
           </span>
         </div>
-        <div :id="item.name" class="anchor" />
+        <div :id="value.name" class="anchor" />
       </template>
 
-      <template #default="{ item }">
-        <div v-if="item.deprecated" class="deprecated-message">
+      <template #default="{ value }">
+        <div v-if="value.deprecated" class="deprecated-message">
           This subtag has been deprecated and will be removed in the future.<br>
-          <span v-if="typeof item.deprecated === 'string'">
+          <span v-if="typeof value.deprecated === 'string'">
             Use the
-            <router-link :to="`#${item.deprecated}`">
-              <code>{{ "{" + item.deprecated + "}" }}</code>
+            <router-link :to="`#${value.deprecated}`">
+              <code>{{ "{" + value.deprecated + "}" }}</code>
             </router-link>
             subtag instead.
           </span>
         </div>
 
-        <markdown v-if="item.description" :content="item.description" :auto-new-lines="true" />
+        <markdown v-if="value.description" :content="value.description" :auto-new-lines="true" />
 
-        <!-- <template v-if="item.flags.length > 0">
-          <h3>Flags:</h3>
-          <markdown :content="renderFlags(item)" />
-        </template> -->
-
-        <div v-for="signature, i of getSignatures(item)" :key="i" class="subtag-signature">
+        <div v-for="signature, i of getSignatures(value)" :key="i" class="subtag-signature">
           <h3>
             <div v-twemoji class="v-aligned gap">
-              ℹ️ <pre><code>{{ renderParameters(item, signature) }}</code></pre>
+              ℹ️ <pre><code>{{ renderParameters(value, signature) }}</code></pre>
             </div>
           </h3>
           <div class="quote">
@@ -76,20 +71,37 @@
 
 <script>
 import { render } from '@bots-gg/markup'
-import ItemList from '@/components/ItemList.vue'
-import Markdown from '~/components/Markdown.vue'
 
 export default {
-  components: { ItemList, Markdown },
-  data() {
-    const list = Object.values(this.$store.state.subtags.list)
-    list.sort((a, b) => {
-      return a.category - b.category
-    })
+  computed: {
+    subtags() {
+      return this.$store.state.subtags.list
+    },
+    categories() {
+      return this.$store.state.subtags.categories
+    },
+    listItems() {
+      const groups = {}
+      for (const subtag of this.subtags) {
+        const group = groups[subtag.category] ?? (groups[subtag.category] = [])
+        group.push(subtag)
+      }
 
-    return {
-      subtags: list,
-      categories: this.$store.state.subtags.categories
+      return Object.entries(groups)
+        .sort((a, b) => a[0] - b[0])
+        .map(([category, subtags]) => [
+          this.categories[category] ?? category,
+          subtags
+        ])
+        .map(([category, subtags]) => ({
+          name: `${category.name} Subtags`,
+          description: category.desc,
+          items: subtags.map(subtag => ({
+            name: subtag.name,
+            value: subtag,
+            tags: [subtag.name, category.name, ...subtag.aliases]
+          }))
+        }))
     }
   },
   methods: {

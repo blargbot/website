@@ -3,14 +3,14 @@ export const state = () => ({
 })
 
 export const mutations = {
-  setList (store, commands) {
+  setList(store, commands) {
     store.list = commands
   }
 }
 
 export const actions = {
-  async reload ({ commit }) {
+  async reload({ commit }) {
     const commands = await this.$axios.$get('/commands')
-    commit('setList', commands)
+    commit('setList', Object.values(commands))
   }
 }

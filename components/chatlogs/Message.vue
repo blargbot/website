@@ -7,9 +7,9 @@
       <div class="badge">
         ID: {{ message.userid }}
       </div>
-      <div class="badge">
+      <a class="badge" :href="`https://discord.com/channels/${message.guildid}/${message.channelid}/${message.msgid}`" target="_blank">
         MSG ID: {{ message.msgid }}
-      </div>
+      </a>
     </div>
     <div class="message-wrapper">
       <img class="avatar" :src="user.avatarURL">
@@ -29,15 +29,16 @@
       <div>Attachments</div>
       <ul class="message-attachments">
         <li v-for="(attachment, i) in message.attachments" :key="i" class="message-attachment">
-          <a :href="attachment" target="_blank">{{ attachment.split('/').slice(-1)[0] }}</a>
-          <div v-if="isImage(attachment)" class="message-attachment-image">
-            <img :src="attachment">
-          </div>
+          <a :href="attachment" target="_blank">
+            <div v-if="isImage(attachment)" class="message-attachment-image">
+              <img :src="attachment">
+            </div>
+            <template v-else>
+              {{ attachment.split('/').slice(-1)[0] }}
+            </template>
+          </a>
         </li>
       </ul>
-    </div>
-  </div>
-</template>
     </div>
   </div>
 </template>

@@ -12,36 +12,36 @@
         </nuxt-link>
       </div>
     </section>
-    <item-list :items="commands" item-label="Commands">
-      <template #title-bar="{ item }">
+    <item-list :items="listItems" item-label="Commands">
+      <template #title-bar="{ value }">
         <h2 class="title">
-          {{ item.name }}
-          <template v-if="item.aliases.length > 0">
-            ({{ item.aliases.join(', ') }})
+          {{ value.name }}
+          <template v-if="value.aliases.length > 0">
+            ({{ value.aliases.join(', ') }})
           </template>
         </h2>
 
         <div class="badges">
-          <span class="badge">{{ item.category }}</span>
-          <span v-twemoji class="badge copy" title="Copy URL" @click.prevent="copyUrl(item, $event)">
+          <span class="badge">{{ value.category }}</span>
+          <span v-twemoji class="badge copy" title="Copy URL" @click.prevent="copyUrl(value, $event)">
             🔗
           </span>
         </div>
-        <div :id="item.name" class="anchor" />
+        <div :id="value.name" class="anchor" />
       </template>
 
-      <template #default="{ item }">
-        <markdown v-if="item.description" :content="item.description" :auto-new-lines="true" />
+      <template #default="{ value }">
+        <markdown v-if="value.description" :content="value.description" :auto-new-lines="true" />
 
-        <template v-if="item.flags.length > 0">
+        <template v-if="value.flags.length > 0">
           <h3>Flags:</h3>
-          <markdown :content="renderFlags(item)" />
+          <markdown :content="renderFlags(value)" />
         </template>
 
-        <div v-for="signature, i of getSignatures(item)" :key="i">
+        <div v-for="signature, i of getSignatures(value)" :key="i">
           <h3>
             <div v-twemoji class="v-aligned gap">
-              ℹ️ {{ renderParameters(item, signature.parameters) }}
+              ℹ️ {{ renderParameters(value, signature.parameters) }}
             </div>
           </h3>
           <div class="quote">
@@ -56,14 +56,29 @@
 
 <script>
 import { render } from '@bots-gg/markup'
-import ItemList from '@/components/ItemList.vue'
-import Markdown from '~/components/Markdown.vue'
 
 export default {
-  components: { ItemList, Markdown },
-  data() {
-    return {
-      commands: Object.values(this.$store.state.commands.list)
+  computed: {
+    commands() {
+      return this.$store.state.commands.list
+    },
+    listItems() {
+      const groups = {}
+      for (const command of this.commands) {
+        const group =
+          groups[command.category] ?? (groups[command.category] = [])
+        group.push(command)
+      }
+
+      return Object.entries(groups).map(([category, commands]) => ({
+        name: `${category} Commands`,
+        description: category.desc,
+        items: commands.map(command => ({
+          name: command.name,
+          value: command,
+          tags: [command.name, category, ...command.aliases]
+        }))
+      }))
     }
   },
   methods: {
